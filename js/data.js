@@ -99,6 +99,7 @@ window.SITE = {
       summary:
         "A computer-vision system for hockey game film. A CNN identifies each player's team from jersey colors and numbers, and a fine-tuned YOLO model labels everyone on screen as player, referee, coach or other. Player movement is tracked as vectors so plays can be reviewed frame by frame.",
       details: [
+        "Inspo from Raúl Vizcarra Chirinos's open-source hockey tracking project, which this builds on.",
         "Built a CNN team classifier and fine-tuned YOLOv1 to classify on-screen roles.",
         "Tracked movement in vector form, then converted rink pixels to meters to estimate player speed and distance.",
         "Used human-labeled footage as ground truth, plus linear regression and iterative loss-function tuning, to reach over 90% classification accuracy.",
@@ -107,7 +108,7 @@ window.SITE = {
       video: "assets/video/hockey-demo.mp4",
       metrics: [{ value: "90%+", label: "accuracy" }, { value: "4", label: "classes tracked" }],
       skills: ["PyTorch", "CNN", "YOLO", "OpenCV", "Object tracking", "Data labeling"],
-      links: [],
+      links: [{ label: "Inspo: Raúl Vizcarra Chirinos", url: "https://github.com/rvizcarra15/IceHockey_ComputerVision_PyTorch" }],
       missing: [
         "Link to YOUR code (the local repo points to a third-party GitHub repo, so it isn't linked here)",
         "Any write-up or poster from the IEYI China exhibition"
