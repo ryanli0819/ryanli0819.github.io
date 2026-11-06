@@ -21,6 +21,7 @@ window.SITE = {
     grad: "Expected May 2030",
     location: "West Lafayette, IN · from Lexington, MA",
     email: "ryanli08199@gmail.com",
+    github: "https://github.com/ryanli0819",
     resume: "assets/resume/Ryan_Li_Resume.pdf",
     photo: null, // e.g. "assets/img/ryan.jpg"
     bio: [
@@ -62,17 +63,18 @@ window.SITE = {
       tags: ["research", "ml"],
       icon: "💬",
       summary:
-        "A few-shot prompt-tuning framework that uses a large language model to classify the sentiment of live-stream \"bullet chat\" messages, the comments that scroll across the video. It reached about 80% accuracy across multiple validation scenarios.",
+        "A few-shot prompt-tuning framework that turns a pre-trained LLM into a filter for negative \"bullet chat\" messages, the comments that fly across live streams on Douyu. Trained on just one hour of chat from a single gaming room, it held about 80% accuracy on 185k+ messages from other rooms, other games and even food and shopping streams.",
       details: [
-        "Came out of a summer research program with Purdue Prof. Yang's PhD team (30 hrs/week for 9 weeks), fine-tuning LLMs on live-chat data.",
-        "Worked on data preparation, prompt design and evaluation of the few-shot framework.",
-        "Co-authored the resulting paper."
+        "Came out of a summer research program with Purdue Prof. Yang's PhD team (30 hrs/week for 9 weeks).",
+        "Bullet chat is hard: tiny messages full of memes and in-jokes (\"666\", \"2333\", \"FGNB\"), sarcasm and emojis like 🤡.",
+        "Prompt-tuned the LLM instead of fine-tuning all of it, and used an iterative human-feedback loop to clean up rough keyword labels.",
+        "Tested generalization on four much larger validation sets: same room later, other rooms, other games, and non-gaming streams."
       ],
       citation:
         "Liu, X.; Jin, N.; <b>Li, R.</b>; Li, K.; Wang, M. Y.; Yang, B. \"ASABC: An LLM-based Arbitrator for Sentiment Analysis in Bullet Chat Messages.\" IEEE AIxHeart, 2024.",
-      metrics: [{ value: "~80%", label: "accuracy" }, { value: "6", label: "co-authors" }],
+      metrics: [{ value: "~80%", label: "accuracy" }, { value: "0.90", label: "best F1" }, { value: "185k+", label: "msgs tested" }],
       skills: ["LLMs", "Few-shot prompt tuning", "Sentiment analysis", "Python", "Evaluation"],
-      links: [],
+      links: [{ label: "Research code (GitLab)", url: "https://gitlab.com/tonyyang1995/douyu" }],
       missing: [
         "Link to the paper itself (IEEE Xplore DOI or a preprint)",
         "Are you OK with co-authors being named on the site? (citation is shown as-is for now)"
@@ -80,6 +82,7 @@ window.SITE = {
     },
     {
       id: "hockey-cv",
+      code: true,
       featured: true,
       title: "Jersey & player-role recognition",
       badge: "Distinction Award · IEYI China",
@@ -149,6 +152,7 @@ window.SITE = {
     },
     {
       id: "kaggle",
+      code: true,
       title: "Kaggle Titanic: Machine Learning from Disaster",
       badge: "Tied 1st of 2,000+",
       era: "unknown",
@@ -210,6 +214,7 @@ window.SITE = {
     },
     {
       id: "vo",
+      code: true,
       title: "Visual odometry",
       badge: "Details coming soon",
       era: "unknown",

@@ -23,7 +23,7 @@
   function readColors() {
     const s = getComputedStyle(document.documentElement);
     const v = (n) => s.getPropertyValue(n).trim();
-    colors = { ice: v("--rink-ice"), red: v("--red"), blue: v("--blue"), ink: v("--ink"), ink3: v("--ink-3"), line: v("--line") };
+    colors = { ice: v("--rink-ice"), red: v("--red"), blue: v("--gold"), ink: v("--ink"), ink3: v("--ink-3"), line: v("--line") };
   }
 
   function resize() {

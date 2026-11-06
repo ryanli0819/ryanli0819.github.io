@@ -47,13 +47,16 @@
   function projectCard(p) {
     const awardish = /award|1st|2nd|published/i.test(p.badge);
     const badgeCls = /soon/i.test(p.badge) ? "soon" : awardish ? "award" : "";
-    const links = p.links.length
-      ? p.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")
+    const linkList = [...p.links];
+    if (p.code && P.github) linkList.push({ label: "Code on my GitHub", url: P.github, gh: true });
+    const links = linkList.length
+      ? linkList.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="${l.gh ? "gh-link" : ""}">${esc(l.label)} ↗</a>`).join("")
       : `<span class="nolink">Link coming soon</span>`;
     const metrics = p.metrics.length
       ? `<div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>` : "";
-    const media = p.video
+    const video = p.video
       ? `<video src="${esc(p.video)}" muted loop playsinline autoplay controls preload="metadata" aria-label="Demo of ${esc(p.title)} running on game footage"></video>` : "";
+    const media = video + `<div class="viz${video ? " viz-plain" : ""}" data-viz="${esc(p.id)}"></div>`;
     const needCount = window.SHOW_MISSING_INFO ? p.missing.length : 0;
     const head = `
       <div class="project-top">
@@ -77,13 +80,14 @@
           ${dropbox(p.missing, `Edit project <code>${esc(p.id)}</code> in <code>js/data.js</code>.`)}
         </div>
       </details>`;
-    const body = p.featured && media
-      ? `<div class="featured-body"><div>${main}</div><div>${media}</div></div>`
-      : main + media;
+    const body = p.featured
+      ? `<div class="featured-body"><div>${main}</div><div class="media-col">${media}</div></div>`
+      : media + main;
     return `<article class="project reveal ${p.featured ? "featured" : ""}" data-tags="${[...p.tags, p.era].join(" ")}" id="p-${esc(p.id)}">
       ${head}${body}${more}</article>`;
   }
   $("#projectList").innerHTML = S.projects.map(projectCard).join("");
+  if (window.renderViz) window.renderViz();
 
   // filters
   $("#filters").addEventListener("click", (e) => {
