@@ -1,0 +1,282 @@
+/* =====================================================================
+   SITE CONTENT — edit this file to update the website.
+   Everything on the page (projects, timeline, fun side) is built from
+   the data below, so you never have to touch the HTML.
+
+   • `missing` lists what still needs to be filled in for each project.
+     Each list shows up as a dashed "Info needed" box inside that project's
+     "More info" dropdown. Delete an item once you have added the info.
+   • Set SHOW_MISSING_INFO to false before you publish if you'd rather
+     visitors not see the "Info needed" boxes.
+   • Links: add { label, url } objects to `links`. Never leave a fake URL.
+   ===================================================================== */
+
+window.SHOW_MISSING_INFO = false;
+
+window.SITE = {
+  person: {
+    name: "Ryan Li",
+    school: "Purdue University · Purdue Polytechnic Institute",
+    degree: "B.S. Data Analytics Application and Technology",
+    grad: "Expected May 2030",
+    location: "West Lafayette, IN · from Lexington, MA",
+    email: "ryanli08199@gmail.com",
+    resume: "assets/resume/Ryan_Li_Resume.pdf",
+    photo: null, // e.g. "assets/img/ryan.jpg"
+    bio: [
+      "I'm a data analytics student at Purdue who likes turning messy, real-world data into something a model (or a person) can actually use. That has meant everything from co-authoring an IEEE paper on LLM sentiment analysis to teaching a CNN to tell hockey teams apart by their jerseys.",
+      "Off the clock I'm usually on the ice as a left wing, throwing a disc, or helping run cultural events back home in Lexington."
+    ],
+    missing: [
+      "A headshot or photo for this section (drop it in assets/img/ and set person.photo)",
+      "A few sentences in your own voice: what draws you to data science, and what a visitor should know about you in five seconds"
+    ]
+  },
+
+  stats: [
+    { value: "1", label: "IEEE published paper" },
+    { value: "90%+", label: "CV classification accuracy" },
+    { value: "100%", label: "Kaggle Titanic public score" },
+    { value: "2nd", label: "State YES pitch competition" }
+  ],
+
+  skills: {
+    "Languages": ["Python", "C++", "Java", "R (basic)", "SQL"],
+    "ML & AI": ["CNNs", "YOLO", "PyTorch", "LLM prompt-tuning", "Computer vision"],
+    "Data": ["Preprocessing pipelines", "Exploratory data analysis", "Data validation", "Statistics"]
+  },
+
+  /* ---------------------------------------------------------------
+     PROJECTS
+     era: "hs" (high school) | "college" | "work"
+     tags: used by the filter chips
+     --------------------------------------------------------------- */
+  projects: [
+    {
+      id: "asabc",
+      featured: true,
+      title: "ASABC: an LLM arbitrator for bullet-chat sentiment",
+      badge: "Published · IEEE AIxHeart 2024",
+      era: "hs",
+      when: "Grade 11 · Summer 2024",
+      tags: ["research", "ml"],
+      icon: "💬",
+      summary:
+        "A few-shot prompt-tuning framework that uses a large language model to classify the sentiment of live-stream \"bullet chat\" messages, the comments that scroll across the video. It reached about 80% accuracy across multiple validation scenarios.",
+      details: [
+        "Came out of a summer research program with Purdue Prof. Yang's PhD team (30 hrs/week for 9 weeks), fine-tuning LLMs on live-chat data.",
+        "Worked on data preparation, prompt design and evaluation of the few-shot framework.",
+        "Co-authored the resulting paper."
+      ],
+      citation:
+        "Liu, X.; Jin, N.; <b>Li, R.</b>; Li, K.; Wang, M. Y.; Yang, B. \"ASABC: An LLM-based Arbitrator for Sentiment Analysis in Bullet Chat Messages.\" IEEE AIxHeart, 2024.",
+      metrics: [{ value: "~80%", label: "accuracy" }, { value: "6", label: "co-authors" }],
+      skills: ["LLMs", "Few-shot prompt tuning", "Sentiment analysis", "Python", "Evaluation"],
+      links: [],
+      missing: [
+        "Link to the paper itself (IEEE Xplore DOI or a preprint)",
+        "Are you OK with co-authors being named on the site? (citation is shown as-is for now)"
+      ]
+    },
+    {
+      id: "hockey-cv",
+      featured: true,
+      title: "Jersey & player-role recognition",
+      badge: "Distinction Award · IEYI China",
+      era: "hs",
+      when: "Grade 12 · Independent research",
+      tags: ["ml", "cv"],
+      icon: "🏒",
+      summary:
+        "A computer-vision system for hockey game film. A CNN identifies each player's team from jersey colors and numbers, and a fine-tuned YOLO model labels everyone on screen as player, referee, coach or other. Player movement is tracked as vectors so plays can be reviewed frame by frame.",
+      details: [
+        "Built a CNN team classifier and fine-tuned YOLOv1 to classify on-screen roles.",
+        "Tracked movement in vector form, then converted rink pixels to meters to estimate player speed and distance.",
+        "Used human-labeled footage as ground truth, plus linear regression and iterative loss-function tuning, to reach over 90% classification accuracy.",
+        "Self-directed: about 13 hrs/week for 7 weeks in senior year."
+      ],
+      video: "assets/video/hockey-demo.mp4",
+      metrics: [{ value: "90%+", label: "accuracy" }, { value: "4", label: "classes tracked" }],
+      skills: ["PyTorch", "CNN", "YOLO", "OpenCV", "Object tracking", "Data labeling"],
+      links: [],
+      missing: [
+        "Link to YOUR code (the local repo points to a third-party GitHub repo, so it isn't linked here)",
+        "Any write-up or poster from the IEYI China exhibition"
+      ]
+    },
+    {
+      id: "aviation",
+      title: "Aviation flight-data preprocessing",
+      badge: "Ongoing",
+      era: "college",
+      when: "Purdue · Ongoing",
+      tags: ["data", "research"],
+      icon: "✈️",
+      summary:
+        "Cleaning and preprocessing data exported from Purdue's aviation flight simulators for a Bay Area company that is training an AI system to help student pilots learn to fly.",
+      details: [
+        "Structuring and validating simulator datasets so they're ready for downstream machine learning.",
+        "Building repeatable preprocessing steps for raw flight-sim exports."
+      ],
+      metrics: [],
+      skills: ["Python", "Data cleaning", "Data validation", "ML data prep"],
+      links: [],
+      missing: [
+        "Is any of this shareable (repo, write-up, partner company name)? If it's under NDA, say \"details available on request\"",
+        "Status update: what has progressed since this was written?"
+      ]
+    },
+    {
+      id: "datamine",
+      title: "The Data Mine",
+      badge: "Learning community",
+      era: "college",
+      when: "Purdue · Ongoing",
+      tags: ["data"],
+      icon: "⛏️",
+      summary:
+        "Purdue's Data Mine Learning Community: hands-on project work with real-world datasets alongside faculty and industry partners, building SQL and data-processing fundamentals.",
+      details: [
+        "Writing SQL against real datasets and building data-processing workflows."
+      ],
+      metrics: [],
+      skills: ["SQL", "Data processing", "Teamwork"],
+      links: [{ label: "About The Data Mine", url: "https://datamine.purdue.edu/" }],
+      missing: [
+        "Which corporate-partner project (if any) you're on",
+        "Something concrete to show: a result, report or dataset"
+      ]
+    },
+    {
+      id: "kaggle",
+      title: "Kaggle Titanic: Machine Learning from Disaster",
+      badge: "Tied 1st of 2,000+",
+      era: "unknown",
+      when: "Data science competition",
+      tags: ["ml"],
+      icon: "🚢",
+      summary:
+        "Built a machine learning model to predict which Titanic passengers survived. It scored 100% accuracy on the public leaderboard, tied for 1st among 2,000+ entries.",
+      details: [],
+      metrics: [{ value: "100%", label: "public LB" }, { value: "2,000+", label: "entries" }],
+      skills: ["Python", "Feature engineering", "Classification"],
+      links: [],
+      missing: [
+        "Your Kaggle username / profile link",
+        "Link to the public notebook so visitors can see the approach",
+        "When was this (high school or college)?"
+      ]
+    },
+    {
+      id: "drowning",
+      title: "AI camera for drowning detection (startup pitch)",
+      badge: "2nd in state",
+      era: "hs",
+      when: "Grades 10–12 · Youth Entrepreneurship Service",
+      tags: ["ml", "cv"],
+      icon: "🛟",
+      summary:
+        "Through the Youth Entrepreneurship Service program, did the market analysis for and pitched AI camera software that detects drownings, earning 2nd place in the state competition.",
+      details: [
+        "Market analysis, business model and public pitching across three years in the program."
+      ],
+      metrics: [{ value: "2nd", label: "state" }],
+      skills: ["Pitching", "Market analysis", "Product thinking"],
+      links: [],
+      missing: [
+        "Product / team name and the name of the state competition",
+        "Pitch deck, demo or photos you'd like to share"
+      ]
+    },
+    {
+      id: "ventrix",
+      title: "Storage management intern, Ventrix Supply",
+      badge: "Real-world data work",
+      era: "work",
+      when: "May – Jul 2026",
+      tags: ["data"],
+      icon: "📦",
+      summary:
+        "Daily inventory analysis at a warehouse for a New England distributor of TCL air-conditioning systems, using exploratory data analysis to catch stock discrepancies and inform restocking.",
+      details: [
+        "Tracked AC and heating unit stock and flagged discrepancies with EDA.",
+        "Coordinated with sales to confirm shipping orders, and applied basic statistics to inventory counts for day-to-day decisions.",
+        "Learned the government regulations and industry standards for electronics and HVAC systems."
+      ],
+      metrics: [],
+      skills: ["EDA", "Statistics", "Inventory analysis", "Operations"],
+      links: [],
+      missing: []
+    },
+    {
+      id: "vo",
+      title: "Visual odometry",
+      badge: "Details coming soon",
+      era: "unknown",
+      when: "TBD",
+      tags: ["cv"],
+      icon: "📷",
+      summary:
+        "A visual odometry project: estimating camera motion from a sequence of images. Full write-up coming soon.",
+      details: [],
+      metrics: [],
+      skills: ["Computer vision"],
+      links: [],
+      missing: [
+        "What the project was and what you built",
+        "Tools used (language, libraries such as OpenCV, approach)",
+        "Results or metrics",
+        "GitHub link, or confirm it's private",
+        "Timeframe: high school or college?"
+      ]
+    }
+  ],
+
+  /* ---------------------------------------------------------------
+     TIMELINE (from the activities list + resume)
+     --------------------------------------------------------------- */
+  timeline: [
+    { when: "Grade 9", title: "Boston College Sports Management", kind: "learn",
+      text: "Two intensive weeks (45 hrs/week) exploring sports business and analytics: marketing, ops and finance with industry professionals." },
+    { when: "Grades 10–12", title: "Varsity Hockey, Assistant Captain", kind: "play",
+      text: "Left wing. Training, film study and leading by example. Elected Varsity assistant captain." },
+    { when: "Grades 10–12", title: "Youth Entrepreneurship Service", kind: "build",
+      text: "Pitched AI drowning-detection camera software. 2nd in the state competition." },
+    { when: "Grade 11", title: "LLM summer research → IEEE paper", kind: "build",
+      text: "Purdue Prof. Yang's PhD team, 30 hrs/week. Led to the ASABC paper at IEEE AIxHeart 2024." },
+    { when: "Grade 11", title: "MIT AI & Art Camp", kind: "learn",
+      text: "Hands-on with image-generation tools (Midjourney, DALL·E, Sora) and prompt tuning, inspired by modern museum collections." },
+    { when: "Grades 11–12", title: "LexMACS", kind: "learn",
+      text: "Lexington Math & CS club: USACO, cryptography, CTFs, physics sims." },
+    { when: "Grade 12", title: "Hockey computer-vision research", kind: "build",
+      text: "Independent research. Distinction Award at IEYI China." },
+    { when: "Summer 2026", title: "Ventrix Supply internship", kind: "work",
+      text: "Warehouse inventory analysis with EDA and statistics." },
+    { when: "Fall 2026 →", title: "Purdue · Data Analytics", kind: "learn",
+      text: "Data Mine Learning Community, plus aviation flight-data preprocessing." }
+  ],
+
+  /* ---------------------------------------------------------------
+     FUN SIDE — flip cards
+     --------------------------------------------------------------- */
+  fun: [
+    { icon: "🏒", title: "Left wing, assistant captain",
+      front: "Lexington High Varsity Hockey",
+      back: "Three varsity seasons, lots of film study, and the reason my CV project is about hockey: I wanted a computer to watch game tape the way I do." },
+    { icon: "🥏", title: "Ultimate offense",
+      front: "Varsity Ultimate Frisbee",
+      back: "Ran the offense, competed year-round, and organized donations and clinics to teach kids the game." },
+    { icon: "📰", title: "Reporter",
+      front: "The Musket, LHS newspaper",
+      back: "Wrote about everything from school policy to scholarships: a way to tell my community's stories." },
+    { icon: "🏮", title: "Culture crew",
+      front: "Chinese American Association of Lexington",
+      back: "Coordinated and directed cultural events with 200+ community members: instruments, choir, customs and plenty of food." },
+    { icon: "🎨", title: "AI × art",
+      front: "MIT AI & Art Camp",
+      back: "Two weeks pairing museum inspiration with image-generation models and prompt tuning." },
+    { icon: "🧩", title: "Puzzle brain",
+      front: "LexMACS · USACO · CTF",
+      back: "Cryptography, capture-the-flag and competitive programming with friends." }
+  ]
+};

@@ -1,0 +1,13 @@
+{
+  "_comment": "Template schema for the art portfolio. One entry per piece. Copy this file to captions.json once real art is added, delete this _comment field, and remove this example entry.",
+  "pieces": [
+    {
+      "id": "example-piece-01",
+      "file": "images/piece-01.jpg",
+      "title": "TODO — title of the piece",
+      "medium": "TODO — e.g. watercolor, digital, pencil, oil",
+      "date": "TODO — e.g. 2025-06 or just 2025",
+      "note": "TODO — optional short note about the piece"
+    }
+  ]
+}

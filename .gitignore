@@ -1,0 +1,10 @@
+# Large / third-party source material (demo video already copied to assets/video)
+Hockey CNN Yolov1 project info/
+# Private planning notes and personal docs (not used by the site)
+BRIEF.md
+RyanL acitivity list.pdf
+content/about.md
+content/projects/
+# Local tooling / OS junk
+.claude/
+.DS_Store

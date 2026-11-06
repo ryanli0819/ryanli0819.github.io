@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ryan Li</title>
+  <meta name="description" content="Ryan Li: data analytics student at Purdue. Projects in computer vision, LLM research and data work, plus hockey, art and travel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏒</text></svg>">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" id="top">
+    <a class="brand" href="#top" aria-label="Ryan Li, home"><span class="brand-dot"></span>ryan.li</a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#timeline">Timeline</a></li>
+        <li class="fun-only"><a href="#fun">Off the ice</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="pill-toggle" id="skimToggle" aria-pressed="false" title="Hide the playful bits for a quick professional read">
+        <span class="pill-knob"></span><span class="pill-label">30-sec view</span>
+      </button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Hi, I'm</p>
+        <h1>Ryan Li<span class="cursor" aria-hidden="true">_</span></h1>
+        <p class="tagline">
+          Data analytics @ Purdue. I teach machines to read
+          <span class="rotator" id="rotator" aria-live="polite">hockey film</span>.
+        </p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#projects">See my work →</a>
+          <a class="btn ghost" href="assets/resume/Ryan_Li_Resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+        </div>
+        <ul class="stats" id="stats"></ul>
+      </div>
+
+      <div class="rink-wrap fun-only">
+        <canvas id="rink" aria-label="Mini hockey game: flick the puck into a net to jump to a section" role="img"></canvas>
+        <div class="rink-hud">
+          <span>Drag &amp; flick the puck 🏒</span>
+          <span class="score">Goals: <b id="goals">0</b></span>
+        </div>
+        <div class="rink-goal" id="goalFlash" aria-hidden="true">GOAL!</div>
+        <div class="rink-keys">
+          <button class="chip" data-shoot="left">← shoot for the fun side</button>
+          <button class="chip" data-shoot="right">shoot for projects →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>About</h2>
+      </div>
+      <div class="about-grid">
+        <div class="photo" id="photo"></div>
+        <div>
+          <div class="about-bio" id="bio"></div>
+          <dl class="facts" id="facts"></dl>
+          <div id="aboutMissing"></div>
+        </div>
+        <aside class="skills" id="skills" aria-label="Skills"></aside>
+      </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="section">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>Projects</h2>
+        <p class="section-sub">High school through college. Open any card's <b>More info</b> for the full story.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter projects" id="filters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="research">Research</button>
+        <button class="chip" data-filter="ml">Machine learning</button>
+        <button class="chip" data-filter="cv">Computer vision</button>
+        <button class="chip" data-filter="data">Data work</button>
+        <span class="filter-sep" aria-hidden="true"></span>
+        <button class="chip" data-filter="hs">High school</button>
+        <button class="chip" data-filter="college">College</button>
+      </div>
+      <div class="projects" id="projectList"></div>
+    </section>
+
+    <!-- ============ TIMELINE ============ -->
+    <section id="timeline" class="section">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2>The road so far</h2>
+        <p class="section-sub">From Grade 9 to Purdue. Click a stop.</p>
+      </div>
+      <div class="legend">
+        <span><i class="k-build"></i>built</span>
+        <span><i class="k-learn"></i>learned</span>
+        <span><i class="k-play"></i>played</span>
+        <span><i class="k-work"></i>worked</span>
+      </div>
+      <ol class="timeline" id="timelineList"></ol>
+    </section>
+
+    <!-- ============ FUN SIDE ============ -->
+    <section id="fun" class="section fun fun-only">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2>Off the ice <span class="wiggle">(and on it)</span></h2>
+        <p class="section-sub">The non-résumé stuff. Tap a card to flip it.</p>
+      </div>
+      <div class="flip-grid" id="funGrid"></div>
+
+      <div class="sub-head" id="artHead">
+        <h3>🎨 Art portfolio</h3>
+        <p>Things I've made.</p>
+      </div>
+      <div class="gallery" id="gallery"></div>
+
+      <div class="sub-head">
+        <h3>🌍 Where I've been</h3>
+        <p id="mapSub">Click a highlighted country to see photos from that trip.</p>
+      </div>
+      <div class="map-card">
+        <div class="map" id="map"><p class="map-loading">Loading the world…</p></div>
+        <div class="map-tip" id="mapTip" role="status" aria-live="polite"></div>
+      </div>
+      <div id="travelEmpty"></div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section contact">
+      <h2>Let's talk.</h2>
+      <p>Open to research, internships and anything involving data. Or hockey.</p>
+      <div class="contact-row">
+        <button class="btn primary" id="copyEmail">ryanli08199@gmail.com <span class="copy-hint">copy</span></button>
+        <a class="btn ghost" href="mailto:ryanli08199@gmail.com">Email me</a>
+        <a class="btn ghost" href="assets/resume/Ryan_Li_Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year"></span> Ryan Li · West Lafayette, IN</span>
+    <span class="egg-hint">psst, try typing <kbd>goal</kbd></span>
+  </footer>
+
+  <!-- Lightbox (art + travel photos) -->
+  <dialog class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    <button class="lb-nav prev" id="lbPrev" aria-label="Previous photo">‹</button>
+    <figure>
+      <img id="lbImg" alt="">
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+    <button class="lb-nav next" id="lbNext" aria-label="Next photo">›</button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/rink.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

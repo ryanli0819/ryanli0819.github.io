@@ -1,0 +1,12 @@
+{
+  "_comment": "Template schema for the travel map. One entry per visited country. Copy this file to countries.json once real data is added, delete this _comment field, and remove this example entry. 'iso' should be the ISO 3166-1 alpha-3 code (used by most map libraries, e.g. react-simple-maps' TopoJSON) so the map component can match it to the right country shape.",
+  "countries": [
+    {
+      "iso": "USA",
+      "name": "United States",
+      "datesVisited": "TODO — optional, e.g. 2020-2026 (lives here, so maybe skip or mark as home)",
+      "note": "TODO — optional short note",
+      "photos": ["photos/usa/photo1.jpg"]
+    }
+  ]
+}
