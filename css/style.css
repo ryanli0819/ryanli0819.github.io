@@ -437,3 +437,56 @@ kbd { font: 600 12px var(--font-mono); background: var(--ice-2); border: 1px sol
 /* GitHub bits */
 .gh-btn { display: grid; place-items: center; color: var(--ink); }
 .project-links a.gh-link { color: var(--ink); }
+
+/* ===================== Project modal ===================== */
+.card-actions { display: flex; align-items: center; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
+.card-actions .need { margin-left: auto; font: 600 11.5px var(--font-mono); color: color-mix(in srgb, var(--gold) 55%, var(--ink)); background: color-mix(in srgb, var(--gold) 16%, transparent); padding: 2px 8px; border-radius: 999px; }
+.btn.sm { padding: 8px 14px; font-size: 14px; border-radius: 10px; }
+.pm {
+  width: min(980px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--line);
+  border-radius: 20px; background: var(--card); color: var(--ink); box-shadow: 0 30px 80px rgba(59,10,26,.35); overflow: auto;
+}
+.pm::backdrop { background: rgba(40,8,20,.55); backdrop-filter: blur(4px); }
+.pm[open] { animation: pmIn .3s cubic-bezier(.3,1.3,.5,1); }
+@keyframes pmIn { from { opacity: 0; transform: translateY(20px) scale(.97); } }
+.pm-close { position: sticky; top: 12px; float: right; margin: 12px 12px 0 0; z-index: 2; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); font-size: 16px; }
+.pm-video { margin: 0; background: #1d0b12; }
+.pm-video video { width: 100%; aspect-ratio: 16/9; background: #000; }
+.pm-video figcaption { color: #f2bccb; font: 500 12.5px var(--font-mono); padding: 8px 16px; }
+.pm-text { padding: 20px clamp(16px, 4vw, 36px) 32px; display: flex; flex-direction: column; gap: 10px; }
+.pm-text h2 { font-size: clamp(26px, 4vw, 36px); }
+.pm-text h3 { font: 600 13px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--red); margin: 14px 0 2px; }
+.pm-summary { font-size: 17px; color: var(--ink-2); margin: 0; }
+.pm-text .did { margin: 0; padding-left: 18px; color: var(--ink-2); }
+.pm-text .did li { margin: 4px 0; }
+.pm-links { margin-top: 12px; }
+
+/* ===================== Canva art + travel pop-ups ===================== */
+.canva-card { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+.canva-frame {
+  position: relative; width: 100%; padding-top: 56.25%; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--card);
+}
+.canva-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.map-pop {
+  position: absolute; z-index: 5; width: 300px; background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(59,10,26,.25); padding: 12px; opacity: 0; pointer-events: none; transform: scale(.94);
+  transition: opacity .15s, transform .2s cubic-bezier(.3,1.4,.5,1); border-top: 4px solid var(--red);
+}
+.map-pop.show { opacity: 1; pointer-events: auto; transform: none; }
+.pop-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.pop-head b { font: 700 17px var(--font-head); }
+.pop-head span { font: 500 12px var(--font-mono); color: var(--ink-3); }
+.pop-photos { display: grid; gap: 4px; border-radius: 10px; overflow: hidden; grid-template-columns: 1fr 1fr; }
+.pop-photos.n1 { grid-template-columns: 1fr; }
+.pop-photos.n3 button:first-child { grid-row: span 2; aspect-ratio: auto; }
+.pop-photos button { all: unset; cursor: zoom-in; display: block; aspect-ratio: 4/3; overflow: hidden; }
+.pop-photos.n1 button { aspect-ratio: 16/10; }
+.pop-photos img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+.pop-photos button:hover img { transform: scale(1.06); }
+.pop-empty { border: 2px dashed var(--line); border-radius: 10px; padding: 22px; text-align: center; color: var(--ink-3); font-size: 14px; }
+.pop-note { margin: 8px 0 0; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+.pop-more { all: unset; cursor: pointer; margin-top: 8px; font: 600 13px var(--font-body); color: var(--red); }
+.map-count { position: absolute; left: 16px; bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; color: var(--ink-2); }
+.map-count b { color: var(--red); font-family: var(--font-head); font-size: 16px; }

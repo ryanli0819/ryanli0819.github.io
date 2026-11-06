@@ -8,3 +8,7 @@ content/projects/
 # Local tooling / OS junk
 .claude/
 .DS_Store
+
+# Per-project GitHub repos are generated here and pushed separately
+project-repos/
+tools/projects.json

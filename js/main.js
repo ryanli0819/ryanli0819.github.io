@@ -48,10 +48,9 @@
     const awardish = /award|1st|2nd|published/i.test(p.badge);
     const badgeCls = /soon/i.test(p.badge) ? "soon" : awardish ? "award" : "";
     const linkList = [...p.links];
-    if (p.code && P.github) linkList.push({ label: "Code on my GitHub", url: P.github, gh: true });
-    const links = linkList.length
-      ? linkList.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="${l.gh ? "gh-link" : ""}">${esc(l.label)} ↗</a>`).join("")
-      : `<span class="nolink">Link coming soon</span>`;
+    if (p.repo) linkList.push({ label: "GitHub repo", url: p.repo, gh: true });
+    const linkHtml = (list) => list.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="${l.gh ? "gh-link" : ""}">${esc(l.label)} ↗</a>`).join("");
+    const links = linkList.length ? linkHtml(linkList) : `<span class="nolink">Link coming soon</span>`;
     const metrics = p.metrics.length
       ? `<div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>` : "";
     const video = p.video
@@ -73,13 +72,10 @@
       <ul class="tags">${p.skills.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
       <div class="project-links">${links}</div>`;
     const more = `
-      <details class="more">
-        <summary><span class="chev">▸</span> More info${needCount ? `<span class="need">${needCount} to add</span>` : ""}</summary>
-        <div class="more-body">
-          ${p.details.length ? `<ul class="did">${p.details.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : `<p style="margin:0;color:var(--ink-3)">More details on the way.</p>`}
-          ${dropbox(p.missing, `Edit project <code>${esc(p.id)}</code> in <code>js/data.js</code>.`)}
-        </div>
-      </details>`;
+      <div class="card-actions">
+        <button class="btn primary sm" data-open="${esc(p.id)}">▶ Demo &amp; details</button>
+        ${needCount ? `<span class="need">${needCount} to add</span>` : ""}
+      </div>`;
     const body = p.featured
       ? `<div class="featured-body"><div>${main}</div><div class="media-col">${media}</div></div>`
       : media + main;
@@ -88,6 +84,35 @@
   }
   $("#projectList").innerHTML = S.projects.map(projectCard).join("");
   if (window.renderViz) window.renderViz();
+
+  /* ---------- Project modal: demo video + full description + skills ---------- */
+  const modal = $("#projModal");
+  function openProject(id) {
+    const p = S.projects.find(x => x.id === id); if (!p) return;
+    const linkList = [...p.links]; if (p.repo) linkList.push({ label: "GitHub repo (code, README, video)", url: p.repo, gh: true });
+    $("#pmBody").innerHTML = `
+      ${p.demo ? `<figure class="pm-video"><video src="${esc(p.demo)}" controls autoplay muted playsinline preload="metadata"></video>
+        <figcaption>${p.demoKind === "real" ? "🎥 Real demo: my model running on game footage" : "🎬 Explainer animation of how the project works (not real project footage)"}</figcaption></figure>` : ""}
+      <div class="pm-text">
+        <div class="project-top"><span class="project-icon" aria-hidden="true">${p.icon}</span><span class="badge">${esc(p.badge)}</span></div>
+        <h2 id="pmTitle">${esc(p.title)}</h2>
+        <p class="when">${esc(p.when)}</p>
+        <p class="pm-summary">${esc(p.summary)}</p>
+        ${p.details.length ? `<h3>What I did</h3><ul class="did">${p.details.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : ""}
+        <h3>Skills used</h3><ul class="tags">${p.skills.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+        ${p.metrics.length ? `<h3>Results</h3><div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>` : ""}
+        ${p.citation ? `<h3>Citation</h3><p class="cite">${p.citation}</p>` : ""}
+        <div class="project-links pm-links">${linkList.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="${l.gh ? "gh-link" : ""}">${esc(l.label)} ↗</a>`).join("")}</div>
+        ${dropbox(p.missing, `Edit project <code>${esc(p.id)}</code> in <code>js/data.js</code>.`)}
+      </div>`;
+    modal.showModal();
+    history.replaceState(null, "", "#project-" + p.id);
+  }
+  $("#projectList").addEventListener("click", (e) => { const b = e.target.closest("[data-open]"); if (b) openProject(b.dataset.open); });
+  $("#pmClose").onclick = () => modal.close();
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
+  modal.addEventListener("close", () => { $("#pmBody").innerHTML = ""; history.replaceState(null, "", location.pathname + "#projects"); });
+  if (location.hash.startsWith("#project-")) openProject(location.hash.slice(9));
 
   // filters
   $("#filters").addEventListener("click", (e) => {
@@ -151,7 +176,7 @@
     } catch { /* not added yet */ }
     const el = $("#gallery");
     if (!pieces.length) {
-      if (!window.SHOW_MISSING_INFO) { el.hidden = true; $("#artHead").hidden = true; return; }
+      if (!window.SHOW_MISSING_INFO) { el.hidden = true; return; }
       el.classList.add("is-empty");
       el.innerHTML = `<div class="empty-art">
           <div class="frame">🖼️</div><div class="frame">✏️</div><div class="frame">🎨</div>
@@ -174,7 +199,7 @@
   })();
 
   window.addEventListener("travel-loaded", (e) => {
-    if (e.detail.count) return;
+    if (e.detail.count) { const mc = $("#mapCount"); mc.hidden = false; mc.innerHTML = `<b>${e.detail.count}</b> countries and counting ✈️`; return; }
     $("#mapSub").textContent = "Hover around the world. Travel pins are on the way.";
     $("#travelEmpty").innerHTML = dropbox(["List of countries you've visited", "Photos for each country (content/travel/photos/<country>/)"],
       "Copy <code>content/travel/countries-template.json</code> → <code>countries.json</code>. Each country you add lights up on the map.");

@@ -88,7 +88,7 @@
       <div class="section-head">
         <span class="section-num">02</span>
         <h2>Projects</h2>
-        <p class="section-sub">High school through college. Play with the visuals, open <b>More info</b> for the story, and find the code on <a href="https://github.com/ryanli0819" target="_blank" rel="noopener">my GitHub</a>.</p>
+        <p class="section-sub">High school through college. Play with the visuals, hit <b>▶ Demo &amp; details</b> for the video and full story, and find the code on <a href="https://github.com/ryanli0819" target="_blank" rel="noopener">my GitHub</a>.</p>
       </div>
       <div class="filters" role="group" aria-label="Filter projects" id="filters">
         <button class="chip active" data-filter="all">All</button>
@@ -130,17 +130,26 @@
 
       <div class="sub-head" id="artHead">
         <h3>🎨 Art portfolio</h3>
-        <p>Things I've made.</p>
+        <p>Things I've made. Flip through it right here.</p>
+      </div>
+      <div class="canva-card">
+        <div class="canva-frame">
+          <iframe loading="lazy" title="Ryan Li art portfolio (Canva)" allow="fullscreen" allowfullscreen
+            src="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view?embed"></iframe>
+        </div>
+        <a class="btn ghost sm" href="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view" target="_blank" rel="noopener">Open full portfolio in Canva ↗</a>
       </div>
       <div class="gallery" id="gallery"></div>
 
       <div class="sub-head">
         <h3>🌍 Where I've been</h3>
-        <p id="mapSub">Click a highlighted country to see photos from that trip.</p>
+        <p id="mapSub">Hover over a highlighted country to peek at photos and stories from that trip.</p>
       </div>
       <div class="map-card">
         <div class="map" id="map"><p class="map-loading">Loading the world…</p></div>
         <div class="map-tip" id="mapTip" role="status" aria-live="polite"></div>
+        <div class="map-pop" id="mapPop"></div>
+        <div class="map-count" id="mapCount" hidden></div>
       </div>
       <div id="travelEmpty"></div>
     </section>
@@ -172,6 +181,12 @@
       <figcaption id="lbCap"></figcaption>
     </figure>
     <button class="lb-nav next" id="lbNext" aria-label="Next photo">›</button>
+  </dialog>
+
+  <!-- Project details modal -->
+  <dialog class="pm" id="projModal" aria-labelledby="pmTitle">
+    <button class="pm-close" id="pmClose" aria-label="Close">✕</button>
+    <div id="pmBody"></div>
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

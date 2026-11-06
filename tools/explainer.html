@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Explainer Renderer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #fff3f6; font: 14px Inter, sans-serif; color: #3b0a1a; padding: 16px; }
+  canvas { width: 640px; height: 360px; border: 1px solid #f6cdd8; display: block; margin-bottom: 8px; }
+  #log { font: 12px "JetBrains Mono", monospace; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<!-- Renders a 15-second explainer video per project and saves it via tools/upload_server.py.
+     Open http://localhost:5174/tools/explainer.html and call renderAll() (or ?auto=1). -->
+<canvas id="c" width="1280" height="720"></canvas>
+<div id="log"></div>
+<script src="../js/data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
+<script>
+const C = { bg: "#fff3f6", bg2: "#ffe3ea", card: "#ffffff", ink: "#3b0a1a", ink2: "#6e2c40", ink3: "#a1657a", line: "#f6cdd8",
+            red: "#e11d48", rose: "#c2185b", gold: "#f5b800", orange: "#f97316", dark: "#1d0b12" };
+const W = 1280, H = 720, FPS = 30, DUR = 15;
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const log = (m) => document.getElementById("log").textContent += m + "\n";
+const ease = (x) => x < 0 ? 0 : x > 1 ? 1 : 1 - Math.pow(1 - x, 3);
+const clamp = (x) => Math.max(0, Math.min(1, x));
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function rr(x, y, w, h, r, fill, stroke) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke(); } }
+function text(s, x, y, size, color, weight = 600, font = "Inter", align = "left") { ctx.font = `${weight} ${size}px "${font}"`; ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(s, x, y); }
+function wrap(s, x, y, maxW, size, color, lh = 1.3, weight = 700, font = "Space Grotesk") {
+  ctx.font = `${weight} ${size}px "${font}"`; const words = s.split(" "); let line = "", yy = y;
+  for (const w of words) { const t = line ? line + " " + w : w; if (ctx.measureText(t).width > maxW && line) { text(line, x, yy, size, color, weight, font); line = w; yy += size * lh; } else line = t; }
+  text(line, x, yy, size, color, weight, font); return yy;
+}
+function bg() {
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "rgba(225,29,72,.07)"; for (let x = 12; x < W; x += 28) for (let y = 12; y < H; y += 28) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, 6.3); ctx.fill(); }
+  const g = ctx.createRadialGradient(1100, 0, 10, 1100, 0, 600); g.addColorStop(0, "rgba(245,184,0,.18)"); g.addColorStop(1, "rgba(245,184,0,0)"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function hbar(x, y, w, label, val, max, shown, fmt) {
+  text(label, x, y + 20, 22, C.ink2, 500);
+  rr(x + 300, y, w - 400, 28, 14, C.card, C.line);
+  const ww = Math.max(0.001, (w - 400) * (val / max) * shown);
+  const g = ctx.createLinearGradient(x + 300, 0, x + w - 100, 0); g.addColorStop(0, C.red); g.addColorStop(1, C.gold);
+  rr(x + 300, y, ww, 28, 14, g);
+  text(fmt(val * shown), x + w - 10, y + 22, 24, C.ink, 700, "Space Grotesk", "right");
+}
+
+/* ---------------- per-project "how it works" scenes (t: 0..1) ---------------- */
+const SCENES = {
+  asabc(t) {
+    const msgs = [["well played", "pos"], ["666", "pos"], ["This is stupid", "neg"], ["Nice try!", "pos"], ["🤡🤡🤡", "neg"], ["2333", "pos"], ["Double Kill!", "oops"], ["WP", "pos"], ["FGNB", "pos"], ["GG", "pos"], ["so boring", "neg"], ["Nice try! 👏", "pos"]];
+    rr(80, 150, 620, 330, 18, C.dark);
+    text("Live-stream bullet chat (examples from the paper)", 100, 140, 20, C.ink3, 600, "JetBrains Mono");
+    ctx.save(); ctx.beginPath(); ctx.roundRect(80, 150, 620, 330, 18); ctx.clip();
+    msgs.forEach(([m, k], j) => {
+      const start = j * 0.075, p = (t - start) / 0.4; if (p < 0 || p > 1.2) return;
+      const x = 720 - p * 820, y = 200 + (j % 5) * 60;
+      const judged = x < 420;
+      ctx.font = `600 26px Inter`; const tw = ctx.measureText(m).width;
+      if (judged) rr(x - 10, y - 30, tw + 20, 42, 8, null, k === "pos" ? C.gold : k === "neg" ? "#ff4d6d" : C.orange);
+      text(m, x, y, 26, "#fff");
+      if (judged) text(k === "pos" ? "✓ positive" : k === "neg" ? "✕ negative" : "⚠ corner case", x + tw + 18, y, 16, k === "pos" ? C.gold : k === "neg" ? "#ff4d6d" : C.orange, 600, "JetBrains Mono");
+    });
+    ctx.restore();
+    ctx.strokeStyle = C.red; ctx.setLineDash([8, 8]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(430, 160); ctx.lineTo(430, 470); ctx.stroke(); ctx.setLineDash([]);
+    text("🤖 LLM filter", 440, 180, 18, "#ffd23f", 700, "JetBrains Mono");
+    rr(740, 150, 460, 330, 18, C.card, C.line);
+    text("Accuracy on unseen chat", 765, 195, 24, C.ink, 700, "Space Grotesk");
+    const sets = [["Same room", 83.5], ["Same room, later", 77.4], ["Other rooms", 75.9], ["Other games", 77.3], ["Food / shopping", 76.2]];
+    sets.forEach(([k, v], i) => {
+      const s = ease((t - .25 - i * .08) / .3), y = 225 + i * 48;
+      text(k, 765, y + 22, 18, C.ink2, 500); rr(940, y + 4, 180, 22, 11, C.bg2);
+      const g = ctx.createLinearGradient(940, 0, 1120, 0); g.addColorStop(0, C.red); g.addColorStop(1, C.gold);
+      rr(940, y + 4, Math.max(.001, 180 * v / 100 * s), 22, 11, g);
+      text((v * s).toFixed(1) + "%", 1180, y + 22, 18, C.ink, 700, "Space Grotesk", "right");
+    });
+    text("Trained on 1 hour of chat · tested on 185k+ messages", 640, 540, 26, C.ink, 700, "Space Grotesk", "center");
+  },
+  aviation(t) {
+    const r = rng(7), N = 160, x0 = 120, x1 = 1160, yb = 520, hh = 300;
+    const alt = (u) => u < .25 ? Math.sin((u / .25) * Math.PI / 2) : u < .7 ? 1 + Math.sin(u * 40) * .015 : Math.cos(((u - .7) / .3) * Math.PI / 2);
+    const X = (i) => x0 + (i / (N - 1)) * (x1 - x0), Y = (v) => yb - v * hh;
+    const spikes = [40, 81, 127];
+    rr(80, 150, 1120, 430, 18, C.card, C.line);
+    const rawA = t < .55 ? 1 : 1 - .8 * ease((t - .55) / .2);
+    ctx.globalAlpha = rawA; ctx.strokeStyle = C.ink3; ctx.lineWidth = 2; ctx.beginPath();
+    let gap = true;
+    for (let i = 0; i < N; i++) {
+      const u = i / (N - 1); let v = alt(u) + (r() - .5) * .14; if (spikes.includes(i)) v += i % 2 ? .45 : -.4;
+      if ((i > 58 && i < 70) || (i > 105 && i < 112)) { gap = true; continue; }
+      if (i / N > ease(t / .3)) break;
+      gap ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v)); gap = false;
+    }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    if (t > .3 && t < .75) spikes.forEach(i => { ctx.strokeStyle = C.gold; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(X(i), Y(alt(i / (N - 1))), 26 + Math.sin(t * 40) * 3, 0, 6.3); ctx.stroke(); });
+    if (t > .55) {
+      const p = ease((t - .55) / .35); ctx.strokeStyle = C.red; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.beginPath();
+      for (let i = 0; i < N * p; i++) { const u = i / (N - 1); i ? ctx.lineTo(X(i), Y(alt(u))) : ctx.moveTo(X(i), Y(alt(u))); } ctx.stroke();
+    }
+    text("altitude", 100, 180, 18, C.ink3, 500, "JetBrains Mono"); text("time →", 1100, 565, 18, C.ink3, 500, "JetBrains Mono");
+    const cap = t < .3 ? "1 · Raw flight-simulator export: noisy, with spikes and dropped frames" : t < .55 ? "2 · Detect sensor spikes and gaps" : "3 · Clean, validated series ready for machine learning";
+    text(cap, 640, 625, 26, C.ink, 700, "Space Grotesk", "center");
+  },
+  datamine(t) {
+    const sql = "SELECT region, COUNT(*)\nFROM trips\nGROUP BY region;";
+    rr(80, 160, 560, 360, 18, C.dark);
+    const n = Math.floor(sql.length * clamp(t / .45));
+    sql.slice(0, n).split("\n").forEach((l, i) => text(l, 120, 240 + i * 52, 30, "#ffd23f", 500, "JetBrains Mono"));
+    if (t < .45 && Math.floor(t * 30) % 2) text("▍", 120 + 0, 400, 30, "#ff4d6d", 500, "JetBrains Mono");
+    rr(680, 160, 520, 360, 18, C.card, C.line);
+    text("Result", 710, 210, 26, C.ink, 700, "Space Grotesk");
+    [["North", 42], ["East", 35], ["South", 28], ["West", 19]].forEach(([k, v], i) => {
+      const s = ease((t - .5 - i * .06) / .25), y = 250 + i * 62;
+      text(k, 710, y + 24, 22, C.ink2, 500); rr(820, y, 300, 30, 15, C.bg2);
+      const g = ctx.createLinearGradient(820, 0, 1120, 0); g.addColorStop(0, C.red); g.addColorStop(1, C.gold);
+      rr(820, y, Math.max(.001, 300 * v / 42 * s), 30, 15, g); text(String(Math.round(v * s)), 1170, y + 24, 24, C.ink, 700, "Space Grotesk", "right");
+    });
+    text("Real-world datasets → SQL → answers", 640, 590, 28, C.ink, 700, "Space Grotesk", "center");
+  },
+  kaggle(t) {
+    rr(80, 150, 1120, 410, 18, C.card, C.line);
+    text("Who survived the Titanic? (real Kaggle training data)", 120, 200, 26, C.ink, 700, "Space Grotesk");
+    const rows = [["Female", 74.2], ["Male", 18.9], ["1st class", 63.0], ["2nd class", 47.3], ["3rd class", 24.2]];
+    rows.forEach(([k, v], i) => hbar(120, 230 + i * 60 + (i > 1 ? 20 : 0), 1040, k, v, 100, ease((t - i * .08) / .35), (x) => x.toFixed(1) + "%"));
+    const p = ease((t - .7) / .2);
+    if (p > 0) { ctx.globalAlpha = p; rr(330, 590, 620, 64, 32, C.red); text("🏆 My model: 100% public leaderboard · tied 1st of 2,000+", 640, 632, 24, "#fff", 700, "Inter", "center"); ctx.globalAlpha = 1; }
+  },
+  drowning(t) {
+    const px = 140, py = 160, pw = 1000, ph = 380;
+    rr(px, py, pw, ph, 18, "#cdeff5", C.line);
+    ctx.strokeStyle = C.red; ctx.setLineDash([12, 12]); ctx.lineWidth = 3;
+    for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(px, py + ph / 5 * i); ctx.lineTo(px + pw, py + ph / 5 * i); ctx.stroke(); }
+    ctx.setLineDash([]);
+    for (let i = 0; i < 5; i++) {
+      const victim = i === 2, stopT = .3, tt = victim ? Math.min(t, stopT) : t;
+      const ph0 = i * 1.3, u = (Math.sin(tt * 7 * (1 + i * .15) + ph0) + 1) / 2;
+      const x = px + 60 + u * (pw - 120), y = py + ph / 5 * (i + .5) + (victim && t > stopT ? Math.sin(t * 60) * 2 : 0);
+      const flagged = victim && t > .5;
+      ctx.fillStyle = flagged ? C.red : C.ink; ctx.beginPath(); ctx.arc(x, y, 13, 0, 6.3); ctx.fill();
+      const pad = flagged ? 34 + Math.sin(t * 50) * 5 : 26;
+      ctx.strokeStyle = flagged ? C.red : C.gold; ctx.lineWidth = 4; ctx.strokeRect(x - pad, y - pad, pad * 2, pad * 2);
+      if (!flagged) text(victim && t > stopT ? "still…" : "swimming", x, y - pad - 8, 16, C.ink2, 600, "JetBrains Mono", "center");
+    }
+    if (t > .5) { rr(390, 100, 500, 50, 25, C.red); text("⚠ No movement detected → alert lifeguard", 640, 133, 22, "#fff", 700, "Inter", "center"); }
+    const cap = t < .3 ? "1 · Camera tracks every swimmer" : t < .5 ? "2 · One swimmer stops moving" : "3 · AI raises an alert in seconds";
+    text(cap, 640, 600, 28, C.ink, 700, "Space Grotesk", "center");
+  },
+  ventrix(t) {
+    rr(80, 150, 1120, 420, 18, C.card, C.line);
+    const r = rng(3), days = 14, bw = 1000 / days, yb = 520;
+    const exp = Array.from({ length: days }, (_, i) => 60 - i * 1.6), cnt = exp.map((e, i) => i === 9 ? e - 12 : e + (r() - .5) * 2);
+    const Y = (v) => yb - v * 4.6;
+    cnt.forEach((v, i) => {
+      const s = ease((t - i * .03) / .3);
+      rr(140 + i * bw + 8, Y(v * s), bw - 16, (yb - Y(v)) * s, 6, i === 9 && t > .6 ? C.gold : "rgba(225,29,72,.55)");
+    });
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath();
+    exp.forEach((e, i) => { const x = 140 + i * bw + bw / 2; i ? ctx.lineTo(x, Y(e)) : ctx.moveTo(x, Y(e)); }); ctx.stroke(); ctx.setLineDash([]);
+    text("Daily AC unit count vs expected stock", 120, 195, 26, C.ink, 700, "Space Grotesk");
+    if (t > .6) text("⚠ −12 units: recount & restock", 140 + 9 * bw + bw / 2, Y(cnt[9]) - 50, 24, "#9a6b00", 700, "Inter", "center");
+    text("Exploratory data analysis catches discrepancies before they cost money", 640, 620, 26, C.ink, 700, "Space Grotesk", "center");
+  },
+  vo(t) {
+    rr(80, 150, 1120, 420, 18, C.card, C.line);
+    const r = rng(11), pts = Array.from({ length: 140 }, () => [100 + r() * 1080, 170 + r() * 380]);
+    const path = (u, off) => [140 + u * 1000, 470 - Math.sin(u * 5.2) * 120 - u * 80 + off * Math.sin(u * 9) * 14];
+    const u = ease(t / .9), [cx, cy] = path(u, 1);
+    pts.forEach(([x, y]) => { const near = Math.hypot(x - cx, y - cy) < 120; ctx.fillStyle = near ? C.gold : C.ink3; ctx.beginPath(); ctx.arc(x, y, near ? 5 : 3, 0, 6.3); ctx.fill(); });
+    ctx.strokeStyle = C.ink3; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath();
+    for (let i = 0; i <= 100; i++) { const [x, y] = path(i / 100, 0); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = C.red; ctx.lineWidth = 6; ctx.lineCap = "round"; ctx.beginPath();
+    for (let i = 0; i <= 100 * u; i++) { const [x, y] = path(i / 100, 1); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+    const [nx, ny] = path(Math.min(1, u + .01), 1), a = Math.atan2(ny - cy, nx - cx);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(a); ctx.fillStyle = C.gold; ctx.strokeStyle = C.ink; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(22, 0); ctx.lineTo(-16, -15); ctx.lineTo(-16, 15); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+    text("— estimated path    - - true path    ● tracked features", 120, 195, 20, C.ink2, 600, "JetBrains Mono");
+    text("Track features frame to frame → estimate how the camera moved", 640, 620, 26, C.ink, 700, "Space Grotesk", "center");
+  }
+};
+
+const FOOT = { asabc: "Explainer animation · results from the IEEE AIxHeart 2024 paper", kaggle: "Explainer animation · chart uses real Kaggle Titanic data" };
+
+function drawFrame(p, sec) {
+  bg();
+  const fade = (a, b) => clamp((sec - a) / .5) * clamp((b - sec) / .5);
+  // Scene 1: title (0-3s)
+  let a = fade(-1, 3);
+  if (a > 0) {
+    ctx.globalAlpha = a;
+    text(p.icon, 120, 230, 90, C.ink, 400, "Inter");
+    ctx.font = `600 22px "JetBrains Mono"`; const bw = ctx.measureText(p.badge).width + 36;
+    rr(120, 280, bw, 44, 22, "#fde68a"); text(p.badge, 138, 310, 22, "#7a4a00", 600, "JetBrains Mono");
+    const yy = wrap(p.title, 120, 410, 1040, 64, C.ink);
+    text(p.when, 120, yy + 60, 28, C.ink3, 500);
+    ctx.globalAlpha = 1;
+  }
+  // Scene 2: how it works (3-10s)
+  a = fade(3, 10);
+  if (a > 0) {
+    ctx.globalAlpha = a;
+    text("How it works", 80, 100, 40, C.ink, 700, "Space Grotesk");
+    rr(80, 112, 90, 6, 3, C.red);
+    SCENES[p.id](clamp((sec - 3.2) / 6.3));
+    ctx.globalAlpha = 1;
+  }
+  // Scene 3: skills + results (10-13s)
+  a = fade(10, 13);
+  if (a > 0) {
+    ctx.globalAlpha = a;
+    text("Skills used", 120, 160, 48, C.ink, 700, "Space Grotesk"); rr(120, 175, 110, 7, 3, C.red);
+    let x = 120, y = 230;
+    p.skills.forEach((s, i) => {
+      const k = ease((sec - 10.2 - i * .15) / .3); ctx.font = `600 28px Inter`; const w = ctx.measureText(s).width + 44;
+      if (x + w > 1160) { x = 120; y += 74; }
+      ctx.globalAlpha = a * k; rr(x, y, w, 56, 28, i % 2 ? "#fde68a" : "#ffd5df"); text(s, x + 22, y + 38, 28, C.ink, 600); x += w + 16;
+    });
+    ctx.globalAlpha = a;
+    if (p.metrics.length) {
+      text("Results", 120, y + 140, 32, C.ink3, 600, "Inter");
+      p.metrics.forEach((m, i) => { text(m.value, 120 + i * 300, y + 220, 64, C.red, 700, "Space Grotesk"); text(m.label, 120 + i * 300, y + 258, 24, C.ink2, 500); });
+    }
+    ctx.globalAlpha = 1;
+  }
+  // Scene 4: end card (13-15s)
+  a = fade(13, 16);
+  if (a > 0) {
+    ctx.globalAlpha = a;
+    text("Ryan Li", 640, 320, 96, C.ink, 700, "Space Grotesk", "center");
+    text("ryanli0819.github.io", 640, 400, 34, C.red, 600, "Inter", "center");
+    text("github.com/ryanli0819", 640, 450, 28, C.ink2, 500, "Inter", "center");
+    ctx.globalAlpha = 1;
+  }
+  text(FOOT[p.id] || "Explainer animation · not real project footage", 40, 694, 18, C.ink3, 500, "JetBrains Mono");
+}
+
+async function render(p) {
+  const target = new Mp4Muxer.ArrayBufferTarget();
+  const muxer = new Mp4Muxer.Muxer({ target, video: { codec: "avc", width: W, height: H }, fastStart: "in-memory" });
+  const enc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: (e) => log("ERR " + e) });
+  enc.configure({ codec: "avc1.42001f", width: W, height: H, bitrate: 1_800_000, framerate: FPS });
+  for (let i = 0; i < FPS * DUR; i++) {
+    drawFrame(p, i / FPS);
+    const f = new VideoFrame(cv, { timestamp: Math.round(i * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
+    enc.encode(f, { keyFrame: i % (FPS * 2) === 0 }); f.close();
+    while (enc.encodeQueueSize > 8) await new Promise(r => setTimeout(r, 5));
+  }
+  await enc.flush(); muxer.finalize();
+  const res = await fetch(`/save?name=${p.id}-explainer.mp4`, { method: "POST", body: target.buffer });
+  log(await res.text());
+}
+
+async function renderAll() {
+  await document.fonts.ready;
+  for (const p of SITE.projects.filter(p => SCENES[p.id])) { log("rendering " + p.id + "…"); await render(p); }
+  log("DONE");
+  return "done";
+}
+window.preview = (id, sec) => drawFrame(SITE.projects.find(p => p.id === id), sec);
+document.fonts.load('700 20px "Space Grotesk"').then(() => preview("asabc", 6));
+</script>
+</body>
+</html>

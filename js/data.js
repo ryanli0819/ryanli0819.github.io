@@ -55,6 +55,9 @@ window.SITE = {
   projects: [
     {
       id: "asabc",
+      repo: "https://github.com/ryanli0819/asabc-bullet-chat-sentiment",
+      demo: "assets/video/asabc-explainer.mp4",
+      demoKind: "explainer",
       featured: true,
       title: "ASABC: an LLM arbitrator for bullet-chat sentiment",
       badge: "Published · IEEE AIxHeart 2024",
@@ -82,6 +85,9 @@ window.SITE = {
     },
     {
       id: "hockey-cv",
+      repo: "https://github.com/ryanli0819/hockey-jersey-player-recognition",
+      demo: "assets/video/hockey-demo.mp4",
+      demoKind: "real",
       code: true,
       featured: true,
       title: "Jersey & player-role recognition",
@@ -109,6 +115,9 @@ window.SITE = {
     },
     {
       id: "aviation",
+      repo: "https://github.com/ryanli0819/flight-sim-data-preprocessing",
+      demo: "assets/video/aviation-explainer.mp4",
+      demoKind: "explainer",
       title: "Aviation flight-data preprocessing",
       badge: "Ongoing",
       era: "college",
@@ -131,6 +140,9 @@ window.SITE = {
     },
     {
       id: "datamine",
+      repo: "https://github.com/ryanli0819/purdue-data-mine",
+      demo: "assets/video/datamine-explainer.mp4",
+      demoKind: "explainer",
       title: "The Data Mine",
       badge: "Learning community",
       era: "college",
@@ -152,6 +164,9 @@ window.SITE = {
     },
     {
       id: "kaggle",
+      repo: "https://github.com/ryanli0819/kaggle-titanic",
+      demo: "assets/video/kaggle-explainer.mp4",
+      demoKind: "explainer",
       code: true,
       title: "Kaggle Titanic: Machine Learning from Disaster",
       badge: "Tied 1st of 2,000+",
@@ -173,6 +188,9 @@ window.SITE = {
     },
     {
       id: "drowning",
+      repo: "https://github.com/ryanli0819/ai-drowning-detection-pitch",
+      demo: "assets/video/drowning-explainer.mp4",
+      demoKind: "explainer",
       title: "AI camera for drowning detection (startup pitch)",
       badge: "2nd in state",
       era: "hs",
@@ -194,6 +212,9 @@ window.SITE = {
     },
     {
       id: "ventrix",
+      repo: "https://github.com/ryanli0819/ventrix-inventory-analysis",
+      demo: "assets/video/ventrix-explainer.mp4",
+      demoKind: "explainer",
       title: "Storage management intern, Ventrix Supply",
       badge: "Real-world data work",
       era: "work",
@@ -214,6 +235,9 @@ window.SITE = {
     },
     {
       id: "vo",
+      repo: "https://github.com/ryanli0819/visual-odometry",
+      demo: "assets/video/vo-explainer.mp4",
+      demoKind: "explainer",
       code: true,
       title: "Visual odometry",
       badge: "Details coming soon",
