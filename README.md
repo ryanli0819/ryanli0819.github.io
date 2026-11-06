@@ -37,8 +37,10 @@ Each project's `missing` list renders as a dashed "📥 Info needed" box inside 
 delete items as you fill them in. Set `SHOW_MISSING_INFO = false` to hide all of those boxes before going public.
 
 **Art:** add images to `content/art/images/`, copy `captions-template.json` → `captions.json`, fill it in.
-**Travel map:** copy `content/travel/countries-template.json` → `countries.json`. Countries match by `name`
-(e.g. "United States", "Japan", "China") or `isoNumeric`; add `"home": true` for gold. Photos go in `content/travel/photos/`.
+**Travel map:** put photos in `content/travel/photos/<Country>/` (plus optional `story.txt`, `dates.txt`)
+and run `python3 tools/build_travel.py`. See `content/travel/README.md`.
+**Demo videos:** explainer videos are rendered by `tools/explainer.html` (run `python3 tools/upload_server.py`,
+open http://localhost:5174/tools/explainer.html, call `renderAll()`).
 **Photo:** put a headshot in `assets/img/` and set `person.photo` in `js/data.js`.
 
 **Deploy:** push this folder to a GitHub repo and turn on GitHub Pages (or drag it into Netlify).
