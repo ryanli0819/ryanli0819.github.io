@@ -13,6 +13,13 @@
 
 window.SHOW_MISSING_INFO = false;
 
+/* Visitor analytics (GoatCounter: free, no cookies, privacy-friendly).
+   1. Sign up at https://www.goatcounter.com/signup and pick a code, e.g. "ryanli".
+   2. Put that code below. Your dashboard is then at https://<code>.goatcounter.com
+   3. Optional: in GoatCounter Settings, tick "Allow adding visitor counts on your
+      website" to show the public visitor counter in the footer. */
+window.ANALYTICS = { goatcounter: "" };
+
 window.SITE = {
   person: {
     name: "Ryan Li",
@@ -25,8 +32,8 @@ window.SITE = {
     resume: "assets/resume/Ryan_Li_Resume.pdf",
     photo: null, // e.g. "assets/img/ryan.jpg"
     bio: [
-      "I'm a data analytics student at Purdue who likes turning messy, real-world data into something a model (or a person) can actually use. That has meant everything from co-authoring an IEEE paper on LLM sentiment analysis to teaching a CNN to tell hockey teams apart by their jerseys.",
-      "Off the clock I'm usually on the ice as a left wing, throwing a disc, or helping run cultural events back home in Lexington."
+      "I'm a data analytics student at Purdue who gets weirdly excited about messy data. In high school I co-wrote an IEEE paper that taught a large language model to read live-stream chat (yes, it learned that \"666\" and \"2333\" are good vibes), then built a computer-vision model that tells hockey teams apart by their jerseys, which won a Distinction Award at IEYI China.",
+      "When I'm not wrangling datasets, I'm on the ice as a left wing, throwing a frisbee, making art, or adding another country to my map. The list is getting long, so go hover around it below."
     ],
     missing: [
       "A headshot or photo for this section (drop it in assets/img/ and set person.photo)",

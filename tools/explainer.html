@@ -18,8 +18,8 @@
 <script src="../js/data.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.min.js"></script>
 <script>
-const C = { bg: "#fff3f6", bg2: "#ffe3ea", card: "#ffffff", ink: "#3b0a1a", ink2: "#6e2c40", ink3: "#a1657a", line: "#f6cdd8",
-            red: "#e11d48", rose: "#c2185b", gold: "#f5b800", orange: "#f97316", dark: "#1d0b12" };
+const C = { bg: "#fff5f7", bg2: "#ffe6eb", card: "#ffffff", ink: "#1d2a47", ink2: "#47557a", ink3: "#8691ad", line: "#f8d3db",
+            red: "#e2577c", rose: "#1f86c9", gold: "#89CDFA", pink: "#FEB6C1", orange: "#f59e0b", dark: "#1d2a47" };
 const W = 1280, H = 720, FPS = 30, DUR = 15;
 const cv = document.getElementById("c"), ctx = cv.getContext("2d");
 const log = (m) => document.getElementById("log").textContent += m + "\n";
@@ -35,14 +35,14 @@ function wrap(s, x, y, maxW, size, color, lh = 1.3, weight = 700, font = "Space 
 }
 function bg() {
   ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = "rgba(225,29,72,.07)"; for (let x = 12; x < W; x += 28) for (let y = 12; y < H; y += 28) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, 6.3); ctx.fill(); }
-  const g = ctx.createRadialGradient(1100, 0, 10, 1100, 0, 600); g.addColorStop(0, "rgba(245,184,0,.18)"); g.addColorStop(1, "rgba(245,184,0,0)"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "rgba(137,205,250,.12)"; for (let x = 12; x < W; x += 28) for (let y = 12; y < H; y += 28) { ctx.beginPath(); ctx.arc(x, y, 1.6, 0, 6.3); ctx.fill(); }
+  const g = ctx.createRadialGradient(1100, 0, 10, 1100, 0, 600); g.addColorStop(0, "rgba(137,205,250,.28)"); g.addColorStop(1, "rgba(137,205,250,0)"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 }
 function hbar(x, y, w, label, val, max, shown, fmt) {
   text(label, x, y + 20, 22, C.ink2, 500);
   rr(x + 300, y, w - 400, 28, 14, C.card, C.line);
   const ww = Math.max(0.001, (w - 400) * (val / max) * shown);
-  const g = ctx.createLinearGradient(x + 300, 0, x + w - 100, 0); g.addColorStop(0, C.red); g.addColorStop(1, C.gold);
+  const g = ctx.createLinearGradient(x + 300, 0, x + w - 100, 0); g.addColorStop(0, C.pink); g.addColorStop(1, C.gold);
   rr(x + 300, y, ww, 28, 14, g);
   text(fmt(val * shown), x + w - 10, y + 22, 24, C.ink, 700, "Space Grotesk", "right");
 }
@@ -59,20 +59,20 @@ const SCENES = {
       const x = 720 - p * 820, y = 200 + (j % 5) * 60;
       const judged = x < 420;
       ctx.font = `600 26px Inter`; const tw = ctx.measureText(m).width;
-      if (judged) rr(x - 10, y - 30, tw + 20, 42, 8, null, k === "pos" ? C.gold : k === "neg" ? "#ff4d6d" : C.orange);
+      if (judged) rr(x - 10, y - 30, tw + 20, 42, 8, null, k === "pos" ? C.gold : k === "neg" ? "#FEB6C1" : C.orange);
       text(m, x, y, 26, "#fff");
-      if (judged) text(k === "pos" ? "✓ positive" : k === "neg" ? "✕ negative" : "⚠ corner case", x + tw + 18, y, 16, k === "pos" ? C.gold : k === "neg" ? "#ff4d6d" : C.orange, 600, "JetBrains Mono");
+      if (judged) text(k === "pos" ? "✓ positive" : k === "neg" ? "✕ negative" : "⚠ corner case", x + tw + 18, y, 16, k === "pos" ? C.gold : k === "neg" ? "#FEB6C1" : C.orange, 600, "JetBrains Mono");
     });
     ctx.restore();
     ctx.strokeStyle = C.red; ctx.setLineDash([8, 8]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(430, 160); ctx.lineTo(430, 470); ctx.stroke(); ctx.setLineDash([]);
-    text("🤖 LLM filter", 440, 180, 18, "#ffd23f", 700, "JetBrains Mono");
+    text("🤖 LLM filter", 440, 180, 18, "#89CDFA", 700, "JetBrains Mono");
     rr(740, 150, 460, 330, 18, C.card, C.line);
     text("Accuracy on unseen chat", 765, 195, 24, C.ink, 700, "Space Grotesk");
     const sets = [["Same room", 83.5], ["Same room, later", 77.4], ["Other rooms", 75.9], ["Other games", 77.3], ["Food / shopping", 76.2]];
     sets.forEach(([k, v], i) => {
       const s = ease((t - .25 - i * .08) / .3), y = 225 + i * 48;
       text(k, 765, y + 22, 18, C.ink2, 500); rr(940, y + 4, 180, 22, 11, C.bg2);
-      const g = ctx.createLinearGradient(940, 0, 1120, 0); g.addColorStop(0, C.red); g.addColorStop(1, C.gold);
+      const g = ctx.createLinearGradient(940, 0, 1120, 0); g.addColorStop(0, C.pink); g.addColorStop(1, C.gold);
       rr(940, y + 4, Math.max(.001, 180 * v / 100 * s), 22, 11, g);
       text((v * s).toFixed(1) + "%", 1180, y + 22, 18, C.ink, 700, "Space Grotesk", "right");
     });
@@ -107,14 +107,14 @@ const SCENES = {
     const sql = "SELECT region, COUNT(*)\nFROM trips\nGROUP BY region;";
     rr(80, 160, 560, 360, 18, C.dark);
     const n = Math.floor(sql.length * clamp(t / .45));
-    sql.slice(0, n).split("\n").forEach((l, i) => text(l, 120, 240 + i * 52, 30, "#ffd23f", 500, "JetBrains Mono"));
-    if (t < .45 && Math.floor(t * 30) % 2) text("▍", 120 + 0, 400, 30, "#ff4d6d", 500, "JetBrains Mono");
+    sql.slice(0, n).split("\n").forEach((l, i) => text(l, 120, 240 + i * 52, 30, "#89CDFA", 500, "JetBrains Mono"));
+    if (t < .45 && Math.floor(t * 30) % 2) text("▍", 120 + 0, 400, 30, "#FEB6C1", 500, "JetBrains Mono");
     rr(680, 160, 520, 360, 18, C.card, C.line);
     text("Result", 710, 210, 26, C.ink, 700, "Space Grotesk");
     [["North", 42], ["East", 35], ["South", 28], ["West", 19]].forEach(([k, v], i) => {
       const s = ease((t - .5 - i * .06) / .25), y = 250 + i * 62;
       text(k, 710, y + 24, 22, C.ink2, 500); rr(820, y, 300, 30, 15, C.bg2);
-      const g = ctx.createLinearGradient(820, 0, 1120, 0); g.addColorStop(0, C.red); g.addColorStop(1, C.gold);
+      const g = ctx.createLinearGradient(820, 0, 1120, 0); g.addColorStop(0, C.pink); g.addColorStop(1, C.gold);
       rr(820, y, Math.max(.001, 300 * v / 42 * s), 30, 15, g); text(String(Math.round(v * s)), 1170, y + 24, 24, C.ink, 700, "Space Grotesk", "right");
     });
     text("Real-world datasets → SQL → answers", 640, 590, 28, C.ink, 700, "Space Grotesk", "center");
@@ -129,7 +129,7 @@ const SCENES = {
   },
   drowning(t) {
     const px = 140, py = 160, pw = 1000, ph = 380;
-    rr(px, py, pw, ph, 18, "#cdeff5", C.line);
+    rr(px, py, pw, ph, 18, "#cdeafd", C.line);
     ctx.strokeStyle = C.red; ctx.setLineDash([12, 12]); ctx.lineWidth = 3;
     for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(px, py + ph / 5 * i); ctx.lineTo(px + pw, py + ph / 5 * i); ctx.stroke(); }
     ctx.setLineDash([]);
@@ -154,12 +154,12 @@ const SCENES = {
     const Y = (v) => yb - v * 4.6;
     cnt.forEach((v, i) => {
       const s = ease((t - i * .03) / .3);
-      rr(140 + i * bw + 8, Y(v * s), bw - 16, (yb - Y(v)) * s, 6, i === 9 && t > .6 ? C.gold : "rgba(225,29,72,.55)");
+      rr(140 + i * bw + 8, Y(v * s), bw - 16, (yb - Y(v)) * s, 6, i === 9 && t > .6 ? C.gold : "#FEB6C1");
     });
     ctx.strokeStyle = C.ink; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath();
     exp.forEach((e, i) => { const x = 140 + i * bw + bw / 2; i ? ctx.lineTo(x, Y(e)) : ctx.moveTo(x, Y(e)); }); ctx.stroke(); ctx.setLineDash([]);
     text("Daily AC unit count vs expected stock", 120, 195, 26, C.ink, 700, "Space Grotesk");
-    if (t > .6) text("⚠ −12 units: recount & restock", 140 + 9 * bw + bw / 2, Y(cnt[9]) - 50, 24, "#9a6b00", 700, "Inter", "center");
+    if (t > .6) text("⚠ −12 units: recount & restock", 140 + 9 * bw + bw / 2, Y(cnt[9]) - 50, 24, "#1f86c9", 700, "Inter", "center");
     text("Exploratory data analysis catches discrepancies before they cost money", 640, 620, 26, C.ink, 700, "Space Grotesk", "center");
   },
   vo(t) {
@@ -191,7 +191,7 @@ function drawFrame(p, sec) {
     ctx.globalAlpha = a;
     text(p.icon, 120, 230, 90, C.ink, 400, "Inter");
     ctx.font = `600 22px "JetBrains Mono"`; const bw = ctx.measureText(p.badge).width + 36;
-    rr(120, 280, bw, 44, 22, "#fde68a"); text(p.badge, 138, 310, 22, "#7a4a00", 600, "JetBrains Mono");
+    rr(120, 280, bw, 44, 22, "#d6efff"); text(p.badge, 138, 310, 22, "#1d2a47", 600, "JetBrains Mono");
     const yy = wrap(p.title, 120, 410, 1040, 64, C.ink);
     text(p.when, 120, yy + 60, 28, C.ink3, 500);
     ctx.globalAlpha = 1;
@@ -201,7 +201,7 @@ function drawFrame(p, sec) {
   if (a > 0) {
     ctx.globalAlpha = a;
     text("How it works", 80, 100, 40, C.ink, 700, "Space Grotesk");
-    rr(80, 112, 90, 6, 3, C.red);
+    rr(80, 112, 90, 6, 3, C.pink);
     SCENES[p.id](clamp((sec - 3.2) / 6.3));
     ctx.globalAlpha = 1;
   }
@@ -209,12 +209,12 @@ function drawFrame(p, sec) {
   a = fade(10, 13);
   if (a > 0) {
     ctx.globalAlpha = a;
-    text("Skills used", 120, 160, 48, C.ink, 700, "Space Grotesk"); rr(120, 175, 110, 7, 3, C.red);
+    text("Skills used", 120, 160, 48, C.ink, 700, "Space Grotesk"); rr(120, 175, 110, 7, 3, C.pink);
     let x = 120, y = 230;
     p.skills.forEach((s, i) => {
       const k = ease((sec - 10.2 - i * .15) / .3); ctx.font = `600 28px Inter`; const w = ctx.measureText(s).width + 44;
       if (x + w > 1160) { x = 120; y += 74; }
-      ctx.globalAlpha = a * k; rr(x, y, w, 56, 28, i % 2 ? "#fde68a" : "#ffd5df"); text(s, x + 22, y + 38, 28, C.ink, 600); x += w + 16;
+      ctx.globalAlpha = a * k; rr(x, y, w, 56, 28, i % 2 ? "#d6efff" : "#FEB6C1"); text(s, x + 22, y + 38, 28, C.ink, 600); x += w + 16;
     });
     ctx.globalAlpha = a;
     if (p.metrics.length) {

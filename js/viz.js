@@ -150,7 +150,7 @@
       if (!W) size();
       const t = ((now - t0) / 1000) % 8, victim = swimmers[2], still = t > 3;
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = "#bfe9f2"; ctx.globalAlpha = .55; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
+      ctx.fillStyle = "#89CDFA"; ctx.globalAlpha = .35; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
       ctx.strokeStyle = css("--red"); ctx.setLineDash([6, 6]); ctx.lineWidth = 1.5;
       for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(0, (H / 5) * i); ctx.lineTo(W, (H / 5) * i); ctx.stroke(); }
       ctx.setLineDash([]);

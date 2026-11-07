@@ -41,7 +41,9 @@
         <p class="eyebrow">Hi, I'm</p>
         <h1>Ryan Li<span class="cursor" aria-hidden="true">_</span></h1>
         <p class="tagline">
-          Data analytics @ Purdue. I teach machines to read
+          <span class="wave" aria-hidden="true">👋</span> Purdue data-analytics student, hockey left wing, and part-time
+          translator for confused machines. In high school I helped teach an AI that <b>"666"</b> is a compliment.
+          These days I'm teaching machines to read
           <span class="rotator" id="rotator" aria-live="polite">hockey film</span>.
         </p>
         <div class="hero-cta">
@@ -169,6 +171,7 @@
 
   <footer class="footer">
     <span>© <span id="year"></span> Ryan Li · West Lafayette, IN</span>
+    <span id="visitorCount" hidden></span>
     <span class="egg-hint">psst, try typing <kbd>goal</kbd></span>
   </footer>
 
@@ -195,6 +198,7 @@
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
   <script src="js/viz.js"></script>
   <script src="js/rink.js"></script>
   <script src="js/map.js"></script>

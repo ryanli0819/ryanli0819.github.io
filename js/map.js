@@ -60,6 +60,7 @@
       clearTimeout(hideTimer);
       if (current !== c) {
         current = c;
+        window.dispatchEvent(new CustomEvent("country-hover", { detail: c.name }));
         const photos = (c.photos || []).slice(0, 4);
         pop.innerHTML = `
           <div class="pop-head"><b>📍 ${esc(c.name)}</b>${c.datesVisited ? `<span>${esc(c.datesVisited)}</span>` : ""}</div>
