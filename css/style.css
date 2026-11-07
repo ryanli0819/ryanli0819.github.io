@@ -499,3 +499,77 @@ kbd { font: 600 12px var(--font-mono); background: var(--ice-2); border: 1px sol
 @keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } }
 .tagline b { color: var(--ink); font-weight: 600; }
 .tagline .wave { margin-right: 4px; }
+
+/* Rink cursor: hockey stick whose blade faces the net on the side you're on */
+#rink.stick-left { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Cg%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2233%22%20y1%3D%225.5%22%20x2%3D%2230.5%22%20y2%3D%229%22%20stroke%3D%22%2389CDFA%22%20stroke-width%3D%224.2%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M16%2029%20Q14%2035%209%2035%20L4%2035%20Q2%2035%202.6%2033%20Q3.4%2031.5%206%2031.5%20L12%2031%22%20fill%3D%22%23FEB6C1%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221.6%22%20stroke-linejoin%3D%22round%22/%3E%3Cline%20x1%3D%226%22%20y1%3D%2233.4%22%20x2%3D%2213%22%20y2%3D%2233.2%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%221.6%201.4%22/%3E%3C/g%3E%3C/svg%3E") 4 34, grab; }
+#rink.stick-right { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Cg%20transform%3D%22translate%2840%200%29%20scale%28-1%201%29%22%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2233%22%20y1%3D%225.5%22%20x2%3D%2230.5%22%20y2%3D%229%22%20stroke%3D%22%2389CDFA%22%20stroke-width%3D%224.2%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M16%2029%20Q14%2035%209%2035%20L4%2035%20Q2%2035%202.6%2033%20Q3.4%2031.5%206%2031.5%20L12%2031%22%20fill%3D%22%23FEB6C1%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221.6%22%20stroke-linejoin%3D%22round%22/%3E%3Cline%20x1%3D%226%22%20y1%3D%2233.4%22%20x2%3D%2213%22%20y2%3D%2233.2%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%221.6%201.4%22/%3E%3C/g%3E%3C/svg%3E") 36 34, grab; }
+#rink.stick-left:active, #rink.stick-right:active { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Cg%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2233%22%20y1%3D%225.5%22%20x2%3D%2230.5%22%20y2%3D%229%22%20stroke%3D%22%2389CDFA%22%20stroke-width%3D%224.2%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M16%2029%20Q14%2035%209%2035%20L4%2035%20Q2%2035%202.6%2033%20Q3.4%2031.5%206%2031.5%20L12%2031%22%20fill%3D%22%23FEB6C1%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221.6%22%20stroke-linejoin%3D%22round%22/%3E%3Cline%20x1%3D%226%22%20y1%3D%2233.4%22%20x2%3D%2213%22%20y2%3D%2233.2%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%221.6%201.4%22/%3E%3C/g%3E%3C/svg%3E") 4 34, grabbing; }
+#rink.stick-right:active { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Cg%20transform%3D%22translate%2840%200%29%20scale%28-1%201%29%22%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2235%22%20y1%3D%223%22%20x2%3D%2215%22%20y2%3D%2230%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2233%22%20y1%3D%225.5%22%20x2%3D%2230.5%22%20y2%3D%229%22%20stroke%3D%22%2389CDFA%22%20stroke-width%3D%224.2%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M16%2029%20Q14%2035%209%2035%20L4%2035%20Q2%2035%202.6%2033%20Q3.4%2031.5%206%2031.5%20L12%2031%22%20fill%3D%22%23FEB6C1%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221.6%22%20stroke-linejoin%3D%22round%22/%3E%3Cline%20x1%3D%226%22%20y1%3D%2233.4%22%20x2%3D%2213%22%20y2%3D%2233.2%22%20stroke%3D%22%231d2a47%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%221.6%201.4%22/%3E%3C/g%3E%3C/svg%3E") 36 34, grabbing; }
+
+/* ===================== Ventrix warehouse heat map ===================== */
+.wh-controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.wh-controls .v-toggle { margin: 0; flex-wrap: wrap; }
+.wh-week { display: flex; align-items: center; gap: 8px; font: 600 12.5px var(--font-mono); color: var(--ink-2); }
+.wh-week input { accent-color: #e2577c; width: 140px; }
+.wh-play { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); font-size: 11px; }
+.wh-wall { fill: var(--card); stroke: var(--ink); stroke-width: 3; }
+.wh-room { fill: var(--ice-2); stroke: var(--line); stroke-width: 1.5; }
+.wh-lbl { font: 600 10.5px var(--font-body); fill: var(--ink-2); }
+.wh-sub { font: 500 9px var(--font-mono); fill: var(--ink-3); }
+.wh-row { font: 700 14px var(--font-head); fill: var(--ink-3); }
+.wh-aisle { font: 500 9px var(--font-mono); fill: var(--ink-3); letter-spacing: .1em; }
+.wh-path { fill: none; stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 6 5; opacity: .6; }
+.wh-dock { fill: var(--ink); }
+.wh-cell { cursor: pointer; outline: none; }
+.wh-cell rect { stroke: var(--line); stroke-width: 1.2; transition: fill .5s; }
+.wh-cell text { font: 700 12px var(--font-head); pointer-events: none; transition: fill .3s; }
+.wh-cell .wh-id { font: 500 7.5px var(--font-mono); fill: var(--ink-3) !important; }
+.wh-cell:hover rect, .wh-cell:focus rect, .wh-cell.sel rect { stroke: var(--ink); stroke-width: 2.4; }
+.wh-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; font-size: 13px; color: var(--ink-2); }
+.wh-legend { display: flex; align-items: center; gap: 6px; font: 500 11px var(--font-mono); color: var(--ink-3); }
+.wh-legend i { width: 120px; height: 10px; border-radius: 5px; background: linear-gradient(90deg, #f6faff, #89CDFA 30%, #FEB6C1 62%, #d6406a); border: 1px solid var(--line); }
+.wh-warn { color: #d6406a; font-weight: 600; }
+.wh-tip { margin-top: 10px; font-size: 13px; color: var(--ink-2); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 44px; }
+.wh-tip:not(.show)::before { content: "Hover or tap a bay to see its units and serial-number ranges."; color: var(--ink-3); }
+.wh-tip table { width: 100%; border-collapse: collapse; margin-top: 6px; font: 500 12px var(--font-mono); }
+.wh-tip th { text-align: left; color: var(--ink-3); font-weight: 500; padding: 2px 6px 2px 0; }
+.wh-tip td { padding: 2px 6px 2px 0; border-top: 1px solid var(--line); }
+.wide-main { display: flex; flex-direction: column; gap: 12px; }
+
+/* Fun cards with photos */
+.flip { cursor: pointer; }
+.flip.has-photos .flip-front { background: linear-gradient(180deg, rgba(29,42,71,.05) 30%, rgba(29,42,71,.75)), var(--cover) center / cover; }
+.flip.has-photos .flip-front h4, .flip.has-photos .flip-front small { color: #fff; }
+.photo-count { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,.9); color: #1d2a47; font: 600 12px var(--font-mono); padding: 3px 8px; border-radius: 999px; }
+.flip-back p { margin: 0; }
+.see-photos { margin-top: 12px; align-self: flex-start; border: 0; border-radius: 999px; padding: 6px 12px; background: #89CDFA; color: #1d2a47; font-weight: 600; font-size: 13px; }
+
+/* ===================== Timeline branch ===================== */
+.legend-vine { color: var(--ink-3); }
+.tree-wrap { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.tree-scroll { overflow-x: auto; background: radial-gradient(600px 300px at 20% 0%, rgba(254,182,193,.18), transparent 70%), radial-gradient(600px 300px at 90% 100%, rgba(137,205,250,.18), transparent 70%); }
+#treeSvg { display: block; width: 100%; min-width: 900px; height: auto; }
+#treeSvg .bark { fill: #a98272; }
+#treeSvg .bark-hi { fill: none; stroke: #c9a594; stroke-width: 2; stroke-linecap: round; opacity: .8; }
+#treeSvg .knot { fill: #8a6658; }
+#treeSvg .bud { fill: #89CDFA; }
+#treeSvg .twig { fill: none; stroke: #a98272; stroke-width: 3.2; stroke-linecap: round; }
+#treeSvg .vine { fill: none; stroke-width: 2.6; stroke-linecap: round; opacity: .85; }
+#treeSvg .tick circle { fill: var(--card); stroke: #8a6658; stroke-width: 2; }
+#treeSvg .tick text { font: 700 11.5px var(--font-mono); fill: #8a6658; paint-order: stroke; stroke: var(--card); stroke-width: 4px; }
+#treeSvg .midrib, #treeSvg .stem { fill: none; stroke: #4c7a3c; stroke-width: 1.4; stroke-linecap: round; }
+#treeSvg .hit { fill: transparent; }
+#treeSvg .leaf { cursor: pointer; outline: none; }
+#treeSvg .leaf .shape { transition: transform .25s cubic-bezier(.3,1.6,.5,1); transform-box: fill-box; transform-origin: center; }
+#treeSvg .leaf:hover .shape, #treeSvg .leaf:focus .shape, #treeSvg .leaf.sel .shape { transform: scale(1.6); }
+#treeSvg .leaf.sel .hit { fill: rgba(137,205,250,.18); stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 3 3; }
+#treeSvg .leaf-lbl { font: 600 12.5px var(--font-body); fill: var(--ink); paint-order: stroke; stroke: var(--card); stroke-width: 4px; pointer-events: none; }
+#treeSvg .leaf-g { opacity: 0; transform: scale(.6); transform-box: fill-box; transform-origin: center; }
+#treeSvg.grow .leaf-g { animation: sprout .5s cubic-bezier(.3,1.5,.5,1) forwards; animation-delay: inherit; }
+@keyframes sprout { to { opacity: 1; transform: none; } }
+.tree-card { border-top: 1px solid var(--line); padding: 16px 20px; display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: baseline; border-left: 6px solid var(--k, #89CDFA); }
+.tree-card h3 { grid-column: 1 / -1; font-size: 22px; margin: 4px 0 2px; }
+.tree-card p { grid-column: 1 / -1; margin: 0; color: var(--ink-2); }
+.tc-kind { font: 600 12px var(--font-mono); background: var(--ice-2); padding: 2px 8px; border-radius: 999px; }
+.tc-when { font: 500 13px var(--font-mono); color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { #treeSvg .leaf-g { opacity: 1; transform: none; } }

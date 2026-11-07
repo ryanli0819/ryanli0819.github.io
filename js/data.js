@@ -149,8 +149,6 @@ window.SITE = {
     {
       id: "datamine",
       repo: "https://github.com/ryanli0819/purdue-data-mine",
-      demo: "assets/video/datamine-explainer.mp4",
-      demoKind: "explainer",
       title: "The Data Mine",
       badge: "Learning community",
       era: "college",
@@ -220,6 +218,8 @@ window.SITE = {
     },
     {
       id: "ventrix",
+      featured: true,
+      wideViz: true,
       repo: "https://github.com/ryanli0819/ventrix-inventory-analysis",
       demo: "assets/video/ventrix-explainer.mp4",
       demoKind: "explainer",
@@ -273,23 +273,26 @@ window.SITE = {
      TIMELINE (from the activities list + resume)
      --------------------------------------------------------------- */
   timeline: [
-    { when: "Grade 9", title: "Boston College Sports Management", kind: "learn",
+    // from/to: school year as a number (9 = Grade 9, 12.6 = summer after Grade 12, 13 = first year at Purdue).
+    { from: 9, to: 9, when: "Grade 9", title: "BC Sports Management", short: "BC Sports Mgmt", kind: "learn",
       text: "Two intensive weeks (45 hrs/week) exploring sports business and analytics: marketing, ops and finance with industry professionals." },
-    { when: "Grades 10–12", title: "Varsity Hockey, Assistant Captain", kind: "play",
+    { from: 10, to: 12, when: "Grades 10–12", title: "Varsity Hockey, Assistant Captain", short: "Varsity Hockey", kind: "play",
       text: "Left wing. Training, film study and leading by example. Elected Varsity assistant captain." },
-    { when: "Grades 10–12", title: "Youth Entrepreneurship Service", kind: "build",
+    { from: 10, to: 12, when: "Grades 10–12", title: "Varsity Ultimate Frisbee", short: "Ultimate Frisbee", kind: "play",
+      text: "Ran the offense, competed year-round, and taught kids the game." },
+    { from: 10, to: 12, when: "Grades 10–12", title: "LexMACS", short: "LexMACS", kind: "learn",
+      text: "Lexington Math & CS club since sophomore year: USACO, cryptography, CTFs, physics sims." },
+    { from: 10, to: 12, when: "Grades 10–12", title: "Youth Entrepreneurship Service", short: "YES startup pitch", kind: "build",
       text: "Pitched AI drowning-detection camera software. 2nd in the state competition." },
-    { when: "Grade 11", title: "LLM summer research → IEEE paper", kind: "build",
-      text: "Purdue Prof. Yang's PhD team, 30 hrs/week. Led to the ASABC paper at IEEE AIxHeart 2024." },
-    { when: "Grade 11", title: "MIT AI & Art Camp", kind: "learn",
+    { from: 11, to: 11, when: "Grade 11", title: "MIT AI & Art Camp", short: "MIT AI & Art", kind: "learn",
       text: "Hands-on with image-generation tools (Midjourney, DALL·E, Sora) and prompt tuning, inspired by modern museum collections." },
-    { when: "Grades 11–12", title: "LexMACS", kind: "learn",
-      text: "Lexington Math & CS club: USACO, cryptography, CTFs, physics sims." },
-    { when: "Grade 12", title: "Hockey computer-vision research", kind: "build",
+    { from: 11.5, to: 11.5, when: "Summer after Grade 11", title: "LLM research → IEEE paper", short: "IEEE paper", kind: "build",
+      text: "Purdue Prof. Yang's PhD team, 30 hrs/week. Led to the ASABC paper at IEEE AIxHeart 2024." },
+    { from: 12, to: 12, when: "Grade 12", title: "Hockey computer vision", short: "Hockey CV award", kind: "build",
       text: "Independent research. Distinction Award at IEYI China." },
-    { when: "Summer 2026", title: "Ventrix Supply internship", kind: "work",
+    { from: 12.6, to: 12.6, when: "Summer 2026", title: "Ventrix Supply internship", short: "Ventrix internship", kind: "work",
       text: "Warehouse inventory analysis with EDA and statistics." },
-    { when: "Fall 2026 →", title: "Purdue · Data Analytics", kind: "learn",
+    { from: 13, to: 13.6, when: "Fall 2026 →", title: "Purdue · Data Analytics", short: "Purdue", kind: "learn",
       text: "Data Mine Learning Community, plus aviation flight-data preprocessing." }
   ],
 
@@ -297,23 +300,21 @@ window.SITE = {
      FUN SIDE — flip cards
      --------------------------------------------------------------- */
   fun: [
-    { icon: "🏒", title: "Left wing, assistant captain",
+    // Photos for each card go in content/fun/<folder>/ — then run: python3 tools/build_fun.py
+    { folder: "hockey", icon: "🏒", title: "Left wing, assistant captain",
       front: "Lexington High Varsity Hockey",
       back: "Three varsity seasons, lots of film study, and the reason my CV project is about hockey: I wanted a computer to watch game tape the way I do." },
-    { icon: "🥏", title: "Ultimate offense",
+    { folder: "ultimate-frisbee", icon: "🥏", title: "Ultimate offense",
       front: "Varsity Ultimate Frisbee",
       back: "Ran the offense, competed year-round, and organized donations and clinics to teach kids the game." },
-    { icon: "📰", title: "Reporter",
+    { folder: "the-musket", icon: "📰", title: "Reporter",
       front: "The Musket, LHS newspaper",
       back: "Wrote about everything from school policy to scholarships: a way to tell my community's stories." },
-    { icon: "🏮", title: "Culture crew",
+    { folder: "chinese-american-association", icon: "🏮", title: "Culture crew",
       front: "Chinese American Association of Lexington",
       back: "Coordinated and directed cultural events with 200+ community members: instruments, choir, customs and plenty of food." },
-    { icon: "🎨", title: "AI × art",
-      front: "MIT AI & Art Camp",
-      back: "Two weeks pairing museum inspiration with image-generation models and prompt tuning." },
-    { icon: "🧩", title: "Puzzle brain",
+    { folder: "lexmacs", icon: "🧩", title: "Puzzle brain",
       front: "LexMACS · USACO · CTF",
-      back: "Cryptography, capture-the-flag and competitive programming with friends." }
+      back: "Since sophomore year: cryptography, capture-the-flag and competitive programming with friends." }
   ]
 };

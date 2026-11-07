@@ -173,7 +173,10 @@
       shoot(p.x, p.y);
     }
   });
+  const setStick = (x) => { const left = x < W / 2; canvas.classList.toggle("stick-left", left); canvas.classList.toggle("stick-right", !left); };
+  canvas.addEventListener("pointerleave", () => canvas.classList.remove("stick-left", "stick-right"));
   canvas.addEventListener("pointermove", (e) => {
+    setStick(pos(e).x);
     if (!dragging) return;
     const p = pos(e);
     puck.x = Math.max(puck.r, Math.min(W - puck.r, p.x));

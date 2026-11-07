@@ -76,7 +76,9 @@
         <button class="btn primary sm" data-open="${esc(p.id)}">▶ Demo &amp; details</button>
         ${needCount ? `<span class="need">${needCount} to add</span>` : ""}
       </div>`;
-    const body = p.featured
+    const body = p.wideViz
+      ? media + `<div class="wide-main">${main}</div>`
+      : p.featured
       ? `<div class="featured-body"><div>${main}</div><div class="media-col">${media}</div></div>`
       : media + main;
     return `<article class="project reveal ${p.featured ? "featured" : ""}" data-tags="${[...p.tags, p.era].join(" ")}" id="p-${esc(p.id)}">
@@ -137,34 +139,105 @@
     });
   }
 
-  /* ---------- Timeline ---------- */
-  $("#timelineList").innerHTML = S.timeline.map((t, i) => `
-    <li class="tl-item tl-${t.kind}">
-      <div class="tl-dot"></div>
-      <button class="tl-card" aria-expanded="${i === 0}">
-        <span class="tl-when">${esc(t.when)}</span>
-        <span class="tl-title">${esc(t.title)}</span>
-        <span class="tl-text">${esc(t.text)}</span>
-      </button>
-    </li>`).join("");
-  $("#timelineList").addEventListener("click", (e) => {
-    const b = e.target.closest(".tl-card"); if (!b) return;
-    b.setAttribute("aria-expanded", b.getAttribute("aria-expanded") !== "true");
-  });
+  /* ---------- Timeline: a blossoming branch ---------- */
+  (function tree() {
+    const svg = $("#treeSvg"), card = $("#treeCard");
+    const ticks = [[9, 110, "Grade 9"], [10, 300, "Grade 10"], [11, 520, "Grade 11"], [12, 750, "Grade 12"], [12.6, 905, "Summer '26"], [13, 1030, "Purdue"], [13.6, 1150, ""]];
+    const xOf = (v) => { for (let i = 1; i < ticks.length; i++) if (v <= ticks[i][0]) { const [a, xa] = ticks[i - 1], [b, xb] = ticks[i]; return xa + (xb - xa) * (v - a) / (b - a); } return 1150; };
+    const yOf = (x) => 268 + 16 * Math.sin(x / 160) - x * 0.03;
+    const thick = (x) => 20 - x * 0.0135;
+    const COLORS = { build: "#FEB6C1", learn: "#89CDFA", play: "#e2577c", work: "#1d2a47" };
+    let top = "", bot = "";
+    for (let x = 0; x <= 1185; x += 15) { top += `${x ? "L" : "M"}${x},${(yOf(x) - thick(x) / 2).toFixed(1)} `; }
+    for (let x = 1185; x >= 0; x -= 15) { bot += `L${x},${(yOf(x) + thick(x) / 2).toFixed(1)} `; }
+    const branch = `<path d="${top}${bot}Z" class="bark"/>
+      <path d="${Array.from({ length: 79 }, (_, i) => `${i ? "L" : "M"}${i * 15},${(yOf(i * 15) - thick(i * 15) / 5).toFixed(1)}`).join(" ")}" class="bark-hi"/>
+      ${[160, 420, 640, 980].map(x => `<ellipse cx="${x}" cy="${yOf(x)}" rx="5" ry="${thick(x) / 3}" class="knot"/>`).join("")}
+      <path d="M1185,${yOf(1185)} q14,-10 10,-26 q-14,4 -10,26" class="bud"/>`;
+    const tickHtml = ticks.filter(t => t[2]).map(([v, x, l]) => `<g class="tick"><circle cx="${x}" cy="${yOf(x)}" r="4"/><text x="${x}" y="${yOf(x) - 16}" text-anchor="middle">${l}</text></g>`).join("");
 
-  /* ---------- Fun flip cards ---------- */
-  $("#funGrid").innerHTML = S.fun.map(f => `
-    <button class="flip reveal" aria-label="${esc(f.title)}: ${esc(f.front)}. Flip for more.">
-      <div class="flip-inner">
-        <div class="flip-face flip-front">
-          <span class="fi" aria-hidden="true">${f.icon}</span>
-          <div><h4>${esc(f.title)}</h4><small>${esc(f.front)}</small></div>
+    // spans ("vines") for things that lasted more than one year
+    const spans = S.timeline.filter(t => t.to > t.from);
+    const vines = spans.map((t, k) => {
+      const x1 = xOf(t.from), x2 = xOf(t.to), off = thick(x1) / 2 + 6 + k * 7;
+      let d = ""; for (let x = x1; x <= x2; x += 8) d += `${x === x1 ? "M" : "L"}${x.toFixed(1)},${(yOf(x) + off + Math.sin(x / 9) * 2).toFixed(1)} `;
+      return `<path d="${d}" class="vine" style="stroke:${COLORS[t.kind]}"><title>${esc(t.title)}: ${esc(t.when)}</title></path>`;
+    }).join("");
+
+    // leaves / fruits
+    const groups = {}; S.timeline.forEach((t, i) => (groups[t.from] = groups[t.from] || []).push(i));
+    let flipper = 0;
+    const leaves = S.timeline.map((t, i) => {
+      const g = groups[t.from], j = g.indexOf(i), n = g.length;
+      const bx = xOf(t.from) + (j - (n - 1) / 2) * 64, by = yOf(bx);
+      const up = (flipper++ % 2 === 0), len = 70 + ((j + (up ? 0 : 1)) % 2) * 70 + (n > 2 ? 10 : 0);
+      const lx = bx + (up ? -10 : 10), ly = up ? by - len : by + len + 18;
+      const twig = `<path d="M${bx},${by} Q${bx + (up ? 14 : -14)},${(by + ly) / 2} ${lx},${ly}" class="twig"/>`;
+      const c = COLORS[t.kind];
+      let shape;
+      if (t.kind === "build") shape = `<g>${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-9" rx="6.5" ry="9.5" transform="rotate(${a})" style="fill:${c};stroke:#f28ca0;stroke-width:.8"/>`).join("")}<circle r="4.5" style="fill:#f6c453"/></g>`;
+      else if (t.kind === "learn") shape = `<path d="M0,-17 C14,-8 14,8 0,17 C-14,8 -14,-8 0,-17Z" style="fill:${c}" transform="rotate(${up ? -25 : 25})"/><path d="M0,-14 L0,14" class="midrib" transform="rotate(${up ? -25 : 25})"/>`;
+      else if (t.kind === "play") shape = `<path d="M-7,6 Q-2,-12 4,-16 M7,5 Q5,-10 4,-16" class="stem"/><circle cx="-7" cy="8" r="8" style="fill:${c}"/><circle cx="7" cy="7" r="8" style="fill:${c}"/><circle cx="-9" cy="5" r="2.2" fill="#fff" opacity=".7"/><circle cx="5" cy="4" r="2.2" fill="#fff" opacity=".7"/>`;
+      else shape = `<circle r="12" style="fill:${c}"/><circle cx="-4" cy="-4" r="3" fill="#FEB6C1"/><path d="M0,-12 q5,-7 11,-5" class="stem"/>`;
+      const labelY = up ? ly - 30 : ly + 38;
+      return `<g class="leaf-g" style="animation-delay:${i * 90}ms">${twig}
+        <g class="leaf" data-i="${i}" tabindex="0" role="button" aria-label="${esc(t.title)}, ${esc(t.when)}" transform="translate(${lx},${ly})">
+          <circle r="24" class="hit"/><g class="shape" transform="scale(1.25)">${shape}</g></g>
+        <text x="${lx}" y="${labelY}" text-anchor="middle" class="leaf-lbl">${esc(t.short || t.title)}</text></g>`;
+    }).join("");
+    svg.innerHTML = `${branch}${vines}${tickHtml}${leaves}`;
+
+    const kindName = { build: "🌸 built", learn: "🍃 learned", play: "🍒 played", work: "🫐 worked" };
+    function select(i) {
+      const t = S.timeline[i];
+      svg.querySelectorAll(".leaf").forEach(l => l.classList.toggle("sel", +l.dataset.i === i));
+      card.style.setProperty("--k", COLORS[t.kind]);
+      card.innerHTML = `<span class="tc-kind">${kindName[t.kind]}</span><span class="tc-when">${esc(t.when)}</span><h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>`;
+    }
+    svg.addEventListener("mouseover", (e) => { const l = e.target.closest(".leaf"); if (l) select(+l.dataset.i); });
+    svg.addEventListener("focusin", (e) => { const l = e.target.closest(".leaf"); if (l) select(+l.dataset.i); });
+    svg.addEventListener("click", (e) => { const l = e.target.closest(".leaf"); if (l) select(+l.dataset.i); });
+    select(S.timeline.findIndex(t => t.kind === "build"));
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((es) => { if (es[0].isIntersecting) { svg.classList.add("grow"); io.disconnect(); } }, { threshold: .2 });
+      io.observe(svg);
+    } else svg.classList.add("grow");
+  })();
+
+  /* ---------- Fun flip cards (photos from content/fun/<folder>/) ---------- */
+  let funPhotos = {};
+  function renderFun() {
+    $("#funGrid").innerHTML = S.fun.map((f, i) => {
+      const extra = funPhotos[f.folder] || {}, n = (extra.photos || []).length;
+      const cover = n ? `style="--cover:url('${esc(extra.photos[0])}')"` : "";
+      return `
+      <div class="flip reveal in ${n ? "has-photos" : ""}" role="button" tabindex="0" data-i="${i}" aria-label="${esc(f.title)}: ${esc(f.front)}. Flip for more.">
+        <div class="flip-inner">
+          <div class="flip-face flip-front" ${cover}>
+            <span class="fi" aria-hidden="true">${f.icon}</span>
+            ${n ? `<span class="photo-count">📸 ${n}</span>` : ""}
+            <div><h4>${esc(f.title)}</h4><small>${esc(f.front)}</small></div>
+          </div>
+          <div class="flip-face flip-back"><p>${esc(extra.story || f.back)}</p>
+            ${n ? `<button class="see-photos" data-folder="${esc(f.folder)}">See ${n} photo${n > 1 ? "s" : ""} →</button>` : ""}</div>
         </div>
-        <div class="flip-face flip-back">${esc(f.back)}</div>
-      </div>
-    </button>`).join("");
+      </div>`;
+    }).join("");
+  }
+  renderFun();
+  fetch("content/fun/fun.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : {}).then(j => { funPhotos = j || {}; renderFun(); }).catch(() => {});
   $("#funGrid").addEventListener("click", (e) => {
+    const sp = e.target.closest(".see-photos");
+    if (sp) {
+      e.stopPropagation();
+      const f = S.fun.find(x => x.folder === sp.dataset.folder);
+      openLightbox(funPhotos[f.folder].photos.map(src => ({ src, alt: f.title, caption: `${f.icon} ${f.title}` })), 0);
+      return;
+    }
     const c = e.target.closest(".flip"); if (c) c.classList.toggle("flipped");
+  });
+  $("#funGrid").addEventListener("keydown", (e) => {
+    const c = e.target.closest(".flip"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); c.classList.toggle("flipped"); }
   });
 
   /* ---------- Art gallery (data-driven) ---------- */

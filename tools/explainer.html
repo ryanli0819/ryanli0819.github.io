@@ -148,19 +148,32 @@ const SCENES = {
     text(cap, 640, 600, 28, C.ink, 700, "Space Grotesk", "center");
   },
   ventrix(t) {
-    rr(80, 150, 1120, 420, 18, C.card, C.line);
-    const r = rng(3), days = 14, bw = 1000 / days, yb = 520;
-    const exp = Array.from({ length: days }, (_, i) => 60 - i * 1.6), cnt = exp.map((e, i) => i === 9 ? e - 12 : e + (r() - .5) * 2);
-    const Y = (v) => yb - v * 4.6;
-    cnt.forEach((v, i) => {
-      const s = ease((t - i * .03) / .3);
-      rr(140 + i * bw + 8, Y(v * s), bw - 16, (yb - Y(v)) * s, 6, i === 9 && t > .6 ? C.gold : "#FEB6C1");
+    // warehouse floor plan heat map: AC units per bay, shifting over 10 weeks (illustrative)
+    const ox = 80, oy = 140;
+    rr(ox, oy, 1120, 470, 14, C.card); ctx.strokeStyle = C.ink; ctx.lineWidth = 5; ctx.beginPath(); ctx.roundRect(ox, oy, 1120, 470, 14); ctx.stroke();
+    [["Office", 0], ["Returns / QA", 1], ["Parts", 2], ["⚡ Forklift", 3]].forEach(([l, i]) => { rr(ox + 12, oy + 12 + i * 112, 170, 102, 8, C.bg2); text(l, ox + 97, oy + 70 + i * 112, 20, C.ink2, 600, "Inter", "center"); });
+    const week = Math.min(9, Math.floor(t * 10)), r = rng(5);
+    const cells = [];
+    "ABCD".split("").forEach((row, ri) => { for (let i = 0; i < 6; i++) cells.push({ id: row + (i + 1), x: ox + 230 + i * 92, y: oy + 24 + ri * 100, w: 84, h: 60 }); text(row, ox + 214, oy + 62 + ri * 100, 24, C.ink3, 700, "Space Grotesk", "right"); });
+    for (let i = 0; i < 6; i++) cells.push({ id: "F" + (i + 1), x: ox + 820 + (i % 2) * 140, y: oy + 24 + Math.floor(i / 2) * 120, w: 130, h: 108 });
+    for (let i = 0; i < 6; i++) cells.push({ id: (i < 3 ? "S" : "O") + (i % 3 + 1), x: ox + 230 + i * 140 + (i > 2 ? 40 : 0), y: oy + 400, w: 126, h: 56 });
+    const cx = 500 + week * 55, cy = 260 + week * 22;
+    const stops = [[0, [246, 250, 255]], [.3, [137, 205, 250]], [.62, [254, 182, 193]], [1, [214, 64, 106]]];
+    const heat = (v) => { for (let i = 1; i < stops.length; i++) if (v <= stops[i][0]) { const [a, ca] = stops[i - 1], [b, cb] = stops[i], k = (v - a) / (b - a); return `rgb(${ca.map((q, j) => Math.round(q + (cb[j] - q) * k)).join(",")})`; } return "rgb(214,64,106)"; };
+    cells.forEach(c => {
+      const dx = c.x + c.w / 2 - cx, dy = c.y + c.h / 2 - cy;
+      const n = Math.round(Math.sqrt(c.w * c.h / 5040) * 80 * Math.exp(-(dx * dx + dy * dy) / (2 * 260 * 260)) * (0.8 + r() * 0.4));
+      const v = Math.min(1, n / 150);
+      rr(c.x, c.y, c.w, c.h, 8, heat(v), C.line);
+      text(String(n), c.x + c.w / 2, c.y + c.h / 2 + 10, 26, v > .8 ? "#fff" : C.ink, 700, "Space Grotesk", "center");
+      text(c.id, c.x + 6, c.y + 16, 13, C.ink3, 500, "JetBrains Mono");
+      if (c.id === "C4" && week >= 5) { ctx.strokeStyle = "#d6406a"; ctx.lineWidth = 5; ctx.strokeRect(c.x - 4, c.y - 4, c.w + 8, c.h + 8); text("⚠ 12 missing", c.x + c.w / 2, c.y - 12, 18, "#d6406a", 700, "Inter", "center"); }
     });
-    ctx.strokeStyle = C.ink; ctx.lineWidth = 3; ctx.setLineDash([10, 10]); ctx.beginPath();
-    exp.forEach((e, i) => { const x = 140 + i * bw + bw / 2; i ? ctx.lineTo(x, Y(e)) : ctx.moveTo(x, Y(e)); }); ctx.stroke(); ctx.setLineDash([]);
-    text("Daily AC unit count vs expected stock", 120, 195, 26, C.ink, 700, "Space Grotesk");
-    if (t > .6) text("⚠ −12 units: recount & restock", 140 + 9 * bw + bw / 2, Y(cnt[9]) - 50, 24, "#1f86c9", 700, "Inter", "center");
-    text("Exploratory data analysis catches discrepancies before they cost money", 640, 620, 26, C.ink, 700, "Space Grotesk", "center");
+    for (let i = 0; i < 4; i++) rr(ox + 260 + i * 220, oy + 466, 120, 16, 3, C.ink);
+    text(`Week ${week + 1} of 10 · units per storage bay`, 640, 125, 24, C.ink, 700, "Space Grotesk", "center");
+    const g = ctx.createLinearGradient(1000, 0, 1180, 0); g.addColorStop(0, "#f6faff"); g.addColorStop(.3, "#89CDFA"); g.addColorStop(.62, "#FEB6C1"); g.addColorStop(1, "#d6406a");
+    rr(1000, 108, 180, 14, 7, g); text("fewer → more", 1090, 100, 14, C.ink3, 500, "JetBrains Mono", "center");
+    text("Serial-number counts mapped across the warehouse; stock drifts toward the docks as summer sells", 640, 655, 22, C.ink, 700, "Space Grotesk", "center");
   },
   vo(t) {
     rr(80, 150, 1120, 420, 18, C.card, C.line);

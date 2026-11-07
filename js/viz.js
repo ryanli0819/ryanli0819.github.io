@@ -99,26 +99,6 @@
     onVisible(el, () => setTimeout(() => set("clean"), reduce ? 0 : 1600));
   };
 
-  /* ---------- Data Mine: SQL query → result ---------- */
-  V.datamine = (el) => {
-    const sql = "SELECT region, COUNT(*)\nFROM trips\nGROUP BY region;";
-    const rows = [["North", 42], ["East", 35], ["South", 28], ["West", 19]];
-    el.innerHTML = `<div class="v-sql"><pre aria-label="${sql}"><code></code><span class="v-caret">▍</span></pre>
-      <div class="v-bars">${rows.map(([k, v]) => `<div class="v-row"><span>${k}</span><div><i data-w="${v / 42 * 100}"></i></div><b>${v}</b></div>`).join("")}</div></div>${note()}`;
-    const code = el.querySelector("code"), bars = el.querySelectorAll(".v-row i");
-    const run = () => {
-      code.textContent = ""; bars.forEach(b => b.style.width = "0");
-      let n = 0;
-      const type = () => {
-        code.textContent = sql.slice(0, ++n);
-        if (n < sql.length) setTimeout(type, reduce ? 0 : 45);
-        else bars.forEach((b, j) => setTimeout(() => b.style.width = b.dataset.w + "%", 150 * j));
-      };
-      type();
-    };
-    onVisible(el, () => { run(); if (!reduce) setInterval(run, 9000); });
-  };
-
   /* ---------- Kaggle Titanic: real survival rates ---------- */
   V.kaggle = (el) => {
     const sets = {
@@ -172,22 +152,119 @@
     onVisible(el, () => requestAnimationFrame(frame));
   };
 
-  /* ---------- Ventrix: daily count vs expected stock, discrepancy flagged ---------- */
+  /* ---------- Ventrix: warehouse heat map of AC units by product, bay and week ---------- */
   V.ventrix = (el) => {
-    const W = 400, H = 170, days = 14, r = rng(3);
-    const expected = Array.from({ length: days }, (_, i) => 60 - i * 1.6);
-    const counted = expected.map((e, i) => i === 9 ? e - 12 : e + (r() - .5) * 2);
-    const bw = (W - 40) / days;
-    const Y = (v) => H - 24 - (v / 70) * (H - 44);
-    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="v-svg" role="img" aria-label="Bar chart of daily AC unit counts against expected stock; one day is flagged as a discrepancy">
-      ${counted.map((v, i) => `<rect class="v-bar ${i === 9 ? "flag" : ""}" x="${24 + i * bw + 3}" width="${bw - 6}" y="${H - 24}" height="0" data-y="${Y(v)}" data-h="${H - 24 - Y(v)}" rx="3" style="fill:${i === 9 ? "var(--gold)" : "color-mix(in srgb, var(--red) 55%, var(--card))"}"/>`).join("")}
-      <polyline points="${expected.map((e, i) => `${24 + i * bw + bw / 2},${Y(e)}`).join(" ")}" style="fill:none;stroke:var(--ink);stroke-width:1.6;stroke-dasharray:4 4"/>
-      <text x="${24 + 9 * bw + bw / 2}" y="${Y(counted[9]) - 30}" text-anchor="middle" class="v-ax v-flagtxt">⚠ −12 units</text>
-      <text x="24" y="${H - 6}" class="v-ax">day 1 → 14 · bars = counted · dashed = expected</text>
-    </svg>${note()}`;
-    onVisible(el, () => el.querySelectorAll(".v-bar").forEach((b, i) => setTimeout(() => {
-      b.setAttribute("y", b.dataset.y); b.setAttribute("height", b.dataset.h);
-    }, reduce ? 0 : i * 60)));
+    const PRODUCTS = [
+      { code: "WA08", name: "Window AC 8k BTU" }, { code: "WA12", name: "Window AC 12k BTU" },
+      { code: "PA10", name: "Portable AC 10k" }, { code: "MS18", name: "Mini-split 18k" }, { code: "HP24", name: "Heat pump 24k" }
+    ];
+    const WEEKS = ["May 4", "May 11", "May 18", "May 25", "Jun 1", "Jun 8", "Jun 15", "Jun 22", "Jun 29", "Jul 6"];
+    // ---- floor plan (viewBox 640 x 400) ----
+    const cells = [];
+    "ABCD".split("").forEach((row, r) => { for (let i = 0; i < 6; i++) cells.push({ id: `${row}${i + 1}`, x: 140 + i * 54, y: 34 + r * 66, w: 50, h: 34, kind: "rack" }); });
+    for (let i = 0; i < 6; i++) cells.push({ id: `F${i + 1}`, x: 488 + (i % 2) * 66, y: 34 + Math.floor(i / 2) * 72, w: 60, h: 64, kind: "bulk" });
+    for (let i = 0; i < 3; i++) cells.push({ id: `S${i + 1}`, x: 140 + i * 64, y: 300, w: 58, h: 40, kind: "stage" });
+    for (let i = 0; i < 3; i++) cells.push({ id: `O${i + 1}`, x: 400 + i * 74, y: 300, w: 68, h: 40, kind: "out" });
+    const cap = { rack: 1, bulk: 1.9, stage: .8, out: .9 };
+    // where each product "lives" and how it moves through the summer (illustrative model)
+    const model = {
+      WA08: (w) => ({ cx: 300 - w * 6, cy: 60 + w * 26, sd: 120, total: 420 - w * 30 }),
+      WA12: (w) => ({ cx: 230 + w * 22, cy: 80 + w * 22, sd: 110, total: 520 - w * 34 }),
+      PA10: (w) => ({ cx: 210, cy: 200 + Math.sin(w) * 30, sd: 90, total: 260 - w * 12 }),
+      MS18: (w) => ({ cx: 540, cy: 90 + w * 8, sd: 80, total: 300 + (w > 5 ? -40 : 15) * (w % 3) }),
+      HP24: (w) => ({ cx: 560, cy: 220 - w * 6, sd: 70, total: 90 + w * 26 })
+    };
+    const data = {}; // data[week][code][cellId] = count
+    WEEKS.forEach((_, w) => {
+      data[w] = {};
+      PRODUCTS.forEach((p, pi) => {
+        const m = model[p.code](w), r = rng(100 + w * 7 + pi * 131);
+        const wts = cells.map(c => { const dx = c.x + c.w / 2 - m.cx, dy = c.y + c.h / 2 - m.cy; return Math.exp(-(dx * dx + dy * dy) / (2 * m.sd * m.sd)) * cap[c.kind] * (0.75 + r() * 0.5); });
+        const sum = wts.reduce((a, b) => a + b, 0);
+        data[w][p.code] = Object.fromEntries(cells.map((c, i) => [c.id, Math.round(m.total * wts[i] / sum)]));
+      });
+    });
+    const FLAG = { week: 5, cell: "C4", code: "WA12", missing: 12 };
+    const countOf = (w, code, id) => code === "ALL" ? PRODUCTS.reduce((a, p) => a + data[w][p.code][id], 0) : data[w][code][id];
+    const maxOf = (code) => Math.max(...WEEKS.flatMap((_, w) => cells.map(c => countOf(w, code, c.id))));
+    const stops = [[0, [246, 250, 255]], [.3, [137, 205, 250]], [.62, [254, 182, 193]], [1, [214, 64, 106]]];
+    const heat = (t) => { for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) { const [a, ca] = stops[i - 1], [b, cb] = stops[i], k = (t - a) / (b - a); return `rgb(${ca.map((v, j) => Math.round(v + (cb[j] - v) * k)).join(",")})`; } return "rgb(214,64,106)"; };
+    const serials = (w, code, id) => { // serial range for this bay, numbered in a fixed walk order
+      let start = 1; for (const c of cells) { if (c.id === id) break; start += data[w][code][c.id]; }
+      const n = data[w][code][id]; return n ? `${code}-26-${String(start).padStart(4, "0")} → ${String(start + n - 1).padStart(4, "0")}` : "none";
+    };
+
+    el.innerHTML = `
+      <div class="wh-controls">
+        <div class="v-toggle wh-products" role="group" aria-label="Product">
+          <button class="on" data-p="ALL">All units</button>${PRODUCTS.map(p => `<button data-p="${p.code}" title="${p.name}">${p.code}</button>`).join("")}
+        </div>
+        <div class="wh-week"><button class="wh-play" aria-label="Play weeks">▶</button>
+          <input type="range" min="0" max="${WEEKS.length - 1}" value="0" aria-label="Week"><span class="wh-wlabel"></span></div>
+      </div>
+      <svg viewBox="0 0 640 400" class="v-svg wh" role="img" aria-label="Warehouse floor plan heat map showing AC unit counts per storage bay">
+        <defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" style="stroke:var(--line);stroke-width:2"/></pattern></defs>
+        <rect x="8" y="8" width="624" height="368" rx="6" class="wh-wall"/>
+        <rect x="14" y="14" width="106" height="72" class="wh-room"/><text x="67" y="46" class="wh-lbl" text-anchor="middle">Office</text><text x="67" y="60" class="wh-sub" text-anchor="middle">inventory desk</text>
+        <rect x="14" y="94" width="106" height="74" class="wh-room" style="fill:url(#hatch)"/><text x="67" y="128" class="wh-lbl" text-anchor="middle">Returns / QA</text><text x="67" y="142" class="wh-sub" text-anchor="middle">cage</text>
+        <rect x="14" y="176" width="106" height="60" class="wh-room"/><text x="67" y="204" class="wh-lbl" text-anchor="middle">Parts &amp;</text><text x="67" y="218" class="wh-lbl" text-anchor="middle">accessories</text>
+        <rect x="14" y="244" width="106" height="96" class="wh-room"/><text x="67" y="288" class="wh-lbl" text-anchor="middle">⚡ Forklift</text><text x="67" y="302" class="wh-lbl" text-anchor="middle">charging</text>
+        ${"ABCD".split("").map((r, i) => `<text x="134" y="${55 + i * 66}" class="wh-row" text-anchor="end">${r}</text>`).join("")}
+        ${[0, 1, 2].map(i => `<text x="300" y="${84 + i * 66}" class="wh-aisle" text-anchor="middle">aisle ${i + 1}</text>`).join("")}
+        <text x="554" y="26" class="wh-sub" text-anchor="middle">bulk floor storage</text>
+        <text x="236" y="294" class="wh-sub" text-anchor="middle">inbound staging</text><text x="511" y="294" class="wh-sub" text-anchor="middle">outbound staging</text>
+        <path d="M128 276 H624 M470 34 V268" class="wh-path"/>
+        <g class="wh-cells">${cells.map(c => `<g class="wh-cell" data-id="${c.id}" tabindex="0" role="button"><rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" rx="4"/><text x="${c.x + c.w / 2}" y="${c.y + c.h / 2 + 4}" text-anchor="middle"></text><text class="wh-id" x="${c.x + 4}" y="${c.y + 9}">${c.id}</text></g>`).join("")}</g>
+        ${[0, 1, 2, 3].map(i => `<rect x="${150 + i * 120}" y="370" width="70" height="12" rx="2" class="wh-dock"/><text x="${185 + i * 120}" y="394" class="wh-sub" text-anchor="middle">dock ${i + 1}</text>`).join("")}
+        <g class="wh-flag" style="display:none"><circle r="10" style="fill:var(--card);stroke:#d6406a;stroke-width:2"/><text y="4" text-anchor="middle" style="font-size:12px">⚠</text></g>
+      </svg>
+      <div class="wh-foot">
+        <div class="wh-legend"><span>fewer</span><i></i><span>more units</span></div>
+        <div class="wh-stats"></div>
+      </div>
+      <div class="wh-tip" role="status" aria-live="polite"></div>${note("illustrative data")}`;
+
+    let code = "ALL", week = 0, playing = null, sel = null;
+    const svg = el.querySelector("svg"), slider = el.querySelector("input"), tip = el.querySelector(".wh-tip"), flag = el.querySelector(".wh-flag");
+    function draw() {
+      const max = maxOf(code);
+      let total = 0, hot = null;
+      el.querySelectorAll(".wh-cell").forEach(g => {
+        const id = g.dataset.id, n = countOf(week, code, id), t = Math.min(1, n / max);
+        total += n; if (!hot || n > hot.n) hot = { id, n };
+        g.querySelector("rect").style.fill = n ? heat(t) : "var(--card)";
+        const tx = g.querySelector("text"); tx.textContent = n || ""; tx.style.fill = t > .8 ? "#fff" : "#1d2a47";
+      });
+      el.querySelector(".wh-wlabel").textContent = `Week of ${WEEKS[week]}`;
+      const flagOn = week === FLAG.week && (code === "ALL" || code === FLAG.code);
+      const fc = cells.find(c => c.id === FLAG.cell); flag.style.display = flagOn ? "" : "none";
+      flag.setAttribute("transform", `translate(${fc.x + fc.w - 2},${fc.y + 2})`);
+      el.querySelector(".wh-stats").innerHTML = `<b>${total.toLocaleString()}</b> units · hottest bay <b>${hot.id}</b> (${hot.n})${flagOn ? ` · <span class="wh-warn">⚠ ${FLAG.cell}: ${FLAG.missing} WA12 units missing vs. system</span>` : ""}`;
+      if (sel) showTip(sel);
+    }
+    function showTip(id) {
+      sel = id;
+      const rows = (code === "ALL" ? PRODUCTS : PRODUCTS.filter(p => p.code === code)).map(p => {
+        const n = data[week][p.code][id]; return n ? `<tr><td>${p.code}</td><td>${n}</td><td>${serials(week, p.code, id)}</td></tr>` : "";
+      }).join("");
+      const flagged = id === FLAG.cell && week === FLAG.week;
+      tip.innerHTML = `<b>Bay ${id}</b> · week of ${WEEKS[week]}${flagged ? ` <span class="wh-warn">⚠ counted ${countOf(week, "WA12", id)}, system says ${countOf(week, "WA12", id) + FLAG.missing}</span>` : ""}
+        ${rows ? `<table><tr><th>Model</th><th>Units</th><th>Serial range</th></tr>${rows}</table>` : "<p>Empty bay</p>"}`;
+      tip.classList.add("show");
+      el.querySelectorAll(".wh-cell").forEach(g => g.classList.toggle("sel", g.dataset.id === id));
+    }
+    el.querySelector(".wh-products").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; code = b.dataset.p; el.querySelectorAll(".wh-products button").forEach(x => x.classList.toggle("on", x === b)); draw(); });
+    slider.addEventListener("input", () => { week = +slider.value; draw(); });
+    el.querySelector(".wh-play").addEventListener("click", (e) => {
+      if (playing) { clearInterval(playing); playing = null; e.target.textContent = "▶"; return; }
+      e.target.textContent = "❚❚";
+      playing = setInterval(() => { week = (week + 1) % WEEKS.length; slider.value = week; draw(); }, 900);
+    });
+    svg.addEventListener("mouseover", (e) => { const g = e.target.closest(".wh-cell"); if (g) showTip(g.dataset.id); });
+    svg.addEventListener("focusin", (e) => { const g = e.target.closest(".wh-cell"); if (g) showTip(g.dataset.id); });
+    svg.addEventListener("click", (e) => { const g = e.target.closest(".wh-cell"); if (g) showTip(g.dataset.id); });
+    draw();
+    onVisible(el, () => { if (!reduce) el.querySelector(".wh-play").click(); setTimeout(() => { if (playing) el.querySelector(".wh-play").click(); }, 9500); });
   };
 
   /* ---------- Visual odometry: estimated vs true camera path from feature points ---------- */
