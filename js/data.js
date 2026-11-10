@@ -33,7 +33,7 @@ window.SITE = {
     photo: null, // e.g. "assets/img/ryan.jpg"
     bio: [
       "I'm a data analytics student at Purdue who gets weirdly excited about messy data. In high school I co-wrote an IEEE paper that taught a large language model to read live-stream chat (yes, it learned that \"666\" and \"2333\" are good vibes), then built a computer-vision model that tells hockey teams apart by their jerseys, which won a Distinction Award at IEYI China.",
-      "When I'm not wrangling datasets, I'm on the ice as a left wing, throwing a frisbee, making art, or adding another country to my map. The list is getting long, so go hover around it below."
+      "When I'm not wrangling datasets, I'm surfing, on the ice as a left wing, throwing a frisbee, making art, or singing (loudly, and well, I promise)."
     ],
     missing: [
       "A headshot or photo for this section (drop it in assets/img/ and set person.photo)",

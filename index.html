@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ryan Li</title>
-  <meta name="description" content="Ryan Li: data analytics student at Purdue. Projects in computer vision, LLM research and data work, plus hockey, art and travel.">
+  <meta name="description" content="Ryan Li: data analytics student at Purdue. Projects in computer vision, LLM research and data work, plus hockey, surfing, art and music.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -38,13 +38,16 @@
     <!-- ============ HERO ============ -->
     <section class="hero">
       <div class="hero-text">
-        <p class="eyebrow">Hi, I'm</p>
+        <p class="eyebrow">Hi! I am</p>
         <h1>Ryan Li<span class="cursor" aria-hidden="true">_</span></h1>
         <p class="tagline">
-          <span class="wave" aria-hidden="true">👋</span> Purdue data-analytics student, hockey left wing, and part-time
-          translator for confused machines. In high school I helped teach an AI that <b>"666"</b> is a compliment.
-          These days I'm teaching machines to read
-          <span class="rotator" id="rotator" aria-live="polite">hockey film</span>.
+          <span class="wave" aria-hidden="true">👋</span> A freshman studying data analytics at Purdue. I am a surfer,
+          hockey player, a brother and a great singer outside of academics.
+        </p>
+        <p class="tagline tagline-2">
+          Whether I'm reading a wave, a play on the ice or a scatter plot, I'm hunting for the pattern hiding in the noise.
+          I'm heading into <b>data science</b>, driven by exploring, cleaning and organizing messy data so that
+          industries and businesses can make clearer, smarter decisions.
         </p>
         <div class="hero-cta">
           <a class="btn primary" href="#projects">See my work →</a>
@@ -110,16 +113,13 @@
       <div class="section-head">
         <span class="section-num">03</span>
         <h2>The road so far</h2>
-        <p class="section-sub">From Grade 9 to Purdue, grown on one branch. Hover or tap a blossom, leaf or fruit.</p>
+        <p class="section-sub">From Grade 9 to Purdue as one road trip. Scroll and the car drives along with you.</p>
       </div>
       <div class="legend">
-        <span>🌸 built</span><span>🍃 learned</span><span>🍒 played</span><span>🫐 worked</span>
-        <span class="legend-vine">〰 vines show how long it lasted</span>
+        <span>🛠️ built</span><span>📚 learned</span><span>🏒 played</span><span>💼 worked</span>
+        <span class="legend-vine">⇆ lanes show what ran for years</span>
       </div>
-      <div class="tree-wrap">
-        <div class="tree-scroll"><svg id="treeSvg" viewBox="0 0 1200 520" role="group" aria-label="My path from Grade 9 to Purdue drawn as a blossoming branch; each leaf or fruit is something I did"></svg></div>
-        <div class="tree-card" id="treeCard" aria-live="polite"></div>
-      </div>
+      <div class="road" id="road" role="list" aria-label="My path from Grade 9 to Purdue, drawn as a road trip"></div>
     </section>
 
     <!-- ============ FUN SIDE ============ -->
@@ -144,17 +144,6 @@
       </div>
       <div class="gallery" id="gallery"></div>
 
-      <div class="sub-head">
-        <h3>🌍 Where I've been</h3>
-        <p id="mapSub">Hover over a highlighted country to peek at photos and stories from that trip.</p>
-      </div>
-      <div class="map-card">
-        <div class="map" id="map"><p class="map-loading">Loading the world…</p></div>
-        <div class="map-tip" id="mapTip" role="status" aria-live="polite"></div>
-        <div class="map-pop" id="mapPop"></div>
-        <div class="map-count" id="mapCount" hidden></div>
-      </div>
-      <div id="travelEmpty"></div>
     </section>
 
     <!-- ============ CONTACT ============ -->
@@ -176,7 +165,7 @@
     <span class="egg-hint">psst, try typing <kbd>goal</kbd></span>
   </footer>
 
-  <!-- Lightbox (art + travel photos) -->
+  <!-- Lightbox (art + fun photos) -->
   <dialog class="lightbox" id="lightbox">
     <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
     <button class="lb-nav prev" id="lbPrev" aria-label="Previous photo">‹</button>
@@ -196,13 +185,10 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <canvas id="confetti" aria-hidden="true"></canvas>
 
-  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
   <script src="js/data.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/viz.js"></script>
   <script src="js/rink.js"></script>
-  <script src="js/map.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

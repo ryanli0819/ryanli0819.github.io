@@ -15,15 +15,6 @@
 
   /* ---------- Hero ---------- */
   $("#stats").innerHTML = S.stats.map(s => `<li><b>${esc(s.value)}</b><span>${esc(s.label)}</span></li>`).join("");
-  const words = ["hockey film", "live-stream chat", "flight-sim data", "warehouse inventory", "Titanic manifests"];
-  let wi = 0;
-  const rot = $("#rotator");
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    setInterval(() => {
-      rot.classList.add("out");
-      setTimeout(() => { wi = (wi + 1) % words.length; rot.textContent = words[wi]; rot.classList.remove("out"); }, 250);
-    }, 2400);
-  }
 
   /* ---------- About ---------- */
   const P = S.person;
@@ -139,69 +130,93 @@
     });
   }
 
-  /* ---------- Timeline: a blossoming branch ---------- */
-  (function tree() {
-    const svg = $("#treeSvg"), card = $("#treeCard");
-    const ticks = [[9, 110, "Grade 9"], [10, 300, "Grade 10"], [11, 520, "Grade 11"], [12, 750, "Grade 12"], [12.6, 905, "Summer '26"], [13, 1030, "Purdue"], [13.6, 1150, ""]];
-    const xOf = (v) => { for (let i = 1; i < ticks.length; i++) if (v <= ticks[i][0]) { const [a, xa] = ticks[i - 1], [b, xb] = ticks[i]; return xa + (xb - xa) * (v - a) / (b - a); } return 1150; };
-    const yOf = (x) => 268 + 16 * Math.sin(x / 160) - x * 0.03;
-    const thick = (x) => 20 - x * 0.0135;
-    const COLORS = { build: "#FEB6C1", learn: "#89CDFA", play: "#e2577c", work: "#1d2a47" };
-    let top = "", bot = "";
-    for (let x = 0; x <= 1185; x += 15) { top += `${x ? "L" : "M"}${x},${(yOf(x) - thick(x) / 2).toFixed(1)} `; }
-    for (let x = 1185; x >= 0; x -= 15) { bot += `L${x},${(yOf(x) + thick(x) / 2).toFixed(1)} `; }
-    const branch = `<path d="${top}${bot}Z" class="bark"/>
-      <path d="${Array.from({ length: 79 }, (_, i) => `${i ? "L" : "M"}${i * 15},${(yOf(i * 15) - thick(i * 15) / 5).toFixed(1)}`).join(" ")}" class="bark-hi"/>
-      ${[160, 420, 640, 980].map(x => `<ellipse cx="${x}" cy="${yOf(x)}" rx="5" ry="${thick(x) / 3}" class="knot"/>`).join("")}
-      <path d="M1185,${yOf(1185)} q14,-10 10,-26 q-14,4 -10,26" class="bud"/>`;
-    const tickHtml = ticks.filter(t => t[2]).map(([v, x, l]) => `<g class="tick"><circle cx="${x}" cy="${yOf(x)}" r="4"/><text x="${x}" y="${yOf(x) - 16}" text-anchor="middle">${l}</text></g>`).join("");
+  /* ---------- Timeline: a road trip from Grade 9 to Purdue ---------- */
+  (function road() {
+    const el = $("#road"); if (!el) return;
+    const KIND = {
+      build: { c: "#FEB6C1", e: "🛠️", n: "built" }, learn: { c: "#89CDFA", e: "📚", n: "learned" },
+      play: { c: "#e2577c", e: "🏒", n: "played" }, work: { c: "#f6c453", e: "💼", n: "worked" }
+    };
+    const SIGNS = [[9, "Grade 9", "9"], [10, "Grade 10", "10"], [11, "Grade 11", "11"], [12, "Grade 12", "12"], [12.6, "Summer '26", "S"], [13, "Purdue", "P"]];
+    const signOf = (v) => SIGNS.filter(s => s[0] <= v).pop();
+    const items = S.timeline.map((t, i) => ({ ...t, i })).sort((a, b) => a.from - b.from || a.i - b.i);
+    const yearText = (t) => t.to > t.from ? `<span class="r-span">⇆ ${esc(t.when)}</span>` : "";
 
-    // spans ("vines") for things that lasted more than one year
-    const spans = S.timeline.filter(t => t.to > t.from);
-    const vines = spans.map((t, k) => {
-      const x1 = xOf(t.from), x2 = xOf(t.to), off = thick(x1) / 2 + 6 + k * 7;
-      let d = ""; for (let x = x1; x <= x2; x += 8) d += `${x === x1 ? "M" : "L"}${x.toFixed(1)},${(yOf(x) + off + Math.sin(x / 9) * 2).toFixed(1)} `;
-      return `<path d="${d}" class="vine" style="stroke:${COLORS[t.kind]}"><title>${esc(t.title)}: ${esc(t.when)}</title></path>`;
-    }).join("");
+    let html = `<svg class="road-svg" aria-hidden="true"></svg><div class="r-row r-sign start"><span class="r-board go">START</span></div>`;
+    let lastSign = null, side = 0;
+    items.forEach(t => {
+      const sg = signOf(t.from);
+      if (sg !== lastSign) { lastSign = sg; html += `<div class="r-row r-sign" data-v="${sg[0]}"><span class="r-board"><small>EXIT ${sg[2]}</small>${sg[1]}</span></div>`; }
+      const k = KIND[t.kind], s = side++ % 2 ? "right" : "left";
+      html += `<div class="r-row r-stop ${s}" role="listitem" data-i="${t.i}" style="--k:${k.c}">
+        <article class="r-card"><div class="r-meta"><span class="r-kind">${k.e} ${k.n}</span><span class="r-when">${esc(t.when)}</span></div>
+          <h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>${yearText(t)}</article>
+        <span class="r-pin" aria-hidden="true">${k.e}</span></div>`;
+    });
+    html += `<div class="r-row r-sign end"><span class="r-board finish">🏁 To be continued…</span></div>`;
+    el.innerHTML = html;
+    const svg = el.querySelector(".road-svg");
+    let path, len = 0, car, stops = [];
 
-    // leaves / fruits
-    const groups = {}; S.timeline.forEach((t, i) => (groups[t.from] = groups[t.from] || []).push(i));
-    let flipper = 0;
-    const leaves = S.timeline.map((t, i) => {
-      const g = groups[t.from], j = g.indexOf(i), n = g.length;
-      const bx = xOf(t.from) + (j - (n - 1) / 2) * 64, by = yOf(bx);
-      const up = (flipper++ % 2 === 0), len = 70 + ((j + (up ? 0 : 1)) % 2) * 70 + (n > 2 ? 10 : 0);
-      const lx = bx + (up ? -10 : 10), ly = up ? by - len : by + len + 18;
-      const twig = `<path d="M${bx},${by} Q${bx + (up ? 14 : -14)},${(by + ly) / 2} ${lx},${ly}" class="twig"/>`;
-      const c = COLORS[t.kind];
-      let shape;
-      if (t.kind === "build") shape = `<g>${[0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-9" rx="6.5" ry="9.5" transform="rotate(${a})" style="fill:${c};stroke:#f28ca0;stroke-width:.8"/>`).join("")}<circle r="4.5" style="fill:#f6c453"/></g>`;
-      else if (t.kind === "learn") shape = `<path d="M0,-17 C14,-8 14,8 0,17 C-14,8 -14,-8 0,-17Z" style="fill:${c}" transform="rotate(${up ? -25 : 25})"/><path d="M0,-14 L0,14" class="midrib" transform="rotate(${up ? -25 : 25})"/>`;
-      else if (t.kind === "play") shape = `<path d="M-7,6 Q-2,-12 4,-16 M7,5 Q5,-10 4,-16" class="stem"/><circle cx="-7" cy="8" r="8" style="fill:${c}"/><circle cx="7" cy="7" r="8" style="fill:${c}"/><circle cx="-9" cy="5" r="2.2" fill="#fff" opacity=".7"/><circle cx="5" cy="4" r="2.2" fill="#fff" opacity=".7"/>`;
-      else shape = `<circle r="12" style="fill:${c}"/><circle cx="-4" cy="-4" r="3" fill="#FEB6C1"/><path d="M0,-12 q5,-7 11,-5" class="stem"/>`;
-      const labelY = up ? ly - 30 : ly + 38;
-      return `<g class="leaf-g" style="animation-delay:${i * 90}ms">${twig}
-        <g class="leaf" data-i="${i}" tabindex="0" role="button" aria-label="${esc(t.title)}, ${esc(t.when)}" transform="translate(${lx},${ly})">
-          <circle r="24" class="hit"/><g class="shape" transform="scale(1.25)">${shape}</g></g>
-        <text x="${lx}" y="${labelY}" text-anchor="middle" class="leaf-lbl">${esc(t.short || t.title)}</text></g>`;
-    }).join("");
-    svg.innerHTML = `${branch}${vines}${tickHtml}${leaves}`;
-
-    const kindName = { build: "🌸 built", learn: "🍃 learned", play: "🍒 played", work: "🫐 worked" };
-    function select(i) {
-      const t = S.timeline[i];
-      svg.querySelectorAll(".leaf").forEach(l => l.classList.toggle("sel", +l.dataset.i === i));
-      card.style.setProperty("--k", COLORS[t.kind]);
-      card.innerHTML = `<span class="tc-kind">${kindName[t.kind]}</span><span class="tc-when">${esc(t.when)}</span><h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>`;
+    function draw() {
+      const box = el.getBoundingClientRect();
+      const pts = [...el.querySelectorAll(".r-row")].map(r => {
+        const a = r.querySelector(".r-pin, .r-board"), b = a.getBoundingClientRect();
+        return { x: b.left + b.width / 2 - box.left, y: b.top + b.height / 2 - box.top, row: r };
+      });
+      pts.forEach(p => { if (p.row.classList.contains("r-sign")) p.x = pts.find(q => q.row.classList.contains("r-stop")) ? box.width / 2 : p.x; });
+      const narrow = box.width < 720;
+      if (narrow) pts.forEach(p => p.x = pts[1] ? (el.querySelector(".r-pin").getBoundingClientRect().left + 20 - box.left) : p.x);
+      let d = `M${pts[0].x},0 L${pts[0].x},${pts[0].y}`;
+      for (let i = 1; i < pts.length; i++) { const a = pts[i - 1], b = pts[i], m = (b.y - a.y) / 2; d += ` C${a.x},${a.y + m} ${b.x},${b.y - m} ${b.x},${b.y}`; }
+      d += ` L${pts.at(-1).x},${box.height}`;
+      const W = narrow ? 40 : 58;
+      // lanes for anything that lasted more than a year
+      const spans = items.filter(t => t.to > t.from);
+      const yAt = (sel) => { const r = el.querySelector(sel); return r ? r.getBoundingClientRect().top - box.top + r.offsetHeight / 2 : box.height; };
+      const lanes = spans.map((t, k) => {
+        const y1 = yAt(`.r-stop[data-i="${t.i}"]`), nextSign = SIGNS.find(s => s[0] > t.to);
+        const y2 = nextSign ? yAt(`.r-sign[data-v="${nextSign[0]}"]`) - 24 : box.height;
+        const n = spans.length, off = (k - (n - 1) / 2) * (W - 16) / Math.max(n - 1, 1);
+        return `<clipPath id="lc${k}"><rect x="0" y="${y1}" width="${box.width}" height="${Math.max(0, y2 - y1)}"/></clipPath>
+          <path d="${d}" class="lane" clip-path="url(#lc${k})" transform="translate(${off.toFixed(1)},0)" style="stroke:${KIND[t.kind].c}"><title>${esc(t.title)}: ${esc(t.when)}</title></path>`;
+      }).join("");
+      svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+      svg.style.setProperty("--w", W + "px");
+      svg.innerHTML = `<path d="${d}" class="verge"/><path d="${d}" class="asphalt"/><path d="${d}" class="edge"/><path d="${d}" class="asphalt inner"/>
+        <path d="${d}" class="center"/>${lanes}
+        <g class="car"><g transform="scale(${narrow ? .8 : 1})">
+          <rect x="-17" y="-11" width="7" height="4" rx="1.5" class="tyre"/><rect x="8" y="-11" width="7" height="4" rx="1.5" class="tyre"/>
+          <rect x="-17" y="7" width="7" height="4" rx="1.5" class="tyre"/><rect x="8" y="7" width="7" height="4" rx="1.5" class="tyre"/>
+          <rect x="-20" y="-9" width="40" height="18" rx="7" class="body"/><rect x="2" y="-7" width="7" height="14" rx="2.5" class="glass"/>
+          <rect x="-12" y="-6.5" width="5" height="13" rx="2" class="glass"/><rect x="-6" y="-7" width="7" height="14" rx="1.5" class="roof"/>
+          <circle cx="19" cy="-5.5" r="1.8" class="lamp"/><circle cx="19" cy="5.5" r="1.8" class="lamp"/></g></g>`;
+      path = svg.querySelector(".center"); len = path.getTotalLength(); car = svg.querySelector(".car");
+      stops = [...el.querySelectorAll(".r-stop")];
+      move();
     }
-    svg.addEventListener("mouseover", (e) => { const l = e.target.closest(".leaf"); if (l) select(+l.dataset.i); });
-    svg.addEventListener("focusin", (e) => { const l = e.target.closest(".leaf"); if (l) select(+l.dataset.i); });
-    svg.addEventListener("click", (e) => { const l = e.target.closest(".leaf"); if (l) select(+l.dataset.i); });
-    select(S.timeline.findIndex(t => t.kind === "build"));
+
+    let lastP = -1;
+    function move() {
+      if (!path) return;
+      const r = el.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (innerHeight * .55 - r.top) / r.height));
+      if (Math.abs(p - lastP) < 1e-4) return; lastP = p;
+      const at = Math.max(1, p * len), a = path.getPointAtLength(at), b = path.getPointAtLength(Math.max(0, at - 2));
+      const ang = Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI;
+      car.setAttribute("transform", `translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+      stops.forEach(s => { const y = s.offsetTop + s.offsetHeight / 2; s.classList.toggle("passed", a.y >= y - 30); s.classList.toggle("here", Math.abs(a.y - y) < s.offsetHeight / 2 + 10); });
+    }
+    let raf = 0;
+    addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; move(); }); }, { passive: true });
+    if ("ResizeObserver" in window) new ResizeObserver(() => { lastP = -1; draw(); }).observe(el); else { addEventListener("resize", draw); }
+    draw();
+    if (document.fonts) document.fonts.ready.then(() => { lastP = -1; draw(); });
+
     if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((es) => { if (es[0].isIntersecting) { svg.classList.add("grow"); io.disconnect(); } }, { threshold: .2 });
-      io.observe(svg);
-    } else svg.classList.add("grow");
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("shown"); io.unobserve(e.target); } }), { threshold: .25 });
+      el.querySelectorAll(".r-stop").forEach(s => io.observe(s));
+    } else el.querySelectorAll(".r-stop").forEach(s => s.classList.add("shown"));
   })();
 
   /* ---------- Fun flip cards (photos from content/fun/<folder>/) ---------- */
@@ -270,13 +285,6 @@
     el.addEventListener("click", (e) => { const b = e.target.closest("[data-i]"); if (b) openLightbox(items, +b.dataset.i); });
     observeReveals();
   })();
-
-  window.addEventListener("travel-loaded", (e) => {
-    if (e.detail.count) { const mc = $("#mapCount"); mc.hidden = false; mc.innerHTML = `<b>${e.detail.count}</b> countries and counting ✈️`; return; }
-    $("#mapSub").textContent = "Hover around the world. Travel pins are on the way.";
-    $("#travelEmpty").innerHTML = dropbox(["List of countries you've visited", "Photos for each country (content/travel/photos/<country>/)"],
-      "Copy <code>content/travel/countries-template.json</code> → <code>countries.json</code>. Each country you add lights up on the map.");
-  });
 
   /* ---------- Lightbox ---------- */
   const lb = $("#lightbox"); let lbItems = [], lbIdx = 0;

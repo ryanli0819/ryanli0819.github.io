@@ -7,7 +7,7 @@ This folder is the starting kit for building Ryan's personal website with Claude
 1. Read `BRIEF.md` — the full spec: what the site is, its three sections, design direction, and a recommended (not mandatory) tech stack.
 2. Read everything under `content/` — this is the real written content for the site, already drafted from Ryan's resume and this conversation. Some files have `TODO` markers where a link, image, or detail is still missing — see `content/projects/_TODO-links-and-info.md` for the full checklist.
 3. Check `assets/resume/` — Ryan's current resume (PDF) is there for reference on formatting, phrasing, and any detail not already copied into `content/`.
-4. `content/art/` and `content/travel/` are currently near-empty — they have a README and a template data file each, because Ryan still needs to supply the actual images and travel data. Don't invent placeholder art or fabricate countries/photos; ask Ryan directly for these, or build the gallery/map components against the template schema so they're ready the moment he drops real files in.
+4. `content/art/` is currently near-empty (the travel map was removed) — they have a README and a template data file each, because Ryan still needs to supply the actual images and travel data. Don't invent placeholder art or fabricate countries/photos; ask Ryan directly for these, or build the gallery/map components against the template schema so they're ready the moment he drops real files in.
 
 ## What Ryan asked for (in his words, paraphrased)
 
@@ -26,9 +26,9 @@ Once built, this should end up somewhere genuinely public and ownable by Ryan �
 
 ## The website (built)
 
-Plain HTML/CSS/JS — no build step. Files: `index.html`, `css/style.css`, `js/data.js`, `js/main.js`, `js/rink.js`, `js/map.js`.
+Plain HTML/CSS/JS — no build step. Files: `index.html`, `css/style.css`, `js/data.js`, `js/main.js`, `js/rink.js`, `js/viz.js`.
 
-**Run it locally** (needed so the art/travel JSON files can load):
+**Run it locally** (needed so the art and fun-photo JSON files can load):
 
     python3 -m http.server 5173     # then open http://localhost:5173
 
@@ -37,8 +37,7 @@ Each project's `missing` list renders as a dashed "📥 Info needed" box inside 
 delete items as you fill them in. Set `SHOW_MISSING_INFO = false` to hide all of those boxes before going public.
 
 **Art:** add images to `content/art/images/`, copy `captions-template.json` → `captions.json`, fill it in.
-**Travel map:** put photos in `content/travel/photos/<Country>/` (plus optional `story.txt`, `dates.txt`)
-and run `python3 tools/build_travel.py`. See `content/travel/README.md`.
+**Fun photos:** put photos in `content/fun/<folder>/` (plus optional `story.txt`) and run `python3 tools/build_fun.py`.
 **Demo videos:** explainer videos are rendered by `tools/explainer.html` (run `python3 tools/upload_server.py`,
 open http://localhost:5174/tools/explainer.html, call `renderAll()`).
 **Photo:** put a headshot in `assets/img/` and set `person.photo` in `js/data.js`.
