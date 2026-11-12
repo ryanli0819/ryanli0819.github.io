@@ -1,6 +1,7 @@
 (function () {
   const S = window.SITE;
-  const $ = (s, el = document) => el.querySelector(s);
+  // Shared by index.html (work) and fun.html (fun): an #id that isn't on this page returns a detached stub.
+  const $ = (s, el = document) => el.querySelector(s) || (el === document && s[0] === "#" ? document.createElement("div") : null);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   /* ---------- Missing-info drop box ---------- */
@@ -134,8 +135,8 @@
   (function road() {
     const el = $("#road"); if (!el) return;
     const KIND = {
-      build: { c: "#FEB6C1", e: "🛠️", n: "built" }, learn: { c: "#89CDFA", e: "📚", n: "learned" },
-      play: { c: "#e2577c", e: "🏒", n: "played" }, work: { c: "#f6c453", e: "💼", n: "worked" }
+      build: { c: "var(--pink)", e: "🛠️", n: "built" }, learn: { c: "var(--sky)", e: "📚", n: "learned" },
+      play: { c: "var(--red)", e: "🏒", n: "played" }, work: { c: "var(--gold-2)", e: "💼", n: "worked" }
     };
     const SIGNS = [[9, "Grade 9", "9"], [10, "Grade 10", "10"], [11, "Grade 11", "11"], [12, "Grade 12", "12"], [12.6, "Summer '26", "S"], [13, "Purdue", "P"]];
     const signOf = (v) => SIGNS.filter(s => s[0] <= v).pop();
@@ -342,9 +343,9 @@
     const r = $("#rink").getBoundingClientRect();
     confetti(e.detail.side === "left" ? r.left + r.width * .08 : r.right - r.width * .08, r.top + r.height / 2);
     setTimeout(() => flash.classList.remove("show"), 900);
-    const target = e.detail.side === "left" ? "#fun" : "#projects";
-    toast(e.detail.side === "left" ? "🥳 Goal! Heading to the fun side…" : "🎯 Goal! Heading to projects…");
-    setTimeout(() => document.querySelector(target).scrollIntoView({ behavior: "smooth" }), 1000);
+    const left = e.detail.side === "left";
+    toast(left ? "🥳 Goal! Heading to life in frames…" : "🎯 Goal! Heading to the work side…");
+    setTimeout(() => { if (left) document.querySelector("#life").scrollIntoView({ behavior: "smooth" }); else location.href = "index.html#projects"; }, 1000);
   });
 
   /* ---------- Easter egg: type "goal" ---------- */
@@ -363,13 +364,14 @@
     const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
     root.dataset.theme = dark ? "light" : "dark"; storage.set("theme", root.dataset.theme);
   };
-  const skimBtn = $("#skimToggle");
-  function setSkim(on) {
-    document.body.classList.toggle("skim", on); skimBtn.setAttribute("aria-pressed", on);
-    storage.set("skim", on ? "1" : "0");
+  document.body.classList.remove("skim");
+
+  /* ---------- Work page: nav slides in once you scroll past the 3D figure ---------- */
+  const floatNav = document.querySelector(".nav-float"), stage3d = document.querySelector("#stage3d");
+  if (floatNav && stage3d) {
+    const navCheck = () => floatNav.classList.toggle("show", scrollY > stage3d.offsetHeight * .6);
+    addEventListener("scroll", navCheck, { passive: true }); navCheck();
   }
-  setSkim(storage.get("skim") === "1");
-  skimBtn.onclick = () => { const on = !document.body.classList.contains("skim"); setSkim(on); toast(on ? "30-sec view: just the essentials" : "Full view: fun side unlocked 🎉"); };
 
   /* ---------- Copy email ---------- */
   $("#copyEmail").onclick = async () => {

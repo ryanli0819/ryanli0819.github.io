@@ -30,7 +30,7 @@ window.SITE = {
     email: "ryanli08199@gmail.com",
     github: "https://github.com/ryanli0819",
     resume: "assets/resume/Ryan_Li_Resume.pdf",
-    photo: null, // e.g. "assets/img/ryan.jpg"
+    photo: "assets/img/ryan-aix.jpg",
     bio: [
       "I'm a data analytics student at Purdue who gets weirdly excited about messy data. In high school I co-wrote an IEEE paper that taught a large language model to read live-stream chat (yes, it learned that \"666\" and \"2333\" are good vibes), then built a computer-vision model that tells hockey teams apart by their jerseys, which won a Distinction Award at IEYI China.",
       "When I'm not wrangling datasets, I'm surfing, on the ice as a left wing, throwing a frisbee, making art, or singing (loudly, and well, I promise)."
@@ -336,29 +336,39 @@ window.LIFE = {
     { src: "tennis-serve.mp4", cap: "🎾 Serve", shape: "tall" },
     { src: "golf-swing.mp4", cap: "⛳ Golf swing", shape: "tall" },
     { src: "hockey-goal-3.mp4", cap: "🏒 Goal again", shape: "wide" },
-    { src: "golf-range.mp4", cap: "⛳ At the range", shape: "tall" }
+    { src: "golf-range.mp4", cap: "⛳ At the range", shape: "tall" },
+    { src: "wakesurf-sunset.mp4", cap: "🌅 Wakesurfing at sunset", shape: "wide" },
+    { src: "ski-run.mp4", cap: "⛷️ Ski run", shape: "wide" },
+    { src: "hockey-game.mp4", cap: "🏒 Game day", shape: "wide" }
   ],
   hockey: [
     ["hockey-shot", "Shot from the slot"], ["hockey-back-19", "#19"], ["hockey-anthem", "National anthem"],
     ["hockey-lexington", "Lexington vs. the boards"], ["hockey-laugh", "Genuine laugh"], ["hockey-carry", "Carrying it in"],
     ["hockey-big-hit", "Big hit"], ["hockey-bond", "Bench bond"], ["hockey-skate", "Wheels"],
     ["hockey-boys", "With the boys"], ["hockey-chase", "Puck chase"], ["hockey-pose", "Pose"],
-    ["hockey-rush", "Odd-man rush"], ["hockey-battle", "Battle at the net"], ["hockey-bench", "Goal celebration"]
+    ["hockey-rush", "Odd-man rush"], ["hockey-battle", "Battle at the net"], ["hockey-bench", "Goal celebration"],
+    ["hockey-phone-case", "My phone case. Yes, it's me."]
   ],
   world: [
     ["japan-torii", "Torii gates, Japan"], ["surf-barrel", "Surfing in Seoul"], ["china-hohhot-horses", "Horse riding in Hohhot, China"],
     ["ski-copper", "Skiing at Copper Mountain"], ["seoul-brother", "With my brother in Seoul"], ["surf-young", "Surfing, younger me"],
     ["japan-nature", "Japan, up in the green"], ["world-cup-flag", "Flag bearer at the Boston World Cup. Best experience."],
-    ["surf-seoul", "Seoul wave pool"], ["china-horse", "Out on the grassland, Hohhot"], ["surf-long-island", "Long Island surf"]
+    ["surf-seoul", "Seoul wave pool"], ["china-horse", "Out on the grassland, Hohhot"], ["surf-long-island", "Long Island surf"],
+    ["space-saturn-v", "Under a Saturn V rocket"], ["space-patches", "Apollo mission patches"], ["moon-night", "Moon over the water"]
   ],
   eats: [
     ["eats-ramen", "Ramen"], ["eats-wagyu", "Wagyu sukiyaki"], ["eats-malatang", "Malatang"], ["eats-matcha", "Matcha"],
     ["eats-japan-hamburg", "Hamburg steak, Japan"], ["eats-truffle-burger", "Truffle burger"], ["eats-canto", "Cantonese"],
-    ["eats-chinese", "Spicy Chinese"], ["eats-purdue", "Purdue dining"]
+    ["eats-chinese", "Spicy Chinese"], ["eats-purdue", "Purdue dining"],
+    ["eats-steak", "Steak with chimichurri"], ["eats-kbbq", "Korean BBQ"], ["eats-desserts", "Dessert round"], ["eats-seafood-tower", "Seafood tower"],
+    ["eats-hotpot", "Hot pot"], ["eats-spicy-stirfry", "Spicy stir-fry"], ["eats-feast", "Family-style feast"], ["eats-prosciutto-pizza", "Prosciutto pizza"],
+    ["eats-white-pizza", "White pizza"], ["eats-pasta", "Pasta with egg yolk"], ["eats-shrimp", "Shrimp night"], ["eats-breakfast", "Breakfast plate"],
+    ["eats-steak-dinner", "Steak dinner"], ["eats-lobster-roll", "Lobster roll"], ["eats-shabu", "Shabu-shabu"], ["eats-spread", "The spread"]
   ],
   people: [
     ["frisbee-sunset", "Frisbee boys at sunset"], ["prom", "Prom"], ["pastrnak", "With David Pastrňák"],
     ["frisbee-nationals", "Frisbee nationals"], ["boba-job", "Working at the boba place"], ["frisbee-team", "Frisbee team"],
-    ["prom-bus", "Prom bus"], ["frisbee-squad", "The squad"], ["frisbee-yula", "Fall frisbee crew"]
+    ["prom-bus", "Prom bus"], ["frisbee-squad", "The squad"], ["frisbee-yula", "Fall frisbee crew"],
+    ["big-bite", "Big bite"], ["seafood-boil", "Seafood boil"], ["food-tray", "Dessert haul"]
   ]
 };

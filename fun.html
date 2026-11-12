@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ryan Li, off the clock</title>
+  <meta name="description" content="Ryan Li: data analytics student at Purdue. Projects in computer vision, LLM research and data work, plus hockey, surfing, art and music.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+</head>
+<body class="page-fun">
+  <a class="skip" href="#life">Skip to content</a>
+
+  <header class="nav " id="top">
+    <a class="brand" href="#top" aria-label="Ryan Li, home"><span class="brand-dot"></span>ryan.li</a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#life">Life</a></li>
+        <li><a href="#fun">Off the ice</a></li>
+        <li><a href="#artHead">Art</a></li>
+        <li><a href="#contact">Say hi</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="side-switch" href="index.html">Work side →</a>
+      <a class="icon-btn gh-btn" href="https://github.com/ryanli0819" target="_blank" rel="noopener" aria-label="Ryan's GitHub"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero-stage" id="heroStage">
+      <div class="hero-media" aria-hidden="true">
+        <video id="heroVideo" src="assets/life/video/surf-hero.mp4" muted loop playsinline autoplay preload="auto"></video>
+        <div class="hero-shade"></div>
+        <span class="hero-media-tag">🏄 me, surfing in Seoul</span>
+      </div>
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">The other side of</p>
+        <h1 class="split-in" aria-label="Ryan Li"><span aria-hidden="true">Ryan Li</span><span class="cursor" aria-hidden="true">_</span></h1>
+        <p class="tagline">
+          <span class="wave" aria-hidden="true">👋</span> The part of me no one else gets to see. Surfing, hockey, frisbee,
+          way too much food, a lamb or two, and the people I do it all with.
+        </p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#life">Dive in ↓</a>
+          <a class="btn ghost" href="index.html">The work side →</a>
+        </div>
+      </div>
+
+      <div class="rink-wrap fun-only">
+        <canvas id="rink" aria-label="Mini hockey game: flick the puck into a net to jump to a section" role="img"></canvas>
+        <div class="rink-hud">
+          <span>Drag &amp; flick the puck 🏒</span>
+          <span class="score">Goals: <b id="goals">0</b></span>
+        </div>
+        <div class="rink-goal" id="goalFlash" aria-hidden="true">GOAL!</div>
+        <div class="rink-keys">
+          <button class="chip" data-shoot="left">← shoot for life in frames</button>
+          <button class="chip" data-shoot="right">shoot for the work side →</button>
+        </div>
+      </div>
+    </section>
+    </section>
+
+    <!-- ============ LIFE IN FRAMES ============ -->
+    <section id="life" class="life" aria-labelledby="lifeTitle">
+      <div class="section section-head-only">
+        <div class="section-head">
+          <span class="section-num">01</span>
+          <h2 id="lifeTitle">Life in frames</h2>
+          <p class="section-sub">Hockey, surf, golf, frisbee, food and the people in between. All mine, all real.</p>
+        </div>
+      </div>
+
+      <div class="reel" id="reel">
+        <div class="reel-pin">
+          <div class="reel-head"><h3>Highlight reel</h3><p>Keep scrolling: the clips slide by. Click one for sound.</p></div>
+          <div class="reel-track" id="reelTrack"></div>
+          <div class="reel-progress"><i id="reelBar"></i></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sub-head"><h3>🏒 Lexington #19</h3><p>Hover (or swipe) to open a slice. Click for the full gallery.</p></div>
+        <div class="accordion" id="hockeyAcc"></div>
+      </div>
+
+      <div class="section ring-section">
+        <div class="sub-head"><h3>🌏 Around the world</h3><p>Drag to spin. Click a photo to open it.</p></div>
+        <div class="ring-stage" id="ringStage">
+          <div class="ring" id="ring"></div>
+          <div class="ring-floor" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sub-head"><h3>🍜 Things I've eaten</h3><p>Move your mouse (or drag your finger) across the table.</p></div>
+        <div class="trail" id="eatTrail" aria-label="Food photo trail. Move the pointer across to reveal food photos.">
+          <p class="trail-hint">move here<br><span>🍣 🍔 🍜 🍵</span></p>
+          <span class="trail-cap" id="trailCap"></span>
+        </div>
+      </div>
+
+      <div class="marquee-wrap">
+        <div class="sub-head section-inline"><h3>👯 The people</h3><p>Frisbee crews, prom, the boba job, and a few legends.</p></div>
+        <div class="marquee" id="mq1"></div>
+        <div class="marquee reverse" id="mq2"></div>
+      </div>
+    </section>
+
+    <!-- ============ FUN SIDE ============ -->
+    <section id="fun" class="section fun">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>Off the ice <span class="wiggle">(and on it)</span></h2>
+        <p class="section-sub">The non-résumé stuff. Tap a card to flip it.</p>
+      </div>
+      <div class="flip-grid" id="funGrid"></div>
+
+      <div class="sub-head" id="artHead">
+        <h3>🎨 Art portfolio</h3>
+        <p>Things I've made. Flip through it right here.</p>
+      </div>
+      <div class="canva-card">
+        <div class="canva-frame">
+          <iframe loading="lazy" title="Ryan Li art portfolio (Canva)" allow="fullscreen" allowfullscreen
+            src="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view?embed"></iframe>
+        </div>
+        <a class="btn ghost sm" href="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view" target="_blank" rel="noopener">Open full portfolio in Canva ↗</a>
+      </div>
+      <div class="gallery" id="gallery"></div>
+
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section contact">
+      <h2>Say hi.</h2>
+      <p>Want to talk surf spots, hockey, or where to eat? I'm in.</p>
+      <div class="contact-row">
+        <button class="btn primary" id="copyEmail">ryanli08199@gmail.com <span class="copy-hint">copy</span></button>
+        <a class="btn ghost" href="mailto:ryanli08199@gmail.com">Email me</a>
+        <a class="btn ghost" href="assets/resume/Ryan_Li_Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+        <a class="btn ghost" href="https://github.com/ryanli0819" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year"></span> Ryan Li · West Lafayette, IN</span>
+    <span id="visitorCount" hidden></span>
+    <span class="egg-hint">psst, try typing <kbd>goal</kbd></span>
+  </footer>
+
+  <!-- Lightbox (art + fun photos) -->
+  <dialog class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    <button class="lb-nav prev" id="lbPrev" aria-label="Previous photo">‹</button>
+    <figure>
+      <img id="lbImg" alt="">
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+    <button class="lb-nav next" id="lbNext" aria-label="Next photo">›</button>
+  </dialog>
+
+  <!-- Video player -->
+  <dialog class="vbox" id="vbox">
+    <button class="lb-close" id="vbClose" aria-label="Close">✕</button>
+    <video id="vbVideo" controls playsinline></video>
+    <p id="vbCap"></p>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script src="js/data.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/rink.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/life.js"></script>
+</body>
+</html>

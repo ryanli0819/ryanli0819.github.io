@@ -7,49 +7,52 @@
   <meta name="description" content="Ryan Li: data analytics student at Purdue. Projects in computer vision, LLM research and data work, plus hockey, surfing, art and music.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏒</text></svg>">
 </head>
-<body>
-  <a class="skip" href="#main">Skip to content</a>
+<body class="page-work">
+  <a class="skip" href="#intro">Skip to content</a>
 
-  <header class="nav" id="top">
+  <header class="nav nav-float" id="top">
     <a class="brand" href="#top" aria-label="Ryan Li, home"><span class="brand-dot"></span>ryan.li</a>
     <nav aria-label="Primary">
       <ul class="nav-links">
+        <li><a href="#intro">Intro</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#timeline">Timeline</a></li>
-        <li class="fun-only"><a href="#life">Life</a></li>
-        <li class="fun-only"><a href="#fun">Off the ice</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
     <div class="nav-actions">
-      <button class="pill-toggle" id="skimToggle" aria-pressed="false" title="Hide the playful bits for a quick professional read">
-        <span class="pill-knob"></span><span class="pill-label">30-sec view</span>
-      </button>
+      <a class="side-switch" href="fun.html">Fun side →</a>
       <a class="icon-btn gh-btn" href="https://github.com/ryanli0819" target="_blank" rel="noopener" aria-label="Ryan's GitHub"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
       <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">◐</button>
     </div>
   </header>
 
   <main id="main">
-    <!-- ============ HERO ============ -->
-    <section class="hero-stage" id="heroStage">
-      <div class="hero-media" aria-hidden="true">
-        <video id="heroVideo" src="assets/life/video/surf-hero.mp4" muted loop playsinline autoplay preload="auto"></video>
-        <div class="hero-shade"></div>
-        <span class="hero-media-tag">🏄 me, surfing in Seoul</span>
-      </div>
-    <section class="hero">
-      <div class="hero-text">
+    <!-- ============ FIRST LOOK: 3D figure + name ============ -->
+    <section class="stage3d" id="stage3d" aria-label="Ryan Li. A 3D figure of Ryan; drag to look around him.">
+      <div class="s3-bg" aria-hidden="true"><div class="s3-halo"></div></div>
+      <h1 class="s3-name" aria-hidden="true"><span>RYAN</span><span>LI</span></h1>
+      <img class="s3-fallback" id="figureFallback" src="assets/hero/ryan-figure-sm.webp" alt="">
+      <canvas id="figure" aria-hidden="true"></canvas>
+    </section>
+
+    <!-- ============ INTRO (shows after the first scroll) ============ -->
+    <section id="intro" class="intro section">
+      <figure class="intro-photo reveal">
+        <img src="assets/img/ryan-aix.jpg" alt="Ryan Li (right, with name tag) at the AIx Conference" loading="lazy">
+        <figcaption>At the AIx Conference (IEEE AIxHeart 2024), where our ASABC paper was presented. I'm on the right.</figcaption>
+      </figure>
+      <div class="intro-text reveal">
         <p class="eyebrow">Hi! I am</p>
-        <h1 class="split-in" aria-label="Ryan Li"><span aria-hidden="true">Ryan Li</span><span class="cursor" aria-hidden="true">_</span></h1>
+        <h2 class="intro-name">Ryan Li</h2>
         <p class="tagline">
-          <span class="wave" aria-hidden="true">👋</span> A freshman studying data analytics at Purdue. I am a surfer,
-          hockey player, a brother and a great singer outside of academics.
+          A freshman studying data analytics at Purdue. I am a surfer, hockey player, a brother and a great singer
+          outside of academics.
         </p>
         <p class="tagline tagline-2">
           Whether I'm reading a wave, a play on the ice or a scatter plot, I'm hunting for the pattern hiding in the noise.
@@ -59,24 +62,10 @@
         <div class="hero-cta">
           <a class="btn primary" href="#projects">See my work →</a>
           <a class="btn ghost" href="assets/resume/Ryan_Li_Resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
-          <a class="btn ghost" href="https://github.com/ryanli0819" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="btn ghost" href="fun.html">The fun side →</a>
         </div>
         <ul class="stats" id="stats"></ul>
       </div>
-
-      <div class="rink-wrap fun-only">
-        <canvas id="rink" aria-label="Mini hockey game: flick the puck into a net to jump to a section" role="img"></canvas>
-        <div class="rink-hud">
-          <span>Drag &amp; flick the puck 🏒</span>
-          <span class="score">Goals: <b id="goals">0</b></span>
-        </div>
-        <div class="rink-goal" id="goalFlash" aria-hidden="true">GOAL!</div>
-        <div class="rink-keys">
-          <button class="chip" data-shoot="left">← shoot for the fun side</button>
-          <button class="chip" data-shoot="right">shoot for projects →</button>
-        </div>
-      </div>
-    </section>
     </section>
 
     <!-- ============ ABOUT ============ -->
@@ -85,8 +74,7 @@
         <span class="section-num">01</span>
         <h2>About</h2>
       </div>
-      <div class="about-grid">
-        <div class="photo" id="photo"></div>
+      <div class="about-grid no-photo">
         <div>
           <div class="about-bio" id="bio"></div>
           <dl class="facts" id="facts"></dl>
@@ -130,80 +118,10 @@
       <div class="road" id="road" role="list" aria-label="My path from Grade 9 to Purdue, drawn as a road trip"></div>
     </section>
 
-    <!-- ============ LIFE IN FRAMES ============ -->
-    <section id="life" class="life fun-only" aria-labelledby="lifeTitle">
-      <div class="section section-head-only">
-        <div class="section-head">
-          <span class="section-num">04</span>
-          <h2 id="lifeTitle">Life in frames</h2>
-          <p class="section-sub">Hockey, surf, golf, frisbee, food and the people in between. All mine, all real.</p>
-        </div>
-      </div>
-
-      <div class="reel" id="reel">
-        <div class="reel-pin">
-          <div class="reel-head"><h3>Highlight reel</h3><p>Keep scrolling: the clips slide by. Click one for sound.</p></div>
-          <div class="reel-track" id="reelTrack"></div>
-          <div class="reel-progress"><i id="reelBar"></i></div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sub-head"><h3>🏒 Lexington #19</h3><p>Hover (or swipe) to open a slice. Click for the full gallery.</p></div>
-        <div class="accordion" id="hockeyAcc"></div>
-      </div>
-
-      <div class="section ring-section">
-        <div class="sub-head"><h3>🌏 Around the world</h3><p>Drag to spin. Click a photo to open it.</p></div>
-        <div class="ring-stage" id="ringStage">
-          <div class="ring" id="ring"></div>
-          <div class="ring-floor" aria-hidden="true"></div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="sub-head"><h3>🍜 Things I've eaten</h3><p>Move your mouse (or drag your finger) across the table.</p></div>
-        <div class="trail" id="eatTrail" aria-label="Food photo trail. Move the pointer across to reveal food photos.">
-          <p class="trail-hint">move here<br><span>🍣 🍔 🍜 🍵</span></p>
-          <span class="trail-cap" id="trailCap"></span>
-        </div>
-      </div>
-
-      <div class="marquee-wrap">
-        <div class="sub-head section-inline"><h3>👯 The people</h3><p>Frisbee crews, prom, the boba job, and a few legends.</p></div>
-        <div class="marquee" id="mq1"></div>
-        <div class="marquee reverse" id="mq2"></div>
-      </div>
-    </section>
-
-    <!-- ============ FUN SIDE ============ -->
-    <section id="fun" class="section fun fun-only">
-      <div class="section-head">
-        <span class="section-num">05</span>
-        <h2>Off the ice <span class="wiggle">(and on it)</span></h2>
-        <p class="section-sub">The non-résumé stuff. Tap a card to flip it.</p>
-      </div>
-      <div class="flip-grid" id="funGrid"></div>
-
-      <div class="sub-head" id="artHead">
-        <h3>🎨 Art portfolio</h3>
-        <p>Things I've made. Flip through it right here.</p>
-      </div>
-      <div class="canva-card">
-        <div class="canva-frame">
-          <iframe loading="lazy" title="Ryan Li art portfolio (Canva)" allow="fullscreen" allowfullscreen
-            src="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view?embed"></iframe>
-        </div>
-        <a class="btn ghost sm" href="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view" target="_blank" rel="noopener">Open full portfolio in Canva ↗</a>
-      </div>
-      <div class="gallery" id="gallery"></div>
-
-    </section>
-
     <!-- ============ CONTACT ============ -->
     <section id="contact" class="section contact">
       <h2>Let's talk.</h2>
-      <p>Open to research, internships and anything involving data. Or hockey.</p>
+      <p>Open to research, internships and anything involving data. </p>
       <div class="contact-row">
         <button class="btn primary" id="copyEmail">ryanli08199@gmail.com <span class="copy-hint">copy</span></button>
         <a class="btn ghost" href="mailto:ryanli08199@gmail.com">Email me</a>
@@ -216,7 +134,7 @@
   <footer class="footer">
     <span>© <span id="year"></span> Ryan Li · West Lafayette, IN</span>
     <span id="visitorCount" hidden></span>
-    <span class="egg-hint">psst, try typing <kbd>goal</kbd></span>
+    <a class="egg-hint" href="fun.html">psst, there's a fun side →</a>
   </footer>
 
   <!-- Lightbox (art + fun photos) -->
@@ -236,21 +154,13 @@
     <div id="pmBody"></div>
   </dialog>
 
-  <!-- Video player -->
-  <dialog class="vbox" id="vbox">
-    <button class="lb-close" id="vbClose" aria-label="Close">✕</button>
-    <video id="vbVideo" controls playsinline></video>
-    <p id="vbCap"></p>
-  </dialog>
-
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <canvas id="confetti" aria-hidden="true"></canvas>
 
   <script src="js/data.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/viz.js"></script>
-  <script src="js/rink.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/life.js"></script>
+  <script type="module" src="js/figure3d.js"></script>
 </body>
 </html>

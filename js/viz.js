@@ -187,8 +187,10 @@
     const FLAG = { week: 5, cell: "C4", code: "WA12", missing: 12 };
     const countOf = (w, code, id) => code === "ALL" ? PRODUCTS.reduce((a, p) => a + data[w][p.code][id], 0) : data[w][code][id];
     const maxOf = (code) => Math.max(...WEEKS.flatMap((_, w) => cells.map(c => countOf(w, code, c.id))));
-    const stops = [[0, [246, 250, 255]], [.3, [137, 205, 250]], [.62, [254, 182, 193]], [1, [214, 64, 106]]];
-    const heat = (t) => { for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) { const [a, ca] = stops[i - 1], [b, cb] = stops[i], k = (t - a) / (b - a); return `rgb(${ca.map((v, j) => Math.round(v + (cb[j] - v) * k)).join(",")})`; } return "rgb(214,64,106)"; };
+    const work = document.body.classList.contains("page-work");
+    const stops = work ? [[0, [255, 251, 238]], [.3, [226, 207, 150]], [.62, [201, 162, 39]], [1, [122, 74, 30]]]
+                       : [[0, [246, 250, 255]], [.3, [137, 205, 250]], [.62, [254, 182, 193]], [1, [214, 64, 106]]];
+    const heat = (t) => { for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) { const [a, ca] = stops[i - 1], [b, cb] = stops[i], k = (t - a) / (b - a); return `rgb(${ca.map((v, j) => Math.round(v + (cb[j] - v) * k)).join(",")})`; } return `rgb(${stops[stops.length - 1][1].join(",")})`; };
     const serials = (w, code, id) => { // serial range for this bay, numbered in a fixed walk order
       let start = 1; for (const c of cells) { if (c.id === id) break; start += data[w][code][c.id]; }
       const n = data[w][code][id]; return n ? `${code}-26-${String(start).padStart(4, "0")} → ${String(start + n - 1).padStart(4, "0")}` : "none";
