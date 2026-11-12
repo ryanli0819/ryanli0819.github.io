@@ -7,7 +7,7 @@
   <meta name="description" content="Ryan Li: data analytics student at Purdue. Projects in computer vision, LLM research and data work, plus hockey, surfing, art and music.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Big+Shoulders+Display:wght@800;900&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Big+Shoulders+Display:wght@800;900&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏒</text></svg>">
 </head>
@@ -19,6 +19,7 @@
     <nav aria-label="Primary">
       <ul class="nav-links">
         <li class="nl-group">Work</li>
+        <li><a href="#purdue">Purdue</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#timeline">Timeline</a></li>
@@ -37,16 +38,18 @@
 
   <main id="main">
     <!-- ============ FIRST LOOK: 3D figure + name ============ -->
-    <section class="stage3d" id="stage3d" aria-label="Ryan Li. A 3D figure of Ryan; drag to look around him.">
-      <div class="s3-bg" aria-hidden="true"><div class="s3-halo"></div></div>
-      <h1 class="s3-name" aria-hidden="true"><span>RYAN</span><span>LI</span></h1>
-      <img class="s3-fallback" id="figureFallback" src="assets/hero/ryan-figure-sm.webp" alt="">
-      <canvas id="figure" aria-hidden="true"></canvas>
-      <div class="s3-keys" aria-hidden="true">
-        <span class="k k-tl"><b>01</b>Data analytics<br>Purdue University</span>
-        <span class="k k-tr"><b>02</b>Data science ·<br>exploratory data</span>
-        <span class="k k-bl"><b>03</b>Surfer · hockey<br>brother · singer</span>
-        <span class="k k-br">Drag to turn ⟲</span>
+    <section class="stage3d-wrap" id="stage3d" aria-label="Ryan Li. A 3D scene of Ryan surrounded by brass clockwork; drag to look around him.">
+      <div class="stage3d" id="stagePin">
+        <div class="s3-bg" aria-hidden="true"></div>
+        <h1 class="s3-name" aria-hidden="true"><span>Ryan</span><span>Li</span></h1>
+        <img class="s3-fallback" id="figureFallback" src="assets/hero/ryan-figure-sm.webp" alt="">
+        <canvas id="figure" aria-hidden="true"></canvas>
+        <div class="s3-keys" aria-hidden="true">
+          <span class="k k-tl"><b>01</b>Data analytics<br>Purdue University</span>
+          <span class="k k-tr"><b>02</b>Data science ·<br>exploratory data</span>
+          <span class="k k-bl"><b>03</b>Surfer · hockey<br>brother · singer</span>
+          <span class="k k-br">Drag to turn ⟲ · scroll to enter ↓</span>
+        </div>
       </div>
     </section>
 
@@ -78,10 +81,32 @@
       </div>
     </section>
 
+    <!-- ============ PURDUE · DATA ANALYTICS ============ -->
+    <section id="purdue" class="section purdue">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>Purdue · Data analytics</h2>
+        <p class="section-sub">What I'm studying, what I'm working on right now, and how the projects below fit together.</p>
+      </div>
+      <div class="pu-top">
+        <div class="pu-degree">
+          <p class="pu-label">Degree</p>
+          <h3 id="puDegree"></h3>
+          <dl class="pu-spec" id="puSpec"></dl>
+        </div>
+        <blockquote class="pu-why" id="puWhy"></blockquote>
+      </div>
+      <div class="pu-tracks" id="puTracks"></div>
+      <div class="sub-head"><h3>My data pipeline</h3><p>Every project I've done exercised one or more of these stages.</p></div>
+      <ol class="pu-pipe" id="puPipe"></ol>
+      <div class="sub-head"><h3>Before Purdue</h3><p>The short version.</p></div>
+      <dl class="pu-before" id="puBefore"></dl>
+    </section>
+
     <!-- ============ ABOUT ============ -->
     <section id="about" class="section">
       <div class="section-head">
-        <span class="section-num">01</span>
+        <span class="section-num">02</span>
         <h2>About</h2>
       </div>
       <div class="about-grid no-photo">
@@ -97,7 +122,7 @@
     <!-- ============ PROJECTS ============ -->
     <section id="projects" class="section">
       <div class="section-head">
-        <span class="section-num">02</span>
+        <span class="section-num">03</span>
         <h2>Projects</h2>
         <p class="section-sub">High school through college. Play with the visuals, hit <b>▶ Demo &amp; details</b> for the video and full story, and find the code on <a href="https://github.com/ryanli0819" target="_blank" rel="noopener">my GitHub</a>.</p>
       </div>
@@ -117,7 +142,7 @@
     <!-- ============ TIMELINE ============ -->
     <section id="timeline" class="section">
       <div class="section-head">
-        <span class="section-num">03</span>
+        <span class="section-num">04</span>
         <h2>The road so far</h2>
         <p class="section-sub">From Grade 9 to Purdue as one road trip. Scroll and the car drives along with you.</p>
       </div>
@@ -177,7 +202,7 @@
     <section id="life" class="life" aria-labelledby="lifeTitle">
       <div class="section section-head-only">
         <div class="section-head">
-          <span class="section-num">04</span>
+          <span class="section-num">05</span>
           <h2 id="lifeTitle">Life in frames</h2>
           <p class="section-sub">Hockey, surf, golf, frisbee, food and the people in between. All mine, all real.</p>
         </div>
@@ -222,7 +247,7 @@
     <!-- ============ FUN SIDE ============ -->
     <section id="fun" class="section fun">
       <div class="section-head">
-        <span class="section-num">05</span>
+        <span class="section-num">06</span>
         <h2>Off the ice <span class="wiggle">(and on it)</span></h2>
         <p class="section-sub">The non-résumé stuff. Tap a card to flip it.</p>
       </div>
@@ -299,6 +324,12 @@
   <script src="js/rink.js"></script>
   <script src="js/main.js"></script>
   <script src="js/life.js"></script>
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
   <script type="module" src="js/figure3d.js"></script>
 </body>
 </html>

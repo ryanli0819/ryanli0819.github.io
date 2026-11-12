@@ -21,6 +21,41 @@ window.SHOW_MISSING_INFO = false;
 window.ANALYTICS = { goatcounter: "" };
 
 window.SITE = {
+  /* ---------------------------------------------------------------
+     PURDUE · DATA ANALYTICS (work side, right after the intro)
+     --------------------------------------------------------------- */
+  purdue: {
+    degree: "B.S. Data Analytics Application and Technology",
+    college: "Purdue Polytechnic Institute",
+    place: "West Lafayette, IN",
+    grad: "Expected May 2030",
+    why: "I'm heading into data science because the interesting part of every project I've done was the data: messy bullet-chat logs, labeled hockey film, warehouse counts that didn't add up. I want to get really good at exploring, cleaning and organizing that kind of data so industries and businesses can make clearer decisions with it.",
+    tracks: [
+      { code: "DM", title: "The Data Mine", tag: "Learning community · ongoing",
+        text: "Purdue's data-science learning community. I'm building SQL and data-processing fundamentals through hands-on project work with real-world datasets, alongside faculty and industry partners.",
+        link: { label: "About The Data Mine", url: "https://datamine.purdue.edu/" } },
+      { code: "FS", title: "Flight-simulator data", tag: "Research & data work · ongoing",
+        text: "Preprocessing and cleaning data exported from Purdue's aviation flight simulators for a Bay Area company training an AI system that helps student pilots learn to fly. Structuring and validating it for machine learning.",
+        link: { label: "See the project", url: "#p-aviation" } },
+      { code: "DS", title: "Direction: data science", tag: "Where this is going",
+        text: "Exploratory data analysis and data quality first, then modeling. The goal is analysis that people in a business can actually act on, not just a good score.",
+        link: null }
+    ],
+    pipeline: [
+      { stage: "Collect", what: "Gather and label raw data", from: ["Hand-labeled hockey film (ground truth)", "Bullet-chat logs from Douyu live streams", "Daily warehouse counts"] },
+      { stage: "Clean", what: "Fix, structure, validate", from: ["Flight-simulator exports for an AI flight tutor", "Iterative label cleanup in the ASABC paper"] },
+      { stage: "Explore", what: "Find what the data is saying", from: ["EDA on inventory discrepancies at Ventrix", "Titanic survival patterns by class and sex"] },
+      { stage: "Model", what: "Train and evaluate", from: ["CNN + YOLO for teams and roles", "Few-shot prompt-tuned LLM", "Titanic classifier"] },
+      { stage: "Decide", what: "Turn it into action", from: ["Restocking calls and shipping checks", "Frame-by-frame play review", "Flagging negative chat for moderators"] }
+    ],
+    before: [
+      { k: "High school", v: "Lexington High School, Lexington, MA" },
+      { k: "GPA", v: "3.78 unweighted (no weighted GPA offered) · most rigorous course load available" },
+      { k: "SAT", v: "1530 (800 Math)" },
+      { k: "Research", v: "IEEE AIxHeart 2024 co-author · IEYI China Distinction Award" }
+    ]
+  },
+
   person: {
     name: "Ryan Li",
     school: "Purdue University · Purdue Polytechnic Institute",
@@ -62,6 +97,10 @@ window.SITE = {
   projects: [
     {
       id: "asabc",
+      problem: "Live streams on Douyu are covered in \"bullet chat\": thousands of tiny comments flying across the video. Moderating the negative ones by hand doesn't scale, and keyword filters miss the memes, slang and sarcasm that carry most of the meaning.",
+      time: "Summer after Grade 11 · 30 hrs/week for 9 weeks (about 270 hours)",
+      learned: "How a real research team works: preparing messy data, designing a fair evaluation, and iterating when results don't hold up. It's where I learned that most of data science is the data.",
+      results: ["83.5% accuracy on the same-room validation set", "~76–77% accuracy holding up on other rooms, other games and non-gaming streams", "Trained on 8,925 messages; tested on 185k+", "Published at IEEE AIxHeart 2024 (co-author)"],
       repo: "https://github.com/ryanli0819/asabc-bullet-chat-sentiment",
       demo: "assets/video/asabc-explainer.mp4",
       demoKind: "explainer",
@@ -92,6 +131,10 @@ window.SITE = {
     },
     {
       id: "hockey-cv",
+      problem: "I spend hours on film study as a varsity left wing. Breaking down game tape by hand is slow, so I wanted software that could watch the film for me: who is on which team, who's a referee, and how fast everyone is moving.",
+      time: "Grade 12 independent research · about 13 hrs/week for 7 weeks",
+      learned: "Labeling ground truth is half the work, and small changes to the loss function can matter more than a bigger model. Also: computer vision is a lot harder when everyone is wearing helmets.",
+      results: ["Over 90% classification accuracy", "4 classes: home team, away team, referee, puck", "Speed and distance estimated per player", "Distinction Award at IEYI China (International Exhibition for Young Inventors)"],
       repo: "https://github.com/ryanli0819/hockey-jersey-player-recognition",
       demo: "assets/video/hockey-demo.mp4",
       demoKind: "real",
@@ -123,6 +166,10 @@ window.SITE = {
     },
     {
       id: "aviation",
+      problem: "An AI system that helps student pilots learn to fly is only as good as the data it learns from. Raw exports from flight simulators need to be cleaned, structured and checked before any model can use them.",
+      time: "Purdue · ongoing",
+      learned: "Validation rules and repeatable pipelines beat one-off cleanup scripts, especially when someone else's model depends on your output.",
+      results: ["Simulator datasets structured and validated for downstream machine learning", "Preprocessing steps built to be repeated on new exports"],
       repo: "https://github.com/ryanli0819/flight-sim-data-preprocessing",
       demo: "assets/video/aviation-explainer.mp4",
       demoKind: "explainer",
@@ -148,6 +195,10 @@ window.SITE = {
     },
     {
       id: "datamine",
+      problem: "Purdue's Data Mine pairs students with real-world datasets and partners, so the fundamentals get learned on actual problems instead of toy examples.",
+      time: "Purdue · ongoing",
+      learned: "SQL and data-processing fundamentals, applied to real datasets alongside faculty and industry partners.",
+      results: [],
       repo: "https://github.com/ryanli0819/purdue-data-mine",
       title: "The Data Mine",
       badge: "Learning community",
@@ -170,6 +221,10 @@ window.SITE = {
     },
     {
       id: "kaggle",
+      problem: "Kaggle's classic starter competition: given passenger details like class, sex and age, predict who survived the Titanic.",
+      time: "Data science competition",
+      learned: "Feature engineering on tabular data, and reading the data before reaching for a model. The chart on this card uses the real survival rates from Kaggle's training set.",
+      results: ["100% accuracy on the public leaderboard", "Tied for 1st among 2,000+ entries"],
       repo: "https://github.com/ryanli0819/kaggle-titanic",
       demo: "assets/video/kaggle-explainer.mp4",
       demoKind: "explainer",
@@ -194,6 +249,10 @@ window.SITE = {
     },
     {
       id: "drowning",
+      problem: "Lifeguards can't watch every swimmer at once, and a drowning can be silent. The idea: camera software that notices when a swimmer stops moving and alerts a lifeguard.",
+      time: "Grades 10–12 · about 4 hrs/week, 42 weeks a year",
+      learned: "Public speaking, startup thinking, and how to size a market. A good idea still has to be explained in two minutes to people who've never heard of it.",
+      results: ["2nd place in the state competition"],
       repo: "https://github.com/ryanli0819/ai-drowning-detection-pitch",
       demo: "assets/video/drowning-explainer.mp4",
       demoKind: "explainer",
@@ -218,6 +277,10 @@ window.SITE = {
     },
     {
       id: "ventrix",
+      problem: "A warehouse full of AC and heating units only works if the counts are right. When the system says 64 and the shelf says 52, someone has to find out why before an order ships.",
+      time: "Summer 2026 internship · May to July",
+      learned: "Exploratory data analysis on a real operation, working with a sales team, and the regulations and industry standards that govern electronics and HVAC systems.",
+      results: ["Daily inventory analysis across the warehouse", "Discrepancies caught with EDA to inform restocking", "Shipping orders confirmed with sales"],
       featured: true,
       wideViz: true,
       repo: "https://github.com/ryanli0819/ventrix-inventory-analysis",

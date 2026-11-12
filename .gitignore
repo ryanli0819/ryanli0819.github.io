@@ -12,3 +12,4 @@ content/projects/
 # Per-project GitHub repos are generated here and pushed separately
 project-repos/
 tools/projects.json
+*.mov

@@ -17,6 +17,24 @@
   /* ---------- Hero ---------- */
   $("#stats").innerHTML = S.stats.map(s => `<li><b>${esc(s.value)}</b><span>${esc(s.label)}</span></li>`).join("");
 
+  /* ---------- Purdue · Data analytics ---------- */
+  const PU = S.purdue;
+  if (PU && document.querySelector("#purdue")) {
+    $("#puDegree").textContent = PU.degree;
+    $("#puSpec").innerHTML = [["College", PU.college], ["Campus", PU.place], ["Graduation", PU.grad]].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
+    $("#puWhy").innerHTML = `<span class="pu-label">Why data</span><p>${esc(PU.why)}</p>`;
+    $("#puTracks").innerHTML = PU.tracks.map(t => `
+      <article class="pu-track reveal"><span class="pu-code">${esc(t.code)}</span>
+        <p class="pu-tag">${esc(t.tag)}</p><h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>
+        ${t.link ? `<a href="${esc(t.link.url)}" ${t.link.url.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}>${esc(t.link.label)} ${t.link.url.startsWith("http") ? "↗" : "→"}</a>` : ""}
+      </article>`).join("");
+    $("#puPipe").innerHTML = PU.pipeline.map((st, i) => `
+      <li class="pu-stage reveal" style="--i:${i}"><span class="pu-n">${String(i + 1).padStart(2, "0")}</span>
+        <h4>${esc(st.stage)}</h4><p class="pu-what">${esc(st.what)}</p>
+        <ul>${st.from.map(f => `<li>${esc(f)}</li>`).join("")}</ul></li>`).join("");
+    $("#puBefore").innerHTML = PU.before.map(b => `<div><dt>${esc(b.k)}</dt><dd>${esc(b.v)}</dd></div>`).join("");
+  }
+
   /* ---------- About ---------- */
   const P = S.person;
   $("#photo").innerHTML = P.photo
@@ -59,6 +77,7 @@
       <div class="when">${esc(p.when)}</div>`;
     const main = `
       <p class="summary">${esc(p.summary)}</p>
+      ${p.time ? `<p class="card-time">⏱ ${esc(p.time)}</p>` : ""}
       ${p.citation ? `<p class="cite">${p.citation}</p>` : ""}
       ${metrics}
       <ul class="tags">${p.skills.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
@@ -92,9 +111,13 @@
         <h2 id="pmTitle">${esc(p.title)}</h2>
         <p class="when">${esc(p.when)}</p>
         <p class="pm-summary">${esc(p.summary)}</p>
+        ${p.time ? `<p class="pm-time"><b>Time</b> ${esc(p.time)}</p>` : ""}
+        ${p.problem ? `<h3>The problem</h3><p>${esc(p.problem)}</p>` : ""}
         ${p.details.length ? `<h3>What I did</h3><ul class="did">${p.details.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : ""}
         <h3>Skills used</h3><ul class="tags">${p.skills.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
-        ${p.metrics.length ? `<h3>Results</h3><div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>` : ""}
+        ${p.results && p.results.length ? `<h3>Results</h3><ul class="pm-results">${p.results.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+        ${p.learned ? `<h3>What I learned</h3><p>${esc(p.learned)}</p>` : ""}
+        ${p.metrics.length ? `<h3>By the numbers</h3><div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>` : ""}
         ${p.citation ? `<h3>Citation</h3><p class="cite">${p.citation}</p>` : ""}
         <div class="project-links pm-links">${linkList.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="${l.gh ? "gh-link" : ""}">${esc(l.label)} ↗</a>`).join("")}</div>
         ${dropbox(p.missing, `Edit project <code>${esc(p.id)}</code> in <code>js/data.js</code>.`)}
@@ -371,7 +394,7 @@
   if (floatNav && stage3d) {
     const fun = document.querySelector(".side-fun"), sw = document.querySelector("#sideSwitch");
     const navCheck = () => {
-      floatNav.classList.toggle("show", scrollY > stage3d.offsetHeight * .6);
+      floatNav.classList.toggle("show", scrollY > stage3d.offsetHeight - innerHeight * .4);
       if (!fun) return;
       const r = fun.getBoundingClientRect(), inFun = r.top < 70 && r.bottom > 70;
       if (document.body.classList.contains("in-fun") !== inFun) {
