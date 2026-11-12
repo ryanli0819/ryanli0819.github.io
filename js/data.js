@@ -318,3 +318,47 @@ window.SITE = {
       back: "Since sophomore year: cryptography, capture-the-flag and competitive programming with friends." }
   ]
 };
+
+/* ---------------------------------------------------------------
+   LIFE IN FRAMES — photos in assets/life/img/, videos in assets/life/video/
+   --------------------------------------------------------------- */
+// Paste a Spline "Public URL" here (Spline → Export → Public URL, starts with https://my.spline.design/) to show it
+// in the "Around the world" section above the photo ring. Leave empty to show just the ring.
+window.SPLINE_SCENE = "";
+
+window.LIFE = {
+  reel: [
+    { src: "surf-best.mp4", cap: "🏄 Best wave of the trip, Seoul", shape: "wide" },
+    { src: "hockey-goal-1.mp4", cap: "🏒 Goal", shape: "wide" },
+    { src: "golf-driver-280.mp4", cap: "⛳ 280-yard drive in China", shape: "tall" },
+    { src: "surf-wave.mp4", cap: "🌊 Riding one in Seoul", shape: "wide" },
+    { src: "hockey-goal-2.mp4", cap: "🏒 Another goal", shape: "wide" },
+    { src: "tennis-serve.mp4", cap: "🎾 Serve", shape: "tall" },
+    { src: "golf-swing.mp4", cap: "⛳ Golf swing", shape: "tall" },
+    { src: "hockey-goal-3.mp4", cap: "🏒 Goal again", shape: "wide" },
+    { src: "golf-range.mp4", cap: "⛳ At the range", shape: "tall" }
+  ],
+  hockey: [
+    ["hockey-shot", "Shot from the slot"], ["hockey-back-19", "#19"], ["hockey-anthem", "National anthem"],
+    ["hockey-lexington", "Lexington vs. the boards"], ["hockey-laugh", "Genuine laugh"], ["hockey-carry", "Carrying it in"],
+    ["hockey-big-hit", "Big hit"], ["hockey-bond", "Bench bond"], ["hockey-skate", "Wheels"],
+    ["hockey-boys", "With the boys"], ["hockey-chase", "Puck chase"], ["hockey-pose", "Pose"],
+    ["hockey-rush", "Odd-man rush"], ["hockey-battle", "Battle at the net"], ["hockey-bench", "Goal celebration"]
+  ],
+  world: [
+    ["japan-torii", "Torii gates, Japan"], ["surf-barrel", "Surfing in Seoul"], ["china-hohhot-horses", "Horse riding in Hohhot, China"],
+    ["ski-copper", "Skiing at Copper Mountain"], ["seoul-brother", "With my brother in Seoul"], ["surf-young", "Surfing, younger me"],
+    ["japan-nature", "Japan, up in the green"], ["world-cup-flag", "Flag bearer at the Boston World Cup. Best experience."],
+    ["surf-seoul", "Seoul wave pool"], ["china-horse", "Out on the grassland, Hohhot"], ["surf-long-island", "Long Island surf"]
+  ],
+  eats: [
+    ["eats-ramen", "Ramen"], ["eats-wagyu", "Wagyu sukiyaki"], ["eats-malatang", "Malatang"], ["eats-matcha", "Matcha"],
+    ["eats-japan-hamburg", "Hamburg steak, Japan"], ["eats-truffle-burger", "Truffle burger"], ["eats-canto", "Cantonese"],
+    ["eats-chinese", "Spicy Chinese"], ["eats-purdue", "Purdue dining"]
+  ],
+  people: [
+    ["frisbee-sunset", "Frisbee boys at sunset"], ["prom", "Prom"], ["pastrnak", "With David Pastrňák"],
+    ["frisbee-nationals", "Frisbee nationals"], ["boba-job", "Working at the boba place"], ["frisbee-team", "Frisbee team"],
+    ["prom-bus", "Prom bus"], ["frisbee-squad", "The squad"], ["frisbee-yula", "Fall frisbee crew"]
+  ]
+};

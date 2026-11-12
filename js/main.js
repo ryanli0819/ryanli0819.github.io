@@ -224,7 +224,7 @@
   function renderFun() {
     $("#funGrid").innerHTML = S.fun.map((f, i) => {
       const extra = funPhotos[f.folder] || {}, n = (extra.photos || []).length;
-      const cover = n ? `style="--cover:url('${esc(extra.photos[0])}')"` : "";
+      const cover = n ? `style="--cover:url('${esc(new URL(extra.photos[0], location.href).href)}')"` : "";
       return `
       <div class="flip reveal in ${n ? "has-photos" : ""}" role="button" tabindex="0" data-i="${i}" aria-label="${esc(f.title)}: ${esc(f.front)}. Flip for more.">
         <div class="flip-inner">

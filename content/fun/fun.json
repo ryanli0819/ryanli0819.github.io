@@ -3,7 +3,16 @@
     "photos": []
   },
   "hockey": {
-    "photos": []
+    "photos": [
+      "assets/life/img/hockey-shot.jpg",
+      "assets/life/img/hockey-anthem.jpg",
+      "assets/life/img/hockey-back-19.jpg",
+      "assets/life/img/hockey-laugh.jpg",
+      "assets/life/img/hockey-carry.jpg",
+      "assets/life/img/hockey-bond.jpg",
+      "assets/life/img/hockey-boys.jpg",
+      "assets/life/img/hockey-bench.jpg"
+    ]
   },
   "lexmacs": {
     "photos": []
@@ -12,6 +21,12 @@
     "photos": []
   },
   "ultimate-frisbee": {
-    "photos": []
+    "photos": [
+      "assets/life/img/frisbee-team.jpg",
+      "assets/life/img/frisbee-nationals.jpg",
+      "assets/life/img/frisbee-sunset.jpg",
+      "assets/life/img/frisbee-squad.jpg",
+      "assets/life/img/frisbee-yula.jpg"
+    ]
   }
 }
