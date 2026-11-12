@@ -345,7 +345,7 @@
     setTimeout(() => flash.classList.remove("show"), 900);
     const left = e.detail.side === "left";
     toast(left ? "🥳 Goal! Heading to life in frames…" : "🎯 Goal! Heading to the work side…");
-    setTimeout(() => { if (left) document.querySelector("#life").scrollIntoView({ behavior: "smooth" }); else location.href = "index.html#projects"; }, 1000);
+    setTimeout(() => document.querySelector(left ? "#life" : "#projects").scrollIntoView({ behavior: "smooth" }), 1000);
   });
 
   /* ---------- Easter egg: type "goal" ---------- */
@@ -369,7 +369,16 @@
   /* ---------- Work page: nav slides in once you scroll past the 3D figure ---------- */
   const floatNav = document.querySelector(".nav-float"), stage3d = document.querySelector("#stage3d");
   if (floatNav && stage3d) {
-    const navCheck = () => floatNav.classList.toggle("show", scrollY > stage3d.offsetHeight * .6);
+    const fun = document.querySelector(".side-fun"), sw = document.querySelector("#sideSwitch");
+    const navCheck = () => {
+      floatNav.classList.toggle("show", scrollY > stage3d.offsetHeight * .6);
+      if (!fun) return;
+      const r = fun.getBoundingClientRect(), inFun = r.top < 70 && r.bottom > 70;
+      if (document.body.classList.contains("in-fun") !== inFun) {
+        document.body.classList.toggle("in-fun", inFun);
+        sw.textContent = inFun ? "Work side ↑" : "Fun side ↓"; sw.href = inFun ? "#projects" : "#fun-side";
+      }
+    };
     addEventListener("scroll", navCheck, { passive: true }); navCheck();
   }
 

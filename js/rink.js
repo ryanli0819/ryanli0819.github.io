@@ -21,7 +21,7 @@
   };
 
   function readColors() {
-    const s = getComputedStyle(document.documentElement);
+    const s = getComputedStyle(canvas);
     const v = (n) => s.getPropertyValue(n).trim();
     colors = { ice: v("--rink-ice"), red: v("--red"), blue: v("--gold"), ink: v("--ink"), ink3: v("--ink-3"), line: v("--line") };
   }

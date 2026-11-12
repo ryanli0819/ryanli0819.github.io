@@ -22,9 +22,10 @@
   if (reduce && hv) { hv.removeAttribute("autoplay"); hv.pause(); }
   function heroScroll() {
     if (!stage) return;
-    const p = clamp(scrollY / (stage.offsetHeight * .9));
+    const r = stage.getBoundingClientRect(), p = clamp(-r.top / (stage.offsetHeight * .9));
+    const off = r.top > innerHeight || p >= 1;
     media.style.setProperty("--p", p.toFixed(3));
-    if (hv && !reduce) { if (p >= 1 && !hv.paused) hv.pause(); else if (p < 1 && hv.paused) hv.play().catch(() => {}); }
+    if (hv && !reduce) { if (off && !hv.paused) hv.pause(); else if (!off && hv.paused) hv.play().catch(() => {}); }
   }
 
   /* ---------- Video lightbox ---------- */

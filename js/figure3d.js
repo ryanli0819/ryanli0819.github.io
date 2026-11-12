@@ -35,7 +35,7 @@ async function init() {
     return (p(x0, y0) * (1 - fx) + p(x1, y0) * fx) * (1 - fy) + (p(x0, y1) * (1 - fx) + p(x1, y1) * fx) * fy;
   };
 
-  const aspect = tex.image.width / tex.image.height, H = 2, W = H * aspect, DEPTH = 0.42;
+  const aspect = tex.image.width / tex.image.height, H = 2, W = H * aspect, DEPTH = 0.26;
   const SX = small ? 110 : 180, SY = small ? 200 : 330;
   const geo = new THREE.PlaneGeometry(W, H, SX, SY);
   const pos = geo.attributes.position, uv = geo.attributes.uv;
@@ -70,7 +70,7 @@ async function init() {
 
   // orbit state
   let yaw = 0, pitch = 0, tYaw = 0, tPitch = 0, dragging = false, lx = 0, ly = 0, lastMove = 0, mx = 0, my = 0;
-  const YAW_MAX = 0.9, PITCH_MAX = 0.28; // ~52° and ~16°: the photo only has a front, so the view stays in front of it
+  const YAW_MAX = 0.42, PITCH_MAX = 0.14; // ~24° and ~8°: a single photo only holds up for a gentle turn: the photo only has a front, so the view stays in front of it
 
   function layout() {
     const w = stage.clientWidth, h = stage.clientHeight;
@@ -88,7 +88,7 @@ async function init() {
 
   function render(t) {
     if (!dragging) {
-      const idle = reduce ? 0 : Math.sin(t / 2600) * 0.16;
+      const idle = reduce ? 0 : Math.sin(t / 2600) * 0.1;
       if (performance.now() - lastMove > 1400) { tYaw += (idle + mx * 0.12 - tYaw) * 0.03; tPitch += (my * 0.05 - tPitch) * 0.03; }
     }
     yaw += (tYaw - yaw) * 0.12; pitch += (tPitch - pitch) * 0.12;
@@ -112,8 +112,8 @@ async function init() {
     mx = (e.clientX - r.left) / r.width - 0.5; my = (e.clientY - r.top) / r.height - 0.5;
     if (!dragging) return;
     const dx = e.clientX - lx, dy = e.clientY - ly; lx = e.clientX; ly = e.clientY;
-    tYaw = Math.max(-YAW_MAX, Math.min(YAW_MAX, tYaw - dx * 0.008));
-    if (e.pointerType !== "touch") tPitch = Math.max(-PITCH_MAX, Math.min(PITCH_MAX, tPitch + dy * 0.005));
+    tYaw = Math.max(-YAW_MAX, Math.min(YAW_MAX, tYaw - dx * 0.004));
+    if (e.pointerType !== "touch") tPitch = Math.max(-PITCH_MAX, Math.min(PITCH_MAX, tPitch + dy * 0.003));
     lastMove = performance.now();
   });
   const end = () => { if (!dragging) return; dragging = false; lastMove = performance.now(); stage.classList.remove("dragging"); };

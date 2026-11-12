@@ -4,7 +4,7 @@
 (function () {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const NS = "http://www.w3.org/2000/svg";
-  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const css = (n) => getComputedStyle(document.body).getPropertyValue(n).trim(); // projects live on the work side (body tokens)
   const note = (t = "illustrative") => `<span class="viz-note">${t}</span>`;
   function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   function onVisible(el, fn) {
@@ -130,19 +130,28 @@
       if (!W) size();
       const t = ((now - t0) / 1000) % 8, victim = swimmers[2], still = t > 3;
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = "#89CDFA"; ctx.globalAlpha = .35; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
-      ctx.strokeStyle = css("--red"); ctx.setLineDash([6, 6]); ctx.lineWidth = 1.5;
-      for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(0, (H / 5) * i); ctx.lineTo(W, (H / 5) * i); ctx.stroke(); }
-      ctx.setLineDash([]);
+      // water: slate-teal wash with a tile grid
+      ctx.fillStyle = css("--blue"); ctx.globalAlpha = .16; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = .18;
+      ctx.strokeStyle = css("--blue"); ctx.lineWidth = 1;
+      for (let x = 0; x < W; x += 24) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 24) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      // lane ropes: alternating gold / ink floats
+      for (let i = 1; i < 5; i++) {
+        const y = (H / 5) * i;
+        for (let x = 0, k = 0; x < W; x += 9, k++) { ctx.fillStyle = k % 4 < 2 ? css("--pink") : css("--ink"); ctx.fillRect(x, y - 2, 6, 4); }
+      }
       swimmers.forEach(s => {
         if (!(s === victim && still) && !reduce) { s.x += s.dir * s.sp; if (s.x > .94 || s.x < .06) s.dir *= -1; }
         const x = s.x * W, y = (H / 5) * (s.lane + .5) + (s === victim && still ? Math.sin(now / 300) * 1.5 : 0);
         const flagged = s === victim && t > 4.2;
         ctx.fillStyle = flagged ? css("--red") : css("--ink");
         ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = flagged ? css("--red") : css("--gold"); ctx.lineWidth = 2;
+        ctx.strokeStyle = flagged ? css("--red") : css("--gold"); ctx.lineWidth = flagged ? 2.5 : 1.5;
+        if (!flagged) ctx.setLineDash([4, 3]);
         const pad = flagged ? 14 + Math.sin(now / 150) * 3 : 11;
-        ctx.strokeRect(x - pad, y - pad, pad * 2, pad * 2);
+        ctx.strokeRect(x - pad, y - pad, pad * 2, pad * 2); ctx.setLineDash([]);
+        if (flagged) { ctx.fillStyle = css("--red"); ctx.font = "600 10px 'IBM Plex Mono', monospace"; ctx.fillText("NO MOTION", x + pad + 4, y - pad + 8); }
       });
       if (t < .05) swimmers.forEach((s, i) => s.x = .15 + i * .17);
       alertEl.classList.toggle("show", t > 4.2);
@@ -188,7 +197,7 @@
     const countOf = (w, code, id) => code === "ALL" ? PRODUCTS.reduce((a, p) => a + data[w][p.code][id], 0) : data[w][code][id];
     const maxOf = (code) => Math.max(...WEEKS.flatMap((_, w) => cells.map(c => countOf(w, code, c.id))));
     const work = document.body.classList.contains("page-work");
-    const stops = work ? [[0, [255, 251, 238]], [.3, [226, 207, 150]], [.62, [201, 162, 39]], [1, [122, 74, 30]]]
+    const stops = work ? [[0, [247, 241, 223]], [.28, [226, 196, 122]], [.55, [217, 164, 58]], [.8, [180, 83, 42]], [1, [107, 47, 23]]]
                        : [[0, [246, 250, 255]], [.3, [137, 205, 250]], [.62, [254, 182, 193]], [1, [214, 64, 106]]];
     const heat = (t) => { for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) { const [a, ca] = stops[i - 1], [b, cb] = stops[i], k = (t - a) / (b - a); return `rgb(${ca.map((v, j) => Math.round(v + (cb[j] - v) * k)).join(",")})`; } return `rgb(${stops[stops.length - 1][1].join(",")})`; };
     const serials = (w, code, id) => { // serial range for this bay, numbered in a fixed walk order
