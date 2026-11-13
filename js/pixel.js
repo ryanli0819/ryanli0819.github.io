@@ -36,16 +36,23 @@
     [x - w / 2 + 3, x + w / 2 - 3].forEach(e => { ctx.beginPath(); ctx.moveTo(e, 0); ctx.lineTo(e, H); ctx.stroke(); });
     ctx.restore();
   }
+  const EMOJI = `"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
   function surfer(x, y, scale, rot, alpha) {
     ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(rot); ctx.scale(scale, scale);
-    ctx.font = `44px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = `${W < 720 ? 24 : 30}px ${EMOJI}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText("🏄", 0, 0); ctx.restore();
+  }
+  function pushWave(x, y, t) { // same wave as on the timeline, right behind him (mirrored so it curls the way he rides)
+    ctx.save(); ctx.translate(x, y); ctx.scale(-(1 + Math.sin(t * 5.7) * 0.04), 1 + Math.sin(t * 5.7) * 0.04);
+    ctx.font = `${W < 720 ? 34 : 44}px ${EMOJI}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("🌊", 0, 0); ctx.restore();
   }
 
   function draw() {
     if (!W) return;
     const p = reduce ? 1 : progress(), t = performance.now() / 1000;
-    const cx = W / 2, cw = W < 720 ? 44 : 60, land = { x: cx, y: H * 0.56 };
+    const cx = W / 2, cw = W < 720 ? 40 : 58, land = { x: cx, y: H * 0.56 };
+    const secTop = sec.getBoundingClientRect().top, LINE = innerHeight * 0.55; // the timeline surfer rides this line of the screen
     // phases
     const ride = clamp(p / 0.4), jump = clamp((p - 0.4) / 0.22), ripple = clamp((p - 0.62) / 0.3);
     ctx.clearRect(0, 0, W, H);
@@ -74,10 +81,15 @@
 
     // the surfer
     if (jump <= 0) {
-      const y = H * 0.08 + easeInOut(ride) * H * 0.8;
-      // wake behind him
-      ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.beginPath(); ctx.ellipse(cx, y + 18, 18, 6, 0, 0, Math.PI * 2); ctx.fill();
-      surfer(cx, y, 1, Math.sin(t * 2) * 0.06, 1);
+      // entering: he is still on the timeline's line until this scene pins; then he rides on down to the bottom
+      let y = null;
+      if (secTop > 0) { if (secTop <= LINE) y = LINE - secTop; }
+      else y = LINE + easeInOut(ride) * (H * 0.88 - LINE);
+      if (y !== null) {
+        ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.beginPath(); ctx.ellipse(cx, y + 10, 16, 5, 0, 0, Math.PI * 2); ctx.fill();
+        pushWave(cx, y - 34, t);
+        surfer(cx, y, 1, 0, 1);
+      }
     } else {
       const startY = H * 0.88, peakY = H * 0.2;
       const u = jump, y = (1 - u) * (1 - u) * startY + 2 * (1 - u) * u * peakY + u * u * land.y; // arc up and back down

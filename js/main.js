@@ -177,10 +177,9 @@
           <h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>${yearText(t)}</article>
         <span class="r-pin" aria-hidden="true">${k.e}</span></div>`;
     });
-    html += `<div class="r-row r-sign end"><span class="r-board finish">🏝️ To be continued…</span></div>`;
     el.innerHTML = html;
     const svg = el.querySelector(".road-svg");
-    let path, len = 0, car, stops = [];
+    let path, len = 0, car, stops = [], cx = 0, yC = 0, dCurve = "", lenC = 0;
 
     function draw() {
       const box = el.getBoundingClientRect();
@@ -193,7 +192,12 @@
       if (narrow) pts.forEach(p => p.x = pts[1] ? (el.querySelector(".r-pin").getBoundingClientRect().left + 20 - box.left) : p.x);
       let d = `M${pts[0].x},0 L${pts[0].x},${pts[0].y}`;
       for (let i = 1; i < pts.length; i++) { const a = pts[i - 1], b = pts[i], m = (b.y - a.y) / 2; d += ` C${a.x},${a.y + m} ${b.x},${b.y - m} ${b.x},${b.y}`; }
-      d += ` L${pts.at(-1).x},${box.height}`;
+      // the channel doesn't end: it swings to the middle of the screen and keeps going down into the surf landing below
+      const secEl = el.closest("section"), ext = secEl ? Math.max(0, secEl.getBoundingClientRect().bottom - box.bottom) + 4 : 0;
+      const pL = pts.at(-1); cx = innerWidth / 2 - box.left; yC = Math.max(pL.y + 160, box.height - 20);
+      d += ` C${pL.x},${pL.y + (yC - pL.y) / 2} ${cx},${yC - (yC - pL.y) / 2} ${cx},${yC}`;
+      dCurve = d;
+      d += ` L${cx},${box.height + ext}`;
       const W = narrow ? 40 : 58;
       // lanes for anything that lasted more than a year
       const spans = items.filter(t => t.to > t.from);
@@ -211,25 +215,41 @@
       const p0 = pts[0], pN = pts.at(-1);
       svg.innerHTML = `<defs><pattern id="sandDots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#c9ad7c"/><circle cx="6.5" cy="6" r=".8" fill="#d8c096"/></pattern></defs>
         <ellipse cx="${p0.x}" cy="0" rx="${W * 3.2}" ry="${W * 1.4}" class="beach"/><ellipse cx="${p0.x}" cy="0" rx="${W * 3.2}" ry="${W * 1.4}" fill="url(#sandDots)"/>
-        <ellipse cx="${pN.x}" cy="${box.height}" rx="${W * 3.2}" ry="${W * 1.6}" class="beach"/><ellipse cx="${pN.x}" cy="${box.height}" rx="${W * 3.2}" ry="${W * 1.6}" fill="url(#sandDots)"/>
         <path d="${d}" class="verge"/><path d="${d}" class="asphalt"/><path d="${d}" class="edge"/><path d="${d}" class="asphalt inner"/>
         <path d="${d}" class="center"/><path d="${d}" class="crest2"/>${lanes}
-        <g class="car surfer"><ellipse cx="0" cy="10" rx="16" ry="5" class="wake"/><text x="0" y="0" text-anchor="middle" dominant-baseline="central" style="font-size:${narrow ? 24 : 30}px">🏄</text></g>`;
+        <g class="push-wave"><g class="pw-inner"><text x="0" y="0" text-anchor="middle" dominant-baseline="central" style="font-size:${narrow ? 34 : 44}px">🌊</text></g></g>
+        <g class="car surfer"><ellipse cx="0" cy="10" rx="16" ry="5" class="wake"/><g class="rider"><text x="0" y="0" text-anchor="middle" dominant-baseline="central" style="font-size:${narrow ? 24 : 30}px">🏄</text></g></g>`;
       path = svg.querySelector(".center"); len = path.getTotalLength(); car = svg.querySelector(".car");
+      wave = svg.querySelector(".push-wave"); rider = svg.querySelector(".rider");
+      const pc = document.createElementNS("http://www.w3.org/2000/svg", "path"); pc.setAttribute("d", dCurve); lenC = pc.getTotalLength();
       stops = [...el.querySelectorAll(".r-stop")];
       move();
     }
 
-    let lastP = -1;
+    let lastP = -1, wave, rider, facing = 1;
+    const SURFER_FACES = 1, WAVE_FACES = -1; // emoji default orientation (Apple): the surfer faces right, the wave curls toward the left
     function move() {
       if (!path) return;
       const r = el.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, (innerHeight * .55 - r.top) / r.height));
-      if (Math.abs(p - lastP) < 1e-4) return; lastP = p;
-      const at = Math.max(1, p * len), a = path.getPointAtLength(at), b = path.getPointAtLength(Math.max(0, at - 2));
+      const lineY = innerHeight * .55 - r.top; // the surfer rides the 55% line of the screen
+      const p = Math.min(1, Math.max(0, lineY / yC));
+      if (Math.abs(p - lastP) < 1e-4 && lineY < yC) return; lastP = p;
+      let a, b, at = Math.max(1, p * lenC);
+      if (lineY >= yC) { a = { x: cx, y: lineY }; b = { x: cx, y: lineY - 2 }; at = lenC + (lineY - yC); }
+      else { a = path.getPointAtLength(at); b = path.getPointAtLength(Math.max(0, at - 2)); }
       const ang = Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI;
+      // hand-off: once the surf landing below reaches the surfer's line, that scene's surfer takes over
+      const fs = document.getElementById("fun-side"), handed = fs && fs.getBoundingClientRect().top <= innerHeight * .55;
+      car.style.visibility = wave.style.visibility = handed ? "hidden" : "visible";
       const tilt = Math.max(-28, Math.min(28, (ang - 90) * -0.6)); // lean into the turns, stay upright
       car.setAttribute("transform", `translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) rotate(${tilt.toFixed(1)})`);
+      // face the way he's heading: flip when the channel swings right
+      const fw = lineY >= yC ? { x: cx } : path.getPointAtLength(Math.min(len, at + 12)), dx = fw.x - b.x;
+      if (Math.abs(dx) > 0.4) facing = dx > 0 ? 1 : -1;
+      rider.setAttribute("transform", `scale(${facing * SURFER_FACES},1)`);
+      // the wave stays right behind him, pushing
+      const w = lineY >= yC + 30 ? { x: cx, y: lineY - 30 } : path.getPointAtLength(Math.max(0, Math.min(at, lenC) - 30));
+      wave.setAttribute("transform", `translate(${w.x.toFixed(1)},${(w.y - 4).toFixed(1)}) scale(${facing * WAVE_FACES},1)`);
       stops.forEach(s => { const y = s.offsetTop + s.offsetHeight / 2; s.classList.toggle("passed", a.y >= y - 30); s.classList.toggle("here", Math.abs(a.y - y) < s.offsetHeight / 2 + 10); });
     }
     let raf = 0;
