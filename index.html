@@ -25,7 +25,7 @@
         <li><a href="#timeline">Timeline</a></li>
         <li class="nl-group">Fun</li>
         <li><a href="#life">Life</a></li>
-        <li><a href="#fun">Off the ice</a></li>
+        <li><a href="#art">Art</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -67,9 +67,8 @@
           outside of academics.
         </p>
         <p class="tagline tagline-2">
-          Whether I'm reading a wave, a play on the ice or a scatter plot, I'm hunting for the pattern hiding in the noise.
-          I'm heading into <b>data science</b>, driven by exploring, cleaning and organizing messy data so that
-          industries and businesses can make clearer, smarter decisions.
+          I want to go into <b>data science</b>. I like taking messy data, cleaning it up and figuring out what it says,
+          and I want to use that to help companies in different industries make better decisions.
         </p>
         <div class="hero-cta">
           <a class="btn primary" href="#projects">See my work →</a>
@@ -85,7 +84,7 @@
       <div class="section-head">
         <span class="section-num">01</span>
         <h2>Purdue · Data analytics</h2>
-        <p class="section-sub">What I'm studying, what I'm working on right now, and how the projects below fit together.</p>
+        <p class="section-sub">What I'm studying and what I'm working on right now.</p>
       </div>
       <div class="pu-top">
         <div class="pu-degree">
@@ -96,7 +95,7 @@
         <blockquote class="pu-why" id="puWhy"></blockquote>
       </div>
       <div class="pu-tracks" id="puTracks"></div>
-      <div class="sub-head"><h3>My data pipeline</h3><p>Every project I've done exercised one or more of these stages.</p></div>
+      <div class="sub-head"><h3>How my projects fit together</h3><p>Each one covers a different part of working with data.</p></div>
       <ol class="pu-pipe" id="puPipe"></ol>
       <div class="sub-head"><h3>Before Purdue</h3><p>The short version.</p></div>
       <dl class="pu-before" id="puBefore"></dl>
@@ -154,11 +153,13 @@
 
   </div>
 
-  <!-- ============ THE DIVIDE: work above, fun below ============ -->
-  <div class="divide" id="fun-side" role="separator" aria-label="End of the work side. The fun side starts here.">
-    <div class="divide-band"><span>OFF THE CLOCK</span><span>OFF THE CLOCK</span><span>OFF THE CLOCK</span><span>OFF THE CLOCK</span><span>OFF THE CLOCK</span><span>OFF THE CLOCK</span></div>
-    <p class="divide-note">↓ the part of me no one else gets to see</p>
-  </div>
+  <!-- ============ THE DIVIDE: the page breaks into pixels and rebuilds as the fun side ============ -->
+  <section class="pixel-divide" id="fun-side" aria-label="End of the work side. The fun side starts here.">
+    <div class="px-pin">
+      <canvas id="pixelCanvas" aria-hidden="true"></canvas>
+      <div class="px-cap" id="pixelCap"><h2>The other side.</h2><p>Keep scrolling ↓</p></div>
+    </div>
+  </section>
 
   <div class="side side-fun">
     <!-- ============ HERO ============ -->
@@ -236,6 +237,17 @@
         </div>
       </div>
 
+      <div class="section" id="art">
+        <div class="sub-head"><h3>🎨 Art portfolio</h3><p>Things I've made. Flip through it here.</p></div>
+        <div class="canva-card">
+        <div class="canva-frame">
+          <iframe loading="lazy" title="Ryan Li art portfolio (Canva)" allow="fullscreen" allowfullscreen
+            src="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view?embed"></iframe>
+        </div>
+        <a class="btn ghost sm" href="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view" target="_blank" rel="noopener">Open full portfolio in Canva ↗</a>
+      </div>
+      </div>
+
       <div class="marquee-wrap">
         <div class="sub-head section-inline"><h3>👯 The people</h3><p>Frisbee crews, prom, the boba job, and a few legends.</p></div>
         <div class="marquee" id="mq1"></div>
@@ -243,29 +255,6 @@
       </div>
     </section>
 
-    <!-- ============ FUN SIDE ============ -->
-    <section id="fun" class="section fun">
-      <div class="section-head">
-        <span class="section-num">06</span>
-        <h2>Off the ice <span class="wiggle">(and on it)</span></h2>
-        <p class="section-sub">The non-résumé stuff. Tap a card to flip it.</p>
-      </div>
-      <div class="flip-grid" id="funGrid"></div>
-
-      <div class="sub-head" id="artHead">
-        <h3>🎨 Art portfolio</h3>
-        <p>Things I've made. Flip through it right here.</p>
-      </div>
-      <div class="canva-card">
-        <div class="canva-frame">
-          <iframe loading="lazy" title="Ryan Li art portfolio (Canva)" allow="fullscreen" allowfullscreen
-            src="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view?embed"></iframe>
-        </div>
-        <a class="btn ghost sm" href="https://www.canva.com/design/DAG1SlOFj-s/p21yCwBgud660q8YoyCf4A/view" target="_blank" rel="noopener">Open full portfolio in Canva ↗</a>
-      </div>
-      <div class="gallery" id="gallery"></div>
-
-    </section>
 
   </div>
 
@@ -323,6 +312,7 @@
   <script src="js/rink.js"></script>
   <script src="js/main.js"></script>
   <script src="js/life.js"></script>
+  <script src="js/pixel.js"></script>
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",

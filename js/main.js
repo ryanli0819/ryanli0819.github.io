@@ -22,7 +22,7 @@
   if (PU && document.querySelector("#purdue")) {
     $("#puDegree").textContent = PU.degree;
     $("#puSpec").innerHTML = [["College", PU.college], ["Campus", PU.place], ["Graduation", PU.grad]].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
-    $("#puWhy").innerHTML = `<span class="pu-label">Why data</span><p>${esc(PU.why)}</p>`;
+    $("#puWhy").innerHTML = `<span class="pu-label">Right now</span><ul class="pu-now">${(PU.now || []).map(n => `<li>${esc(n)}</li>`).join("")}</ul>`;
     $("#puTracks").innerHTML = PU.tracks.map(t => `
       <article class="pu-track reveal"><span class="pu-code">${esc(t.code)}</span>
         <p class="pu-tag">${esc(t.tag)}</p><h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>

@@ -29,24 +29,24 @@ window.SITE = {
     college: "Purdue Polytechnic Institute",
     place: "West Lafayette, IN",
     grad: "Expected May 2030",
-    why: "I'm heading into data science because the interesting part of every project I've done was the data: messy bullet-chat logs, labeled hockey film, warehouse counts that didn't add up. I want to get really good at exploring, cleaning and organizing that kind of data so industries and businesses can make clearer decisions with it.",
+    now: ["Freshman, fall 2026", "Learning SQL in The Data Mine", "Cleaning flight-simulator data for an AI flight tutor", "Looking for research and internship spots"],
     tracks: [
       { code: "DM", title: "The Data Mine", tag: "Learning community · ongoing",
-        text: "Purdue's data-science learning community. I'm building SQL and data-processing fundamentals through hands-on project work with real-world datasets, alongside faculty and industry partners.",
+        text: "Purdue's data science learning community. I'm learning SQL and data processing by working on real datasets with faculty and industry partners.",
         link: { label: "About The Data Mine", url: "https://datamine.purdue.edu/" } },
       { code: "FS", title: "Flight-simulator data", tag: "Research & data work · ongoing",
-        text: "Preprocessing and cleaning data exported from Purdue's aviation flight simulators for a Bay Area company training an AI system that helps student pilots learn to fly. Structuring and validating it for machine learning.",
+        text: "I clean and organize data from Purdue's flight simulators. A Bay Area company uses it to train an AI that helps student pilots learn to fly.",
         link: { label: "See the project", url: "#p-aviation" } },
-      { code: "DS", title: "Direction: data science", tag: "Where this is going",
-        text: "Exploratory data analysis and data quality first, then modeling. The goal is analysis that people in a business can actually act on, not just a good score.",
+      { code: "DS", title: "Where I'm headed", tag: "Data science",
+        text: "Data science, with a focus on exploratory data analysis. I want to work on data that helps a business decide what to do next.",
         link: null }
     ],
     pipeline: [
       { stage: "Collect", what: "Gather and label raw data", from: ["Hand-labeled hockey film (ground truth)", "Bullet-chat logs from Douyu live streams", "Daily warehouse counts"] },
       { stage: "Clean", what: "Fix, structure, validate", from: ["Flight-simulator exports for an AI flight tutor", "Iterative label cleanup in the ASABC paper"] },
-      { stage: "Explore", what: "Find what the data is saying", from: ["EDA on inventory discrepancies at Ventrix", "Titanic survival patterns by class and sex"] },
+      { stage: "Explore", what: "Look for patterns and problems", from: ["EDA on inventory discrepancies at Ventrix", "Titanic survival patterns by class and sex"] },
       { stage: "Model", what: "Train and evaluate", from: ["CNN + YOLO for teams and roles", "Few-shot prompt-tuned LLM", "Titanic classifier"] },
-      { stage: "Decide", what: "Turn it into action", from: ["Restocking calls and shipping checks", "Frame-by-frame play review", "Flagging negative chat for moderators"] }
+      { stage: "Decide", what: "Use the results", from: ["Restocking calls and shipping checks", "Frame-by-frame play review", "Flagging negative chat for moderators"] }
     ],
     before: [
       { k: "High school", v: "Lexington High School, Lexington, MA" },
@@ -67,8 +67,8 @@ window.SITE = {
     resume: "assets/resume/Ryan_Li_Resume.pdf",
     photo: "assets/img/ryan-aix.jpg",
     bio: [
-      "I'm a data analytics student at Purdue who gets weirdly excited about messy data. In high school I co-wrote an IEEE paper that taught a large language model to read live-stream chat (yes, it learned that \"666\" and \"2333\" are good vibes), then built a computer-vision model that tells hockey teams apart by their jerseys, which won a Distinction Award at IEYI China.",
-      "When I'm not wrangling datasets, I'm surfing, on the ice as a left wing, throwing a frisbee, making art, or singing (loudly, and well, I promise)."
+      "I'm a freshman at Purdue studying data analytics. In high school I co-wrote an IEEE paper on using a large language model to read live-stream chat, and built a computer vision model for hockey film that won a Distinction Award at IEYI China.",
+      "Outside of school I surf, play hockey and ultimate frisbee, make art, and sing."
     ],
     missing: [
       "A headshot or photo for this section (drop it in assets/img/ and set person.photo)",
@@ -97,9 +97,9 @@ window.SITE = {
   projects: [
     {
       id: "asabc",
-      problem: "Live streams on Douyu are covered in \"bullet chat\": thousands of tiny comments flying across the video. Moderating the negative ones by hand doesn't scale, and keyword filters miss the memes, slang and sarcasm that carry most of the meaning.",
+      problem: "Live streams on Douyu have thousands of short \"bullet chat\" comments. Filtering out the negative ones by hand doesn't work at that scale, and keyword filters miss slang and sarcasm.",
       time: "Summer after Grade 11 · 30 hrs/week for 9 weeks (about 270 hours)",
-      learned: "How a real research team works: preparing messy data, designing a fair evaluation, and iterating when results don't hold up. It's where I learned that most of data science is the data.",
+      learned: "Data prep, evaluation, and working on a real research team.",
       results: ["83.5% accuracy on the same-room validation set", "~76–77% accuracy holding up on other rooms, other games and non-gaming streams", "Trained on 8,925 messages; tested on 185k+", "Published at IEEE AIxHeart 2024 (co-author)"],
       repo: "https://github.com/ryanli0819/asabc-bullet-chat-sentiment",
       demo: "assets/video/asabc-explainer.mp4",
@@ -131,9 +131,9 @@ window.SITE = {
     },
     {
       id: "hockey-cv",
-      problem: "I spend hours on film study as a varsity left wing. Breaking down game tape by hand is slow, so I wanted software that could watch the film for me: who is on which team, who's a referee, and how fast everyone is moving.",
+      problem: "I spend a lot of time on film study as a left wing, and breaking down game tape by hand is slow. I wanted a program that could pick out the teams, the referees and how fast each player moves.",
       time: "Grade 12 independent research · about 13 hrs/week for 7 weeks",
-      learned: "Labeling ground truth is half the work, and small changes to the loss function can matter more than a bigger model. Also: computer vision is a lot harder when everyone is wearing helmets.",
+      learned: "Labeling ground truth and tuning a loss function to get the accuracy up.",
       results: ["Over 90% classification accuracy", "4 classes: home team, away team, referee, puck", "Speed and distance estimated per player", "Distinction Award at IEYI China (International Exhibition for Young Inventors)"],
       repo: "https://github.com/ryanli0819/hockey-jersey-player-recognition",
       demo: "assets/video/hockey-demo.mp4",
@@ -166,9 +166,9 @@ window.SITE = {
     },
     {
       id: "aviation",
-      problem: "An AI system that helps student pilots learn to fly is only as good as the data it learns from. Raw exports from flight simulators need to be cleaned, structured and checked before any model can use them.",
+      problem: "An AI that helps student pilots learn to fly needs clean data. The raw exports from the simulators have to be cleaned, structured and checked first.",
       time: "Purdue · ongoing",
-      learned: "Validation rules and repeatable pipelines beat one-off cleanup scripts, especially when someone else's model depends on your output.",
+      learned: "Building cleaning steps that can be repeated, and checks that catch bad data.",
       results: ["Simulator datasets structured and validated for downstream machine learning", "Preprocessing steps built to be repeated on new exports"],
       repo: "https://github.com/ryanli0819/flight-sim-data-preprocessing",
       demo: "assets/video/aviation-explainer.mp4",
@@ -195,9 +195,9 @@ window.SITE = {
     },
     {
       id: "datamine",
-      problem: "Purdue's Data Mine pairs students with real-world datasets and partners, so the fundamentals get learned on actual problems instead of toy examples.",
+      problem: "Purdue's Data Mine has students work on real datasets with faculty and industry partners.",
       time: "Purdue · ongoing",
-      learned: "SQL and data-processing fundamentals, applied to real datasets alongside faculty and industry partners.",
+      learned: "SQL and data processing.",
       results: [],
       repo: "https://github.com/ryanli0819/purdue-data-mine",
       title: "The Data Mine",
@@ -221,9 +221,9 @@ window.SITE = {
     },
     {
       id: "kaggle",
-      problem: "Kaggle's classic starter competition: given passenger details like class, sex and age, predict who survived the Titanic.",
+      problem: "Predict which Titanic passengers survived from details like class, sex and age.",
       time: "Data science competition",
-      learned: "Feature engineering on tabular data, and reading the data before reaching for a model. The chart on this card uses the real survival rates from Kaggle's training set.",
+      learned: "Feature engineering on tabular data. The chart on this card uses the real survival rates from Kaggle's training set.",
       results: ["100% accuracy on the public leaderboard", "Tied for 1st among 2,000+ entries"],
       repo: "https://github.com/ryanli0819/kaggle-titanic",
       demo: "assets/video/kaggle-explainer.mp4",
@@ -249,9 +249,9 @@ window.SITE = {
     },
     {
       id: "drowning",
-      problem: "Lifeguards can't watch every swimmer at once, and a drowning can be silent. The idea: camera software that notices when a swimmer stops moving and alerts a lifeguard.",
+      problem: "Lifeguards can't watch every swimmer at once. The idea was camera software that notices when a swimmer stops moving and alerts a lifeguard.",
       time: "Grades 10–12 · about 4 hrs/week, 42 weeks a year",
-      learned: "Public speaking, startup thinking, and how to size a market. A good idea still has to be explained in two minutes to people who've never heard of it.",
+      learned: "Public speaking, market analysis and pitching.",
       results: ["2nd place in the state competition"],
       repo: "https://github.com/ryanli0819/ai-drowning-detection-pitch",
       demo: "assets/video/drowning-explainer.mp4",
@@ -277,9 +277,9 @@ window.SITE = {
     },
     {
       id: "ventrix",
-      problem: "A warehouse full of AC and heating units only works if the counts are right. When the system says 64 and the shelf says 52, someone has to find out why before an order ships.",
+      problem: "The warehouse stock counts had to match the system before orders shipped. My job was to find where they didn't.",
       time: "Summer 2026 internship · May to July",
-      learned: "Exploratory data analysis on a real operation, working with a sales team, and the regulations and industry standards that govern electronics and HVAC systems.",
+      learned: "EDA on a real operation, working with the sales team, and the regulations for electronics and HVAC systems.",
       results: ["Daily inventory analysis across the warehouse", "Discrepancies caught with EDA to inform restocking", "Shipping orders confirmed with sales"],
       featured: true,
       wideViz: true,
@@ -420,7 +420,7 @@ window.LIFE = {
     ["ski-copper", "Skiing at Copper Mountain"], ["seoul-brother", "With my brother in Seoul"], ["surf-young", "Surfing, younger me"],
     ["japan-nature", "Japan, up in the green"], ["world-cup-flag", "Flag bearer at the Boston World Cup. Best experience."],
     ["surf-seoul", "Seoul wave pool"], ["china-horse", "Out on the grassland, Hohhot"], ["surf-long-island", "Long Island surf"],
-    ["space-saturn-v", "Under a Saturn V rocket"], ["space-patches", "Apollo mission patches"], ["moon-night", "Moon over the water"]
+    ["space-saturn-v", "Under a Saturn V rocket"], ["space-patches", "Apollo mission patches"], ["moon-night", "SpaceX rocket launch"]
   ],
   eats: [
     ["eats-ramen", "Ramen"], ["eats-wagyu", "Wagyu sukiyaki"], ["eats-malatang", "Malatang"], ["eats-matcha", "Matcha"],
