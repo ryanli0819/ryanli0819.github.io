@@ -388,6 +388,9 @@ window.SITE = {
 // Paste a Spline "Public URL" here (Spline → Export → Public URL, starts with https://my.spline.design/) to show it
 // in the "Around the world" section above the photo ring. Leave empty to show just the ring.
 window.SPLINE_SCENE = "";
+// First screen: paste your Spline export URL here (Export → Code export → it ends in /scene.splinecode)
+// and the site shows your Spline scene instead of the built-in three.js puck scene.
+window.SPLINE_HERO = "";
 
 window.LIFE = {
   reel: [
