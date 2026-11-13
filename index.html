@@ -144,7 +144,7 @@
       <div class="section-head">
         <span class="section-num">04</span>
         <h2>The road so far</h2>
-        <p class="section-sub">From Grade 9 to Purdue as one road trip. Scroll and the car drives along with you.</p>
+        <p class="section-sub">From Grade 9 to Purdue, beach to beach. Scroll and ride along with the surfer.</p>
       </div>
       <div class="legend">
         <span>🛠️ built</span><span>📚 learned</span><span>🏒 played</span><span>💼 worked</span>
@@ -210,17 +210,20 @@
         </div>
       </div>
 
-      <div class="reel" id="reel">
-        <div class="reel-pin">
-          <div class="reel-head"><h3>Highlight reel</h3><p>Keep scrolling: the clips slide by. Click one for sound.</p></div>
-          <div class="reel-track" id="reelTrack"></div>
-          <div class="reel-progress"><i id="reelBar"></i></div>
+      <div class="section reel2" id="reel">
+        <div class="sub-head"><h3>Highlight reel</h3><p>One sport after another. Tap a symbol to jump.</p></div>
+        <div class="rl-stage" id="rlStage">
+          <video id="rlVideo" muted playsinline preload="none"></video>
+          <div class="rl-card" id="rlCard" aria-live="polite"><span class="rl-icon" id="rlIcon"></span><b id="rlName"></b><span class="rl-count" id="rlCount"></span></div>
+          <div class="rl-tag" id="rlTag"></div>
+          <button class="rl-sound" id="rlSound" type="button" aria-pressed="false">🔇 Sound off</button>
         </div>
+        <div class="rl-sports" id="rlSports" role="tablist" aria-label="Sports"></div>
       </div>
 
       <div class="section">
         <div class="sub-head"><h3>🏒 Lexington #19</h3><p>Hover (or swipe) to open a slice. Click for the full gallery.</p></div>
-        <div class="accordion" id="hockeyAcc"></div>
+        <div class="acc-wrap"><span class="acc-19" aria-hidden="true">19</span><div class="accordion" id="hockeyAcc"></div></div>
       </div>
 
       <div class="section ring-section">

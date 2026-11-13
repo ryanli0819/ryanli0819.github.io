@@ -393,19 +393,13 @@ window.SPLINE_SCENE = "";
 window.SPLINE_HERO = "";
 
 window.LIFE = {
+  // Highlight reel: one combined video per sport (assets/life/video/reel/), played in this order
   reel: [
-    { src: "surf-best.mp4", cap: "🏄 Best wave of the trip, Seoul", shape: "wide" },
-    { src: "hockey-goal-1.mp4", cap: "🏒 Goal", shape: "wide" },
-    { src: "golf-driver-280.mp4", cap: "⛳ 280-yard drive in China", shape: "tall" },
-    { src: "surf-wave.mp4", cap: "🌊 Riding one in Seoul", shape: "wide" },
-    { src: "hockey-goal-2.mp4", cap: "🏒 Another goal", shape: "wide" },
-    { src: "tennis-serve.mp4", cap: "🎾 Serve", shape: "tall" },
-    { src: "golf-swing.mp4", cap: "⛳ Golf swing", shape: "tall" },
-    { src: "hockey-goal-3.mp4", cap: "🏒 Goal again", shape: "wide" },
-    { src: "golf-range.mp4", cap: "⛳ At the range", shape: "tall" },
-    { src: "wakesurf-sunset.mp4", cap: "🌅 Wakesurfing at sunset", shape: "wide" },
-    { src: "ski-run.mp4", cap: "⛷️ Ski run", shape: "wide" },
-    { src: "hockey-game.mp4", cap: "🏒 Game day", shape: "wide" }
+    { sport: "Hockey", icon: "🏒", src: "reel/hockey.mp4", note: "Goals and game day" },
+    { sport: "Surfing", icon: "🏄", src: "reel/surf.mp4", note: "Seoul wave pool + wakesurfing at sunset" },
+    { sport: "Skiing", icon: "🎿", src: "reel/ski.mp4", note: "A run down the mountain" },
+    { sport: "Golf", icon: "⛳", src: "reel/golf.mp4", note: "280-yard drive in China, swing, range", tall: true },
+    { sport: "Tennis", icon: "🎾", src: "reel/tennis.mp4", note: "Serve", tall: true }
   ],
   hockey: [
     ["hockey-shot", "Shot from the slot"], ["hockey-back-19", "#19"], ["hockey-anthem", "National anthem"],

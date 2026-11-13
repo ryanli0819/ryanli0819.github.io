@@ -1031,3 +1031,59 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
   text-shadow: 0 0 2px rgba(0,0,0,.6), 0 10px 50px rgba(255,255,255,.55), 0 0 120px rgba(255,255,255,.35); }
 .s3-name span + span { color: #EB2F33; -webkit-text-stroke-color: #0b0906; }
 .s3-keys .k { background: rgba(7,5,4,.62); padding: 8px 10px; backdrop-filter: blur(6px); }
+
+/* ============ Highlight reel: one player, sport symbols as chapters ============ */
+.rl-stage { position: relative; aspect-ratio: 16 / 9; max-height: 78vh; margin: 0 auto; background: #021629; border: 1.5px solid #639CC5; box-shadow: 6px 6px 0 #639CC5; overflow: hidden; }
+.rl-stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background:
+  radial-gradient(60% 80% at 50% 50%, rgba(99,156,197,.22), transparent 70%), #021629; }
+.rl-card { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: 6px; background: rgba(3,32,61,.92);
+  opacity: 0; pointer-events: none; transition: opacity .25s; text-align: center; }
+.rl-card.show { opacity: 1; }
+.rl-icon { font-size: clamp(64px, 11vw, 140px); line-height: 1; animation: rlPop .5s cubic-bezier(.2,1.5,.4,1); }
+.rl-card.show .rl-icon { animation: rlPop .5s cubic-bezier(.2,1.5,.4,1); }
+@keyframes rlPop { from { transform: scale(.4) rotate(-12deg); opacity: 0; } }
+.rl-card b { font: 800 clamp(26px, 3.4vw, 44px) var(--font-head); color: #EB2F33; }
+.rl-count { font: 600 14px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: #C3D4E6; min-height: 1.2em; }
+.rl-tag { position: absolute; left: 14px; bottom: 14px; z-index: 1; font: 500 13px var(--font-mono); color: #EEF3F8; background: rgba(3,32,61,.75); padding: 6px 10px; border-left: 3px solid #EB2F33; }
+.rl-tag b { color: #EB2F33; font-weight: 600; }
+.rl-sound { position: absolute; right: 14px; top: 14px; z-index: 3; font: 600 12px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; background: #EB2F33; color: #fff; border: 0; padding: 7px 11px; }
+.rl-sports { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 18px; border: 1.5px solid #639CC5; }
+.rl-sport { background: transparent; border: 0; border-right: 1.5px solid #639CC5; color: var(--ink); padding: 12px 8px 0; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+.rl-sport:last-child { border-right: 0; }
+.rl-sport span { font-size: 30px; line-height: 1; transition: transform .25s; filter: grayscale(.6); opacity: .7; }
+.rl-sport small { font: 600 11px var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: #8FAACA; margin-bottom: 10px; }
+.rl-sport i { display: block; width: 100%; height: 4px; background: rgba(99,156,197,.25); }
+.rl-sport i b { display: block; height: 100%; background: #EB2F33; transform: scaleX(0); transform-origin: left; }
+.rl-sport.done i b { transform: scaleX(1) !important; background: #639CC5; }
+.rl-sport.on span, .rl-sport:hover span { transform: scale(1.18); filter: none; opacity: 1; }
+.rl-sport.on small { color: #EB2F33; }
+.rl-sport.on { background: rgba(99,156,197,.14); }
+@media (max-width: 600px) { .rl-sport span { font-size: 24px; } .rl-sport small { font-size: 9px; } .rl-stage { aspect-ratio: 4 / 5; } }
+
+/* ============ Hockey gallery: see-through slices over a giant 19 ============ */
+.acc-wrap { position: relative; }
+.acc-19 { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); z-index: 0; pointer-events: none; user-select: none;
+  font: 900 clamp(260px, 46vw, 640px)/.8 var(--font-display); letter-spacing: -.02em; color: transparent;
+  -webkit-text-stroke: 3px #EB2F33; text-shadow: 0 0 60px rgba(235,47,51,.25); }
+.acc-wrap .accordion { position: relative; z-index: 1; gap: 10px; }
+.acc-wrap .acc-item { background: transparent; outline: 1.5px solid rgba(99,156,197,.55); outline-offset: -1.5px; }
+.acc-wrap .acc-item img { opacity: .38; filter: grayscale(.85) contrast(1.05); mix-blend-mode: screen; transition: opacity .5s, filter .5s, transform .8s; }
+.acc-wrap .acc-item.open { background: rgba(3,32,61,.35); }
+.acc-wrap .acc-item.open img { opacity: 1; filter: none; mix-blend-mode: normal; }
+.acc-wrap .acc-item:not(.open):hover img { opacity: .6; }
+
+
+/* ============ Timeline as surf: water channel from beach to beach ============ */
+.road-svg .beach { fill: #E9D6B0; }
+.road-svg .verge { stroke: color-mix(in srgb, #639CC5 22%, transparent); stroke-width: calc(var(--w) + 26px); }
+.road-svg .asphalt { stroke: #3F79A6; }
+.road-svg .edge { stroke: #F4FAFF; stroke-width: calc(var(--w) - 6px); stroke-dasharray: 2 7; }
+.road-svg .asphalt.inner { stroke: #5E97C2; stroke-width: calc(var(--w) - 10px); }
+.road-svg .center { stroke: rgba(255,255,255,.75); stroke-width: 3; stroke-dasharray: 18 26; stroke-linecap: round; animation: crest 2.4s linear infinite; }
+.road-svg .crest2 { fill: none; stroke: rgba(255,255,255,.4); stroke-width: 2; stroke-dasharray: 8 34; stroke-linecap: round; transform: translateX(12px); animation: crest 3.2s linear infinite reverse; }
+@keyframes crest { to { stroke-dashoffset: -88; } }
+.road-svg .surfer { transition: transform .12s linear; filter: drop-shadow(0 3px 2px rgba(0,0,0,.3)); }
+.road-svg .surfer .wake { fill: rgba(255,255,255,.75); }
+.side-work .r-board { background: #3F79A6; outline-color: #3F79A6; }
+.side-work .r-board.go, .r-board.finish { background: #E9D6B0; color: #474329; outline-color: #C9AD7C; }
+@media (prefers-reduced-motion: reduce) { .road-svg .center, .road-svg .crest2 { animation: none; } }

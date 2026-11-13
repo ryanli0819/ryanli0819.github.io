@@ -38,35 +38,36 @@
   vbox.addEventListener("close", () => { vbv.pause(); vbv.removeAttribute("src"); vbv.load(); });
   vbox.addEventListener("click", (e) => { if (e.target === vbox) vbox.close(); });
 
-  /* ---------- Highlight reel ---------- */
-  const reel = $("#reel"), rt = $("#reelTrack"), bar = $("#reelBar");
-  rt.innerHTML = L.reel.map((v, i) => `
-    <button class="reel-card ${v.shape}" data-i="${i}" aria-label="Play ${esc(v.cap)} with sound">
-      <video data-src="${VID(v.src)}#t=0.1" muted loop playsinline preload="none"></video>
-      <span class="reel-cap">${esc(v.cap)}</span><span class="reel-play" aria-hidden="true">▶ sound</span>
-    </button>`).join("");
-  rt.addEventListener("click", (e) => { const b = e.target.closest(".reel-card"); if (b) openVideo(L.reel[+b.dataset.i]); });
-  const pinned = () => !reduce && innerWidth >= 720;
-  function sizeReel() {
-    reel.classList.toggle("pinned", pinned());
-    $(".reel-head p").textContent = pinned() ? "Keep scrolling: the clips slide by. Click one for sound." : "Swipe through the clips. Tap one for sound.";
-    reel.style.height = pinned() ? (rt.scrollWidth - innerWidth + innerHeight + 80) + "px" : "";
-    reelScroll();
+  /* ---------- Highlight reel: a 2-second countdown, then one sport after another with a 1-second card in between ---------- */
+  const rv = $("#rlVideo"), card = $("#rlCard"), sportsBar = $("#rlSports"), stageEl = $("#rlStage");
+  sportsBar.innerHTML = L.reel.map((r, i) => `<button class="rl-sport" role="tab" data-i="${i}" aria-label="${esc(r.sport)}"><span>${r.icon}</span><small>${esc(r.sport)}</small><i><b></b></i></button>`).join("");
+  const bars = [...sportsBar.querySelectorAll(".rl-sport")];
+  let cur = -1, started = false, inView = false, timer = null;
+  function showCard(i, text, ms, then) {
+    const r = L.reel[i]; $("#rlIcon").textContent = r.icon; $("#rlName").textContent = r.sport; $("#rlCount").textContent = text || "";
+    card.classList.add("show"); clearTimeout(timer);
+    if (text === "2") timer = setTimeout(() => { $("#rlCount").textContent = "1"; timer = setTimeout(() => { card.classList.remove("show"); then(); }, ms / 2); }, ms / 2);
+    else timer = setTimeout(() => { card.classList.remove("show"); then(); }, ms);
   }
-  function reelScroll() {
-    if (!pinned()) { rt.style.transform = ""; return; }
-    const r = reel.getBoundingClientRect(), p = clamp(-r.top / (r.height - innerHeight));
-    rt.style.transform = `translate3d(${(-p * Math.max(0, rt.scrollWidth - innerWidth + 48)).toFixed(1)}px,0,0)`;
-    bar.style.transform = `scaleX(${p.toFixed(3)})`;
+  function play(i) {
+    cur = i; const r = L.reel[i];
+    bars.forEach((b, k) => { b.classList.toggle("on", k === i); b.classList.toggle("done", k < i); if (k >= i) b.querySelector("b").style.transform = "scaleX(0)"; });
+    stageEl.classList.toggle("tall", !!r.tall);
+    $("#rlTag").innerHTML = `${r.icon} <b>${esc(r.sport)}</b> · ${esc(r.note)}`;
+    rv.src = VID(r.src); rv.currentTime = 0;
+    if (inView) rv.play().catch(() => {});
   }
-  if ("IntersectionObserver" in window) {
-    const vio = new IntersectionObserver(es => es.forEach(e => {
-      const v = e.target;
-      if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; if (!reduce) v.play().catch(() => {}); }
-      else v.pause();
-    }), { threshold: .35 });
-    rt.querySelectorAll("video").forEach(v => vio.observe(v));
-  } else rt.querySelectorAll("video").forEach(v => v.src = v.dataset.src);
+  function next() { const n = cur + 1; if (n < L.reel.length) showCard(n, "", 1000, () => play(n)); else { bars.forEach(b => b.classList.add("done")); showCard(0, "↻ again", 1500, () => play(0)); } }
+  rv.addEventListener("ended", next);
+  rv.addEventListener("timeupdate", () => { if (cur >= 0 && rv.duration) bars[cur].querySelector("b").style.transform = `scaleX(${(rv.currentTime / rv.duration).toFixed(3)})`; });
+  sportsBar.addEventListener("click", (e) => { const b = e.target.closest(".rl-sport"); if (!b) return; started = true; clearTimeout(timer); card.classList.remove("show"); play(+b.dataset.i); track("reel/" + L.reel[+b.dataset.i].sport); });
+  $("#rlSound").addEventListener("click", (e) => { rv.muted = !rv.muted; e.currentTarget.textContent = rv.muted ? "🔇 Sound off" : "🔊 Sound on"; e.currentTarget.setAttribute("aria-pressed", String(!rv.muted)); });
+  if ("IntersectionObserver" in window) new IntersectionObserver(es => {
+    inView = es[0].isIntersecting;
+    if (inView && !started) { started = true; showCard(0, "2", 2000, () => play(0)); }
+    else if (inView && cur >= 0 && !card.classList.contains("show")) rv.play().catch(() => {});
+    else if (!inView) rv.pause();
+  }, { threshold: 0.5 }).observe(stageEl);
 
   /* ---------- Hockey accordion ---------- */
   const acc = $("#hockeyAcc"), hockey = asItems(L.hockey);
@@ -161,9 +162,8 @@
 
   /* ---------- Scroll + resize ---------- */
   let raf = 0;
-  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; heroScroll(); reelScroll(); }); };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; heroScroll(); }); };
   addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("resize", () => { sizeReel(); layoutRing(); });
-  addEventListener("load", sizeReel);
-  sizeReel(); heroScroll();
+  addEventListener("resize", layoutRing);
+  heroScroll();
 })();

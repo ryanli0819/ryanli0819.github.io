@@ -166,7 +166,7 @@
     const items = S.timeline.map((t, i) => ({ ...t, i })).sort((a, b) => a.from - b.from || a.i - b.i);
     const yearText = (t) => t.to > t.from ? `<span class="r-span">⇆ ${esc(t.when)}</span>` : "";
 
-    let html = `<svg class="road-svg" aria-hidden="true"></svg><div class="r-row r-sign start"><span class="r-board go">START</span></div>`;
+    let html = `<svg class="road-svg" aria-hidden="true"></svg><div class="r-row r-sign start"><span class="r-board go">🏖️ Paddle out</span></div>`;
     let lastSign = null, side = 0;
     items.forEach(t => {
       const sg = signOf(t.from);
@@ -177,7 +177,7 @@
           <h3>${esc(t.title)}</h3><p>${esc(t.text)}</p>${yearText(t)}</article>
         <span class="r-pin" aria-hidden="true">${k.e}</span></div>`;
     });
-    html += `<div class="r-row r-sign end"><span class="r-board finish">🏁 To be continued…</span></div>`;
+    html += `<div class="r-row r-sign end"><span class="r-board finish">🏝️ To be continued…</span></div>`;
     el.innerHTML = html;
     const svg = el.querySelector(".road-svg");
     let path, len = 0, car, stops = [];
@@ -207,14 +207,14 @@
       }).join("");
       svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
       svg.style.setProperty("--w", W + "px");
-      svg.innerHTML = `<path d="${d}" class="verge"/><path d="${d}" class="asphalt"/><path d="${d}" class="edge"/><path d="${d}" class="asphalt inner"/>
-        <path d="${d}" class="center"/>${lanes}
-        <g class="car"><g transform="scale(${narrow ? .8 : 1})">
-          <rect x="-17" y="-11" width="7" height="4" rx="1.5" class="tyre"/><rect x="8" y="-11" width="7" height="4" rx="1.5" class="tyre"/>
-          <rect x="-17" y="7" width="7" height="4" rx="1.5" class="tyre"/><rect x="8" y="7" width="7" height="4" rx="1.5" class="tyre"/>
-          <rect x="-20" y="-9" width="40" height="18" rx="7" class="body"/><rect x="2" y="-7" width="7" height="14" rx="2.5" class="glass"/>
-          <rect x="-12" y="-6.5" width="5" height="13" rx="2" class="glass"/><rect x="-6" y="-7" width="7" height="14" rx="1.5" class="roof"/>
-          <circle cx="19" cy="-5.5" r="1.8" class="lamp"/><circle cx="19" cy="5.5" r="1.8" class="lamp"/></g></g>`;
+      // the road is a wave channel: sand beach at each end, foam edges, moving crests; a small surfer rides it
+      const p0 = pts[0], pN = pts.at(-1);
+      svg.innerHTML = `<defs><pattern id="sandDots" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#c9ad7c"/><circle cx="6.5" cy="6" r=".8" fill="#d8c096"/></pattern></defs>
+        <ellipse cx="${p0.x}" cy="0" rx="${W * 3.2}" ry="${W * 1.4}" class="beach"/><ellipse cx="${p0.x}" cy="0" rx="${W * 3.2}" ry="${W * 1.4}" fill="url(#sandDots)"/>
+        <ellipse cx="${pN.x}" cy="${box.height}" rx="${W * 3.2}" ry="${W * 1.6}" class="beach"/><ellipse cx="${pN.x}" cy="${box.height}" rx="${W * 3.2}" ry="${W * 1.6}" fill="url(#sandDots)"/>
+        <path d="${d}" class="verge"/><path d="${d}" class="asphalt"/><path d="${d}" class="edge"/><path d="${d}" class="asphalt inner"/>
+        <path d="${d}" class="center"/><path d="${d}" class="crest2"/>${lanes}
+        <g class="car surfer"><ellipse cx="0" cy="10" rx="16" ry="5" class="wake"/><text x="0" y="0" text-anchor="middle" dominant-baseline="central" style="font-size:${narrow ? 24 : 30}px">🏄</text></g>`;
       path = svg.querySelector(".center"); len = path.getTotalLength(); car = svg.querySelector(".car");
       stops = [...el.querySelectorAll(".r-stop")];
       move();
@@ -228,7 +228,8 @@
       if (Math.abs(p - lastP) < 1e-4) return; lastP = p;
       const at = Math.max(1, p * len), a = path.getPointAtLength(at), b = path.getPointAtLength(Math.max(0, at - 2));
       const ang = Math.atan2(a.y - b.y, a.x - b.x) * 180 / Math.PI;
-      car.setAttribute("transform", `translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+      const tilt = Math.max(-28, Math.min(28, (ang - 90) * -0.6)); // lean into the turns, stay upright
+      car.setAttribute("transform", `translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) rotate(${tilt.toFixed(1)})`);
       stops.forEach(s => { const y = s.offsetTop + s.offsetHeight / 2; s.classList.toggle("passed", a.y >= y - 30); s.classList.toggle("here", Math.abs(a.y - y) < s.offsetHeight / 2 + 10); });
     }
     let raf = 0;
