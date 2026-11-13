@@ -197,7 +197,7 @@
     const countOf = (w, code, id) => code === "ALL" ? PRODUCTS.reduce((a, p) => a + data[w][p.code][id], 0) : data[w][code][id];
     const maxOf = (code) => Math.max(...WEEKS.flatMap((_, w) => cells.map(c => countOf(w, code, c.id))));
     const work = document.body.classList.contains("page-work");
-    const stops = work ? [[0, [247, 241, 223]], [.28, [226, 196, 122]], [.55, [217, 164, 58]], [.8, [180, 83, 42]], [1, [107, 47, 23]]]
+    const stops = work ? [[0, [248, 241, 234]], [.3, [247, 202, 209]], [.58, [252, 108, 133]], [.82, [138, 132, 90]], [1, [71, 67, 41]]]
                        : [[0, [246, 250, 255]], [.3, [137, 205, 250]], [.62, [254, 182, 193]], [1, [214, 64, 106]]];
     const heat = (t) => { for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) { const [a, ca] = stops[i - 1], [b, cb] = stops[i], k = (t - a) / (b - a); return `rgb(${ca.map((v, j) => Math.round(v + (cb[j] - v) * k)).join(",")})`; } return `rgb(${stops[stops.length - 1][1].join(",")})`; };
     const serials = (w, code, id) => { // serial range for this bay, numbered in a fixed walk order
