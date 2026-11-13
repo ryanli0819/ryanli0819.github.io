@@ -39,15 +39,17 @@
   <main id="main">
     <!-- ============ FIRST LOOK: 3D figure + name ============ -->
     <section class="stage3d-wrap" id="stage3d" aria-label="Ryan Li. A 3D scene of a hockey puck smashing through rink glass toward you; drag to look around the puck.">
-      <div class="stage3d" id="stagePin">
-        <div class="s3-bg" aria-hidden="true"></div>
+      <div class="stage3d pre-impact" id="stagePin">
+        <div class="s3-bg" aria-hidden="true"><canvas id="playerCanvas" class="s3-player"></canvas></div>
+        <div class="s3-glass" aria-hidden="true"></div>
+        <div class="s3-flash" aria-hidden="true"></div>
         <h1 class="s3-name" aria-hidden="true"><span>Ryan</span><span>Li</span></h1>
         <canvas id="figure" aria-hidden="true"></canvas>
         <div class="s3-keys" aria-hidden="true">
           <span class="k k-tl"><b>01</b>Data analytics<br>Purdue University</span>
           <span class="k k-tr"><b>02</b>Data science ·<br>exploratory data</span>
           <span class="k k-bl"><b>03</b>Surfer · hockey<br>brother · singer</span>
-          <span class="k k-br">Drag to look around · find the name underneath ⟲<br>scroll to enter ↓</span>
+          <span class="k k-br"><button class="replay" id="replayShot" type="button">↻ Replay the shot</button><br>Drag to look around · find the name underneath<br>scroll to enter ↓</span>
         </div>
       </div>
     </section>
@@ -319,6 +321,8 @@
       "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
     } }
   </script>
+  <script type="module" src="js/player3d.js"></script>
   <script type="module" src="js/figure3d.js"></script>
+  <script>document.getElementById("replayShot").addEventListener("click", () => dispatchEvent(new CustomEvent("replay-shot")));</script>
 </body>
 </html>

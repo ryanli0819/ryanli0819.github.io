@@ -281,6 +281,7 @@
 
   /* ---------- Art gallery (data-driven) ---------- */
   (async function loadArt() {
+    if (!document.querySelector("#gallery")) return;
     let pieces = [];
     try {
       const res = await fetch("content/art/captions.json", { cache: "no-cache" });

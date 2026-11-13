@@ -715,10 +715,9 @@ body.skim .hero-stage { min-height: auto; }
 .stage3d { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 560px; overflow: hidden; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; background: #070504; }
 .stage3d.dragging { cursor: grabbing; }
 .s3-bg, .s3-name { transition: filter .45s ease, opacity .4s; }
-.s3-bg { position: absolute; inset: -40px; background:
-    radial-gradient(70% 65% at 50% 45%, transparent 0%, rgba(7,5,4,.35) 70%, #070504 100%),
-    url("../assets/hero/player-bg.webp") center 35% / cover no-repeat, #070504;
-  filter: blur(3px) saturate(.9); transform: scale(calc(1.04 + var(--sp, 0) * .1)); }
+.s3-bg { position: absolute; inset: -40px; background: #0a0c12;
+  filter: blur(5px) saturate(.9); transform: scale(calc(1.04 + var(--sp, 0) * .1)); }
+.s3-player { position: absolute; inset: 40px; width: calc(100% - 80px); height: calc(100% - 80px); display: block; }
 .s3-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(7,5,4,.2), rgba(7,5,4,0) 40%, rgba(7,5,4,.7)); }
 .s3-name { position: absolute; left: 0; right: 0; top: 50%; margin: 0; display: flex; justify-content: center; gap: .9em; white-space: nowrap; pointer-events: none;
   transform: translate(calc(var(--yaw, 0) * -40px), -55%) scale(calc(1 + var(--sp, 0) * .25));
@@ -1006,3 +1005,22 @@ body.in-fun .nav-links a { color: #C3D4E6; }
 body.in-fun .nav-links a:hover { background: #639CC5; color: #03203D; }
 body.in-fun .brand { color: #EEF3F8; }
 body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3F8; }
+
+
+/* ============ Intro shot: glass before the break, the flash, the name after ============ */
+.s3-glass { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .2s;
+  background: linear-gradient(115deg, transparent 28%, rgba(255,255,255,.09) 38%, transparent 46%, transparent 60%, rgba(255,255,255,.05) 66%, transparent 72%), rgba(180,205,225,.06); }
+.stage3d.pre-impact .s3-glass { opacity: 1; }
+.s3-flash { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 50% 46%, rgba(255,250,235,.95), rgba(255,220,150,.45) 18%, transparent 45%); }
+.stage3d.flash .s3-flash { animation: impactFlash .45s ease-out; }
+@keyframes impactFlash { 0% { opacity: 1; } 100% { opacity: 0; } }
+.stage3d.flash { animation: impactShake .3s linear; }
+@keyframes impactShake { 20% { transform: translate(6px, -4px); } 40% { transform: translate(-5px, 3px); } 60% { transform: translate(3px, 2px); } 80% { transform: translate(-2px, -1px); } }
+.stage3d.pre-impact .s3-name, .stage3d.pre-impact .s3-keys { opacity: 0 !important; }
+.stage3d .s3-name { transition: filter .45s ease, opacity 1s ease 1.3s; }
+.s3-keys .k { transition: opacity .8s ease 1.6s; }
+.s3-keys .replay { pointer-events: auto; background: none; border: 1px solid rgba(226,196,122,.6); color: #e2c47a; font: 600 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; padding: 5px 9px; margin-bottom: 6px; cursor: pointer; }
+.s3-keys .replay:hover { background: #e2c47a; color: #070504; }
+@media (prefers-reduced-motion: reduce) { .stage3d.flash { animation: none; } }
+@media (max-width: 600px) { .k-bl { bottom: 118px; } }

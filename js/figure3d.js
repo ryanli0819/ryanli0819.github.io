@@ -60,20 +60,63 @@ function tweak(app) {
   if (oc && oc.update) oc.update();
 }
 
+/* ---------- the break: hidden until the player's puck hits the glass ---------- */
+const easeOut = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
+function setupBreak(app) {
+  const puck = app.findObjectByName("Hockey Puck");
+  const pane = app.findObjectByName("Cracked Glass Pane");
+  const shards = app.getAllObjects().filter(o => /^Glass Shard \d+$/.test(o.name));
+  const finals = shards.map(s => ({ s, p: { x: s.position.x, y: s.position.y, z: s.position.z }, sc: s.scale.x, r: [s.rotation.x, s.rotation.y, s.rotation.z] }));
+  const pf = puck ? { p: [puck.position.x, puck.position.y, puck.position.z], r: [puck.rotation.x, puck.rotation.y, puck.rotation.z] } : null;
+  const group = app.findObjectByName("Glass Shards"), gp = group ? group.position : { x: 0, y: 0, z: 0 };
+  const hole = { x: -gp.x, y: -gp.y, z: -48 - gp.z }; // the hole, in the shards group's local space
+
+  function hide() {
+    if (puck) puck.visible = false;
+    if (pane) pane.visible = false;
+    finals.forEach(f => { f.s.visible = false; });
+    stage.classList.add("pre-impact"); stage.classList.remove("broken");
+  }
+  let t0 = null;
+  function burst(now) {
+    if (t0 === null) { t0 = now; if (pane) pane.visible = true; stage.classList.remove("pre-impact"); stage.classList.add("broken"); }
+    const t = (now - t0) / 1000;
+    if (puck && pf) { // puck punches out of the hole and lands in its pose, with a last bit of spin
+      const k = easeOut(t / 0.55); puck.visible = true;
+      puck.position.set(pf.p[0] * k, pf.p[1] * k, -60 + (pf.p[2] + 60) * k);
+      puck.rotation.set(pf.r[0], pf.r[1] + (1 - k) * 2.4, pf.r[2]);
+    }
+    finals.forEach((f, i) => {
+      const k = easeOut((t - 0.04 - (i / finals.length) * 0.25) / 0.9); if (k <= 0) return;
+      f.s.visible = true;
+      f.s.position.set(hole.x + (f.p.x - hole.x) * k, hole.y + (f.p.y - hole.y) * k, hole.z + (f.p.z - hole.z) * k);
+      const sc = f.sc * (0.2 + 0.8 * k); f.s.scale.set(sc, sc, sc);
+      f.s.rotation.set(f.r[0] + (1 - k) * 3, f.r[1] + (1 - k) * 2, f.r[2]);
+    });
+    if (t < 1.4) requestAnimationFrame(burst); else t0 = null;
+  }
+  const go = () => requestAnimationFrame(burst);
+  return { hide, go };
+}
+
 async function initSpline() {
   const { Application } = await import(RUNTIME);
   const app = new Application(canvas);
   await app.load(SCENE);
   tweak(app);
   window.ryanSpline = app;
+  const brk = setupBreak(app);
+  if (window.__shotImpacted) brk.go(); else { brk.hide(); addEventListener("shot-impact", () => brk.go(), { once: true }); }
+  addEventListener("replay-shot", () => { brk.hide(); addEventListener("shot-impact", () => brk.go(), { once: true }); });
   stage.classList.add("ready");
   // background blurs while dragging
   canvas.addEventListener("pointerdown", () => stage.classList.add("dragging"));
   addEventListener("pointerup", () => stage.classList.remove("dragging"));
   addEventListener("pointercancel", () => stage.classList.remove("dragging"));
-  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => tweak(app), 200); });
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { if (stage.classList.contains("broken")) tweak(app); }, 200); });
 }
 
+addEventListener("shot-impact", () => { window.__shotImpacted = true; stage.classList.add("flash"); setTimeout(() => stage.classList.remove("flash"), 450); });
 initSpline().catch(async (e) => {
   console.warn("Spline scene failed, using the three.js backup", e);
   const fresh = canvas.cloneNode(false); canvas.replaceWith(fresh); canvas = fresh;
