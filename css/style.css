@@ -715,13 +715,13 @@ body.skim .hero-stage { min-height: auto; }
 .stage3d { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 560px; overflow: hidden; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; background: #070504; }
 .stage3d.dragging { cursor: grabbing; }
 .s3-bg, .s3-name { transition: filter .45s ease, opacity .4s; }
-.s3-bg { position: absolute; inset: -40px; background: #0a0c12;
+.s3-bg { position: absolute; inset: -40px; background: #d3e2ec;
   filter: blur(5px) saturate(.9); transform: scale(calc(1.04 + var(--sp, 0) * .1)); }
 .s3-player { position: absolute; inset: 40px; width: calc(100% - 80px); height: calc(100% - 80px); display: block; }
 .s3-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(7,5,4,.2), rgba(7,5,4,0) 40%, rgba(7,5,4,.7)); }
 .s3-name { position: absolute; left: 0; right: 0; top: 50%; margin: 0; display: flex; justify-content: center; gap: .9em; white-space: nowrap; pointer-events: none;
   transform: translate(calc(var(--yaw, 0) * -40px), -55%) scale(calc(1 + var(--sp, 0) * .25));
-  opacity: calc(.85 - var(--sp, 0) * 1.4);
+  opacity: calc(1 - var(--sp, 0) * 1.4);
   font: 400 clamp(130px, 27vw, 460px)/.85 "Instrument Serif", Georgia, serif; letter-spacing: -.02em; color: #f3d48a;
   text-shadow: 0 0 40px rgba(240,180,80,.55), 0 0 120px rgba(240,180,80,.35); }
 .s3-name span { display: inline-block; animation: nameUp 1.2s cubic-bezier(.2,.9,.25,1) both; }
@@ -1024,3 +1024,10 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .s3-keys .replay:hover { background: #e2c47a; color: #070504; }
 @media (prefers-reduced-motion: reduce) { .stage3d.flash { animation: none; } }
 @media (max-width: 600px) { .k-bl { bottom: 118px; } }
+
+
+/* Name: high contrast against the bright ice and the gold glass */
+.s3-name { color: #0b0906; -webkit-text-stroke: clamp(1.5px, .22vw, 3px) #f3d48a; paint-order: stroke fill;
+  text-shadow: 0 0 2px rgba(0,0,0,.6), 0 10px 50px rgba(255,255,255,.55), 0 0 120px rgba(255,255,255,.35); }
+.s3-name span + span { color: #EB2F33; -webkit-text-stroke-color: #0b0906; }
+.s3-keys .k { background: rgba(7,5,4,.62); padding: 8px 10px; backdrop-filter: blur(6px); }
