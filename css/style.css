@@ -1131,3 +1131,7 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
   color: #e2c47a; font: 600 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; padding: 7px 11px; cursor: pointer; opacity: 0; transition: opacity .6s ease 2s; }
 .stage3d.broken .replay.solo { opacity: 1; }
 .replay.solo:hover { background: #e2c47a; color: #0b0906; }
+/* first screen = Ryan's Spline scene as designed: no photo/arena layer behind it */
+.stage3d.as-designed .s3-bg, .stage3d.as-designed .s3-glass { display: none; }
+.stage3d.as-designed .s3-hello .h-name { transition-delay: .4s; }
+.stage3d.as-designed .s3-hello .h-sub { transition-delay: .8s; }

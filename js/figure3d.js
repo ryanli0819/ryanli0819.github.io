@@ -103,8 +103,15 @@ async function initSpline() {
   const { Application } = await import(RUNTIME);
   const app = new Application(canvas);
   await app.load(SCENE);
-  tweak(app);
   window.ryanSpline = app;
+  if (window.HERO_AS_DESIGNED) {
+    // Ryan's Spline scene exactly as published; only scroll-to-zoom/pan are off so the page can still scroll
+    const oc = app.controls && app.controls.orbitControls;
+    if (oc) { oc.enableZoom = false; oc.enablePan = false; }
+    stage.classList.remove("pre-impact"); stage.classList.add("ready", "broken", "as-designed");
+    return;
+  }
+  tweak(app);
   const brk = setupBreak(app);
   if (window.__shotImpacted) brk.go(); else { brk.hide(); addEventListener("shot-impact", () => brk.go(), { once: true }); }
   addEventListener("replay-shot", () => { brk.hide(); addEventListener("shot-impact", () => brk.go(), { once: true }); });

@@ -39,7 +39,7 @@
   <main id="main">
     <!-- ============ FIRST LOOK: 3D figure + name ============ -->
     <section class="stage3d-wrap" id="stage3d" aria-label="Ryan Li. A 3D scene of a hockey puck smashing through rink glass toward you; drag to look around the puck.">
-      <div class="stage3d pre-impact" id="stagePin">
+      <div class="stage3d" id="stagePin">
         <div class="s3-bg" aria-hidden="true"><canvas id="playerCanvas" class="s3-player"></canvas></div>
         <div class="s3-glass" aria-hidden="true"></div>
         <div class="s3-flash" aria-hidden="true"></div>
@@ -48,7 +48,6 @@
           <p class="h-sub">Freshman · Data Analytics @ Purdue<br>I shoot pucks and I read data.</p>
         </div>
         <canvas id="figure" aria-hidden="true"></canvas>
-        <button class="replay solo" id="replayShot" type="button">↻ Replay the shot</button>
       </div>
     </section>
 
@@ -319,8 +318,7 @@
       "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
     } }
   </script>
-  <script src="js/player2d.js"></script>
+  <script>if (!window.HERO_AS_DESIGNED) { const s = document.createElement("script"); s.src = "js/player2d.js"; document.body.appendChild(s); }</script>
   <script type="module" src="js/figure3d.js"></script>
-  <script>document.getElementById("replayShot").addEventListener("click", () => dispatchEvent(new CustomEvent("replay-shot")));</script>
 </body>
 </html>

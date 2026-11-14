@@ -391,6 +391,9 @@ window.SPLINE_SCENE = "";
 // First screen: paste your Spline export URL here (Export → Code export → it ends in /scene.splinecode)
 // and the site shows your Spline scene instead of the built-in three.js puck scene.
 window.SPLINE_HERO = "";
+// First screen: true = Ryan's Spline scene exactly as he designed it (no shot intro, no code tweaks).
+// false = the hand-animated shot that breaks into a tweaked version of the scene (js/player2d.js + js/figure3d.js).
+window.HERO_AS_DESIGNED = true;
 
 window.LIFE = {
   // Highlight reel: one combined video per sport (assets/life/video/reel/), played in this order
