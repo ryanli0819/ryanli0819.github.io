@@ -111,36 +111,42 @@ function crackSVG() { // a quick spider crack drawn over the screen at the momen
 }
 
 async function playSequence(Application, shotApp) {
-  // Straight cut, no transition: Ryan's player winds up and releases (his script: release at 1.35s), and right at the
-  // release his glass scene takes over, with its puck flying in from the side the shot came from, smashing the glass.
+  // One continuous shot:
+  //  - Ryan's player runs his whole swing (wind-up, release at 1.35s, follow-through to ~2.0s) and the shot puck flies at us;
+  //  - his glass scene is started underneath while that puck is still in the air, so its own puck is already on approach;
+  //  - right after the follow-through the shot dissolves into the glass scene: we still see the puck coming at us
+  //    through the intact glass (the foreshadow), then it smashes through at the glass script's impact (1.1s).
   // Both scenes run their own animation scripts (Spline "inline" HTML content), exactly like his public links.
   const calm = (a) => { const oc = a.controls && a.controls.orbitControls; if (oc) { oc.enableZoom = false; oc.enablePan = false; } a.setBackgroundColor("rgba(0,0,0,0)"); };
-  fetch(SCENE).catch(() => {}); // warm the cache so the glass scene is ready right at the release
+  fetch(SCENE).catch(() => {});
   await shotApp.load(SHOT_SCENE); calm(shotApp);
   window.ryanSpline = shotApp;
   stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
-  const start = performance.now(), RELEASE = 1.38, PRELOAD = 1.0;
-  let glassApp = null, glassReady = null, cut = false;
+  const start = performance.now();
+  const PRELOAD = 1.0;        // shot time when the glass scene starts loading
+  const SWING_END = 1.82;     // follow-through held (his script snaps the puck back to the blade at 2.0)
+  const APPROACH = 0.62;      // glass-scene time at the dissolve: its puck is visibly closing in, impact comes at 1.1
+  let glassApp = null, glassStart = null, faded = false;
   const loadGlass = () => {
-    if (glassReady) return glassReady;
+    if (glassApp) return;
     const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
     canvas.after(glassCanvas);
     glassApp = new Application(glassCanvas, { htmlContentMode: "inline" });
     window.ryanSplineGlass = glassApp;
-    return glassReady = glassApp.load(SCENE).then(() => calm(glassApp)).catch((e) => console.warn("glass scene failed", e));
+    glassApp.load(SCENE).then(() => { calm(glassApp); glassStart = performance.now(); }).catch((e) => console.warn("glass scene failed", e));
   };
   const timer = setInterval(() => {
     const t = (performance.now() - start) / 1000;
     if (t > PRELOAD) loadGlass();
-    if (t >= RELEASE && !cut) {
-      clearInterval(timer);
-      cut = true;
-      glassReady.then(() => {
-        stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on", "hard-cut");
-        setTimeout(() => { try { shotApp.stop(); } catch {} }, 200);
-      });
+    if (!faded && glassStart !== null) {
+      const gt = (performance.now() - glassStart) / 1000;
+      if (t >= SWING_END && gt >= APPROACH) {
+        faded = true; clearInterval(timer);
+        stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
+        setTimeout(() => { try { shotApp.stop(); } catch {} }, 600);
+      }
     }
-  }, 30);
+  }, 20);
 }
 
 async function initSpline() {

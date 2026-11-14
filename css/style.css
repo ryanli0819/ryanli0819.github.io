@@ -1177,9 +1177,9 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
     linear-gradient(rgba(11,18,32,.25) 0%, rgba(7,10,18,.1) 40%, rgba(5,7,13,.45) 75%, rgba(9,8,6,.85) 100%); }
 
 /* Shot scene -> crack -> glass scene */
-.stage3d .glass-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+.stage3d .glass-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity .35s ease-in; pointer-events: none; }
 .stage3d.glass-on .glass-scene { opacity: 1; pointer-events: auto; }
-.stage3d.glass-on #figure { opacity: 0 !important; pointer-events: none; transition: opacity .35s ease; }
+.stage3d.glass-on #figure { opacity: 0 !important; pointer-events: none; transition: opacity .16s ease-in; }
 .s3-crack { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; }
 .s3-crack svg { width: 100%; height: 100%; filter: drop-shadow(0 0 2px rgba(255,240,200,.9)); }
 .stage3d.cracked .s3-crack { opacity: 1; animation: crackOut .9s ease-out forwards; }
