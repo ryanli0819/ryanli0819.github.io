@@ -1161,3 +1161,17 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 @keyframes beamSway { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
 @keyframes twinkle { from { opacity: .55; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .stage3d.as-designed .s3-bg::before, .stage3d.as-designed .s3-bg::after { animation: none; } }
+
+/* Ryan's own photo, blurred, behind the arena light (first screen) */
+.stage3d.as-designed .s3-photo { position: absolute; inset: -40px; z-index: 0; pointer-events: none;
+  background: url("../assets/hero/player-bg.webp") center 30% / cover no-repeat;
+  filter: blur(9px) saturate(.85) brightness(.55); transform: scale(1.06); }
+.stage3d.as-designed .s3-bg { background:
+    radial-gradient(ellipse 70% 26% at 50% 74%, rgba(255,232,180,.18), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(201,149,63,.18), transparent 65%),
+    linear-gradient(rgba(11,18,32,.55) 0%, rgba(7,10,18,.35) 45%, rgba(5,7,13,.7) 75%, rgba(9,8,6,.92) 100%); z-index: 1; }
+.stage3d.as-designed.dragging .s3-photo { filter: blur(16px) saturate(.8) brightness(.5); }
+.stage3d.as-designed .s3-photo { filter: blur(6px) saturate(.95) brightness(.85); }
+.stage3d.as-designed .s3-bg { background:
+    radial-gradient(ellipse 70% 26% at 50% 74%, rgba(255,232,180,.14), transparent 70%),
+    linear-gradient(rgba(11,18,32,.25) 0%, rgba(7,10,18,.1) 40%, rgba(5,7,13,.45) 75%, rgba(9,8,6,.85) 100%); }
