@@ -45,12 +45,12 @@
   $("#facts").innerHTML = [
     ["Studying", `${P.degree}`],
     ["School", P.school],
-    ["Grad", P.grad],
+    ["Graduation", P.grad],
     ["Based", P.location]
   ].map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
   $("#aboutMissing").innerHTML = dropbox(P.missing, "Edit <code>person</code> in <code>js/data.js</code>.");
   $("#skills").innerHTML = Object.entries(S.skills).map(([k, list]) =>
-    `<h3>${esc(k)}</h3><ul class="tags">${list.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`).join("");
+    `<div class="sk-group"><h3>${esc(k)}</h3><ul class="tags">${list.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`).join("");
 
   /* ---------- Projects ---------- */
   const eraLabel = { hs: "High school", college: "College", work: "Experience", unknown: "" };

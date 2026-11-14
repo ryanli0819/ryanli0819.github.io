@@ -28,8 +28,8 @@ window.SITE = {
     degree: "B.S. Data Analytics Application and Technology",
     college: "Purdue Polytechnic Institute",
     place: "West Lafayette, IN",
-    grad: "Expected May 2030",
-    now: ["Freshman, fall 2026", "Learning SQL in The Data Mine", "Cleaning flight-simulator data for an AI flight tutor", "Looking for research and internship spots"],
+    grad: "Expected May 2029",
+    now: ["Learning SQL in The Data Mine", "Cleaning flight-simulator data for an AI flight tutor", "Looking for research and internship spots"],
     tracks: [
       { code: "DM", title: "The Data Mine", tag: "Learning community · ongoing",
         text: "Purdue's data science learning community. I'm learning SQL and data processing by working on real datasets with faculty and industry partners.",
@@ -60,14 +60,14 @@ window.SITE = {
     name: "Ryan Li",
     school: "Purdue University · Purdue Polytechnic Institute",
     degree: "B.S. Data Analytics Application and Technology",
-    grad: "Expected May 2030",
+    grad: "Expected May 2029",
     location: "West Lafayette, IN · from Lexington, MA",
     email: "ryanli08199@gmail.com",
     github: "https://github.com/ryanli0819",
     resume: "assets/resume/Ryan_Li_Resume.pdf",
     photo: "assets/img/ryan-aix.jpg",
     bio: [
-      "I'm a freshman at Purdue studying data analytics. In high school I co-wrote an IEEE paper on using a large language model to read live-stream chat, and built a computer vision model for hockey film that won a Distinction Award at IEYI China.",
+      "I'm a curious Purdue student trying to find my way into data science. In high school I co-wrote an IEEE paper on using a large language model to read live-stream chat, and built a computer vision model for hockey film that won a Distinction Award at IEYI China.",
       "Outside of school I surf, play hockey and ultimate frisbee, make art, and sing."
     ],
     missing: [
