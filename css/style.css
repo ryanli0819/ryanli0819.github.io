@@ -1185,3 +1185,5 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .stage3d.cracked .s3-crack { opacity: 1; animation: crackOut .9s ease-out forwards; }
 @keyframes crackOut { 0% { opacity: 1; transform: scale(.96); } 60% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.04); } }
 .stage3d.flash .s3-flash { animation: impactFlash .45s ease-out; }
+/* straight cut from the shot to the glass scene (no fade) */
+.stage3d.hard-cut .glass-scene, .stage3d.hard-cut #figure { transition: none !important; }
