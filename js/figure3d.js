@@ -9,7 +9,8 @@
 const wrap = document.getElementById("stage3d");
 const stage = document.getElementById("stagePin");
 let canvas = document.getElementById("figure");
-const SCENE = "assets/hero/breakout.splinecode";
+const SCENE = "assets/hero/breakout-glass.splinecode";   // Ryan's puck-through-the-glass scene
+const SHOT_SCENE = "assets/hero/shot.splinecode";         // Ryan's hockey-player shot scene (plays first)
 const RUNTIME = "https://cdn.spline.design/@splinetool/runtime@2.0.183/build/runtime.js"; // the version the scene was published with
 
 function cssScroll() {
@@ -99,17 +100,60 @@ function setupBreak(app) {
   return { hide, go };
 }
 
+function crackSVG() { // a quick spider crack drawn over the screen at the moment of impact
+  const cx = 50, cy = 46; let d = "";
+  for (let i = 0; i < 16; i++) {
+    let a = (i / 16) * Math.PI * 2 + (Math.random() - .5) * .3, r = 3, x = cx, y = cy; d += `M${cx},${cy}`;
+    while (r < 90) { r += 6 + Math.random() * 10; a += (Math.random() - .5) * .25; x = cx + Math.cos(a) * r; y = cy + Math.sin(a) * r * .75; d += ` L${x.toFixed(1)},${y.toFixed(1)}`; }
+  }
+  for (const rr of [8, 16, 27]) { d += ` M${cx + rr},${cy}`; for (let k = 1; k <= 24; k++) { const a = (k / 24) * Math.PI * 2, j = rr * (0.9 + Math.random() * .2); d += ` L${(cx + Math.cos(a) * j).toFixed(1)},${(cy + Math.sin(a) * j * .75).toFixed(1)}`; } }
+  return `<svg viewBox="0 0 100 92" preserveAspectRatio="xMidYMid slice"><path d="${d}" fill="none" stroke="#fff6dc" stroke-width=".35" stroke-linejoin="round"/></svg>`;
+}
+
+async function playSequence(Application, shotApp) {
+  const calm = (a) => { const oc = a.controls && a.controls.orbitControls; if (oc) { oc.enableZoom = false; oc.enablePan = false; } a.setBackgroundColor("rgba(0,0,0,0)"); };
+  // second canvas for the glass scene, loaded underneath while the shot plays
+  const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
+  canvas.after(glassCanvas);
+  const crack = document.createElement("div"); crack.className = "s3-crack"; crack.setAttribute("aria-hidden", "true"); stage.appendChild(crack);
+  const glassApp = new Application(glassCanvas);
+  const glassReady = glassApp.load(SCENE).then(() => calm(glassApp)).catch(() => {});
+  await shotApp.load(SHOT_SCENE); calm(shotApp);
+  window.ryanSpline = shotApp; window.ryanSplineGlass = glassApp;
+  stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
+  const start = performance.now(), puck = shotApp.findObjectByName("Shot Puck");
+  let done = false;
+  const breakThrough = async () => {
+    if (done) return; done = true;
+    crack.innerHTML = crackSVG(); stage.classList.add("flash", "cracked");
+    await glassReady;
+    setTimeout(() => {
+      stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
+      setTimeout(() => { stage.classList.remove("flash", "cracked"); try { shotApp.stop(); } catch {} }, 700);
+    }, 260);
+  };
+  // his script: release at 1.35s, the puck reaches the camera just before 2.0s (first loop)
+  (function watch() {
+    if (done) return;
+    const t = (performance.now() - start) / 1000, z = puck && puck.position ? puck.position.z : 0;
+    if (z > 150 || t > 1.95) breakThrough(); else requestAnimationFrame(watch);
+  })();
+}
+
 async function initSpline() {
   const { Application } = await import(RUNTIME);
   const app = new Application(canvas);
+  if (window.HERO_AS_DESIGNED) return playSequence(Application, app);
   await app.load(SCENE);
   window.ryanSpline = app;
   if (window.HERO_AS_DESIGNED) {
-    // Ryan's Spline scene exactly as published; only scroll-to-zoom/pan are off so the page can still scroll
-    const oc = app.controls && app.controls.orbitControls;
-    if (oc) { oc.enableZoom = false; oc.enablePan = false; }
-    app.setBackgroundColor("rgba(0,0,0,0)"); // the arena backdrop behind the canvas (css: .as-designed .s3-bg) shows through
-    stage.classList.remove("pre-impact"); stage.classList.add("ready", "broken", "as-designed");
+    // 1) Ryan's shot scene plays; 2) when its puck reaches the screen the screen cracks;
+    // 3) his puck-through-the-glass scene takes over. Both exactly as he designed them, with transparent backgrounds
+    //    so the blurred photo behind shows through; only zoom/pan are off so the page still scrolls.
+    const calm = (a) => { const oc = a.controls && a.controls.orbitControls; if (oc) { oc.enableZoom = false; oc.enablePan = false; } a.setBackgroundColor("rgba(0,0,0,0)"); };
+    calm(app);
+    stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
+    // the shot scene was loaded above into `canvas` as SCENE; swap: load the shot into it instead, glass into a second canvas
     return;
   }
   tweak(app);
