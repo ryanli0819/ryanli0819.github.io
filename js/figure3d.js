@@ -10,7 +10,7 @@ const wrap = document.getElementById("stage3d");
 const stage = document.getElementById("stagePin");
 let canvas = document.getElementById("figure");
 const SCENE = "assets/hero/breakout.splinecode";
-const RUNTIME = "https://cdn.spline.design/@splinetool/runtime@2.0.179/build/runtime.js"; // the version the scene was published with
+const RUNTIME = "https://cdn.spline.design/@splinetool/runtime@2.0.183/build/runtime.js"; // the version the scene was published with
 
 function cssScroll() {
   const r = wrap.getBoundingClientRect(), span = Math.max(1, wrap.offsetHeight - innerHeight);
@@ -108,6 +108,7 @@ async function initSpline() {
     // Ryan's Spline scene exactly as published; only scroll-to-zoom/pan are off so the page can still scroll
     const oc = app.controls && app.controls.orbitControls;
     if (oc) { oc.enableZoom = false; oc.enablePan = false; }
+    app.setBackgroundColor("rgba(0,0,0,0)"); // the arena backdrop behind the canvas (css: .as-designed .s3-bg) shows through
     stage.classList.remove("pre-impact"); stage.classList.add("ready", "broken", "as-designed");
     return;
   }
