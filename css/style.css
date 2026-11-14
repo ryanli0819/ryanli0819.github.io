@@ -1211,14 +1211,60 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .project .project-links a:hover { color: var(--pk-ink); }
 .project .card-actions { margin-top: auto; padding-top: 18px; }
 
-/* "Drag to rotate" hint: flashes on at the smash (1s on, off, back on...) */
-.s3-drag { position: absolute; z-index: 6; left: 50%; bottom: clamp(70px, 14vh, 130px); transform: translateX(-50%);
-  display: none; align-items: center; gap: 10px; pointer-events: none; white-space: nowrap;
-  font: 700 clamp(13px, 1.4vw, 16px) var(--font-mono); letter-spacing: .22em; text-transform: uppercase; color: #fff;
-  padding: 10px 18px; background: rgba(20,14,10,.55); border: 1.5px solid #FC6C85; box-shadow: 4px 4px 0 #FC6C85, 0 0 28px rgba(252,108,133,.55);
-  text-shadow: 0 0 10px rgba(252,108,133,.95), 0 0 22px rgba(252,108,133,.6); opacity: calc(1 - var(--sp, 0) * 3); }
-.s3-drag-ic { display: inline-block; font-size: 1.4em; color: #FC6C85; animation: s3-spin 2s linear infinite; }
+/* "Drag to rotate" hint: small, on the right side, flashes on at the smash (1s on, off, back on...) */
+.s3-drag { position: absolute; z-index: 6; right: clamp(16px, 4vw, 48px); top: 50%; transform: translateY(-50%);
+  display: none; align-items: center; gap: 7px; pointer-events: none; white-space: nowrap;
+  font: 700 11px var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: #fff;
+  padding: 7px 12px; background: rgba(20,14,10,.55); border: 1.5px solid #FC6C85; box-shadow: 3px 3px 0 #FC6C85, 0 0 20px rgba(252,108,133,.5);
+  text-shadow: 0 0 8px rgba(252,108,133,.95), 0 0 18px rgba(252,108,133,.55); opacity: calc(1 - var(--sp, 0) * 3); }
+.s3-drag-ic { display: inline-block; font-size: 1.35em; color: #FC6C85; animation: s3-spin 2s linear infinite; }
 .stage3d.drag-hint .s3-drag { display: inline-flex; animation: s3-flash 2s steps(1, end) infinite; }
 @keyframes s3-flash { 0% { visibility: visible; } 50% { visibility: hidden; } }
 @keyframes s3-spin { to { transform: rotate(-360deg); } }
-@media (prefers-reduced-motion: reduce) { .stage3d.drag-hint .s3-drag, .s3-drag-ic { animation: none; } }
+
+/* "Scroll down to keep reading": bottom centre, comes in just after the drag hint, arrow bobs */
+.s3-scroll { position: absolute; z-index: 6; left: 50%; bottom: clamp(22px, 5vh, 44px); transform: translate(-50%, 10px);
+  display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; white-space: nowrap;
+  font: 600 11px var(--font-mono); letter-spacing: .2em; text-transform: uppercase; color: #F0E5DB;
+  text-shadow: 0 1px 8px rgba(0,0,0,.7); opacity: 0; transition: opacity .6s ease 1.2s, transform .6s ease 1.2s; }
+.s3-scroll-ic { font-size: 18px; color: #FC6C85; animation: s3-bob 1.4s ease-in-out infinite; }
+.stage3d.drag-hint .s3-scroll { opacity: calc(1 - var(--sp, 0) * 3); transform: translate(-50%, 0); }
+@keyframes s3-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+@media (max-width: 600px) { .s3-drag { top: 84px; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .stage3d.drag-hint .s3-drag, .s3-drag-ic, .s3-scroll-ic { animation: none; } }
+
+/* Name on the opening: a hockey-jersey nameplate (his #19). Heavy athletic letters in cream, black + gold
+   tackle-twill double outline, slanted forward like it's skating. Colors: cream/black/gold only (never red). */
+.s3-hello .h-name { position: relative; display: inline-block; background: none; box-shadow: none; padding: 0 0 0 4px; overflow: visible;
+  font: 900 clamp(88px, 12vw, 184px)/.86 "Big Shoulders Display", "Archivo", Impact, sans-serif; text-transform: uppercase;
+  letter-spacing: .01em; color: #FFF4DC; font-style: normal; }
+.s3-hello .h-name::before { content: ""; position: absolute; inset: -18% -14% -22% -10%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(8,6,4,.82), rgba(8,6,4,.55) 60%, transparent); filter: blur(6px); }
+/* lockup: RYAN big, LI smaller stacked at the top right over the #19 tag */
+.s3-hello .h-name { display: inline-flex; align-items: flex-start; gap: .08em; }
+.hn-first, .hn-last { display: inline-block; transform: skewX(-9deg); transform-origin: bottom left; }
+.hn-first { text-shadow: 3px 3px 0 #0b0906, 4px 4px 0 #0b0906, 7px 7px 0 #F6D27A, 8px 8px 0 #F6D27A, 9px 9px 0 #0b0906; }
+.hn-side { display: inline-flex; flex-direction: column; align-items: flex-start; gap: .12em; padding-top: .04em; }
+.hn-last { font-size: .62em; line-height: .8; color: #F6D27A; letter-spacing: .02em;
+  text-shadow: 2px 2px 0 #0b0906, 3px 3px 0 #0b0906, 5px 5px 0 #FFF4DC, 6px 6px 0 #0b0906; }
+.hn-side::after { content: ""; order: 1; width: 100%; min-width: 1.1em; height: 3px; background: #F6D27A; transform: skewX(-9deg); }
+.hn-num { order: 2; position: static; transform: rotate(-3deg); margin-left: .06em; line-height: 1;
+  font: 700 clamp(11px, 1vw, 14px) var(--font-mono); letter-spacing: .14em; color: #0b0906; background: #F6D27A;
+  padding: 4px 8px; box-shadow: 3px 3px 0 #0b0906; }
+.s3-hello .h-sub { border-left: 3px solid #F6D27A; margin-top: 26px; }
+@media (max-width: 600px) { .s3-hello .h-name { font-size: 76px; } }
+
+/* His name printed on the glass before the puck breaks it: frosted cream decal over the impact point,
+   cut into wedges that fly apart at the smash. The name card (.s3-hello) waits for the smash. */
+.s3-glassname { position: absolute; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none;
+  display: grid; opacity: 0; transition: opacity .35s ease-in; white-space: nowrap; }
+.stage3d.glass-on .s3-glassname { opacity: 1; }
+.gn-piece { grid-area: 1 / 1; display: block; padding: .1em .25em;
+  font: 900 clamp(84px, 13vw, 210px)/.9 "Big Shoulders Display", "Archivo", Impact, sans-serif; text-transform: uppercase; letter-spacing: .02em;
+  color: rgba(255,244,220,.82); -webkit-text-stroke: 2px rgba(246,210,122,.9);
+  text-shadow: 0 0 18px rgba(255,244,220,.35), 0 0 2px rgba(255,255,255,.6);
+  transition: transform .9s cubic-bezier(.15,.75,.3,1), opacity .7s ease .15s; }
+.gn-piece b { font-weight: 900; } .gn-piece i { font-style: normal; color: rgba(246,210,122,.88); font-size: .62em; vertical-align: .55em; }
+.stage3d.smashed .gn-piece { transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(1.15); opacity: 0; }
+.stage3d.as-designed:not(.smashed) .s3-hello > * { opacity: 0 !important; transform: translateX(-24px) !important; }
+@media (prefers-reduced-motion: reduce) { .gn-piece { transition: opacity .3s; } .stage3d.smashed .gn-piece { transform: none; } }

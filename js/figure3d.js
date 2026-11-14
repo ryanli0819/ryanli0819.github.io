@@ -126,8 +126,17 @@ async function playSequence(Application, shotApp) {
   //  - shot: he glides toward us for 1.5s (camera dollies in), then the whole swing as he glides to a stop; it stops with the puck at the screen (no snap back);
   //  - glass: waits at frame 0 until window.glassGo, plays the smash once (4s) and stops, so the camera is free to orbit.
   const HOLD = 1.5, SHOT_END = HOLD + 2.0;   // shot puck reaches the screen at 2.0s of his swing
-  const APPROACH = 0.62;                      // glass puck already on approach at the dissolve; impact at 1.1
+  const APPROACH = 0.2;                       // glass-scene time at the dissolve; impact at 1.1, so ~0.9s on the glass (name printed on it) first
   window.glassGo = false;
+  // his name printed on the glass: one decal cut into wedges around the impact point, so it shatters with the pane
+  const decal = document.createElement("div"); decal.className = "s3-glassname"; decal.setAttribute("aria-hidden", "true");
+  const EDGE = [[0,0],[30,0],[62,0],[100,0],[100,46],[100,100],[66,100],[34,100],[0,100],[0,52]];
+  decal.innerHTML = EDGE.map((a, i) => {
+    const b = EDGE[(i + 1) % EDGE.length], mx = (a[0] + b[0]) / 2 - 50, my = (a[1] + b[1]) / 2 - 50, n = Math.hypot(mx, my) || 1;
+    const dx = (mx / n) * (90 + (i * 37) % 60), dy = (my / n) * (70 + (i * 53) % 50), r = ((i * 47) % 50) - 25;
+    return `<span class="gn-piece" style="clip-path:polygon(50% 50%,${a[0]}% ${a[1]}%,${b[0]}% ${b[1]}%);--dx:${dx.toFixed(0)}vw;--dy:${dy.toFixed(0)}vh;--r:${r}deg"><b>Ryan</b> <i>Li</i></span>`;
+  }).join("");
+  canvas.after(decal);
   const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
   canvas.after(glassCanvas);
   const glassApp = new Application(glassCanvas, { htmlContentMode: "inline" }); window.ryanSplineGlass = glassApp;
@@ -144,7 +153,7 @@ async function playSequence(Application, shotApp) {
     const t = (performance.now() - window.shotT0) / 1000;
     if (!went && glassReady && t >= SHOT_END - APPROACH) {
       went = true; window.glassGo = true;
-      setTimeout(() => stage.classList.add("drag-hint"), 1100); // the puck smashes through at 1.1s of the glass scene
+      setTimeout(() => stage.classList.add("smashed", "drag-hint"), 1100); // the puck smashes through at 1.1s of the glass scene
     }
     if (went && !faded && t >= SHOT_END) {
       faded = true; clearInterval(timer);
