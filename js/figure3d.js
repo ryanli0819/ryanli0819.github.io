@@ -123,7 +123,7 @@ async function playSequence(Application, shotApp) {
   window.ryanSpline = shotApp;
   stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
   // His scripts are patched (assets/hero/*.splinecode) to play once instead of looping:
-  //  - shot: 1.5s in the ready stance, then the whole swing; it stops with the puck at the screen (no snap back);
+  //  - shot: he glides toward us for 1.5s (camera dollies in), then the whole swing as he glides to a stop; it stops with the puck at the screen (no snap back);
   //  - glass: waits at frame 0 until window.glassGo, plays the smash once (4s) and stops, so the camera is free to orbit.
   const HOLD = 1.5, SHOT_END = HOLD + 2.0;   // shot puck reaches the screen at 2.0s of his swing
   const APPROACH = 0.62;                      // glass puck already on approach at the dissolve; impact at 1.1
@@ -142,7 +142,10 @@ async function playSequence(Application, shotApp) {
   const timer = setInterval(() => {
     if (!window.shotT0) return;
     const t = (performance.now() - window.shotT0) / 1000;
-    if (!went && glassReady && t >= SHOT_END - APPROACH) { went = true; window.glassGo = true; }
+    if (!went && glassReady && t >= SHOT_END - APPROACH) {
+      went = true; window.glassGo = true;
+      setTimeout(() => stage.classList.add("drag-hint"), 1100); // the puck smashes through at 1.1s of the glass scene
+    }
     if (went && !faded && t >= SHOT_END) {
       faded = true; clearInterval(timer);
       stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");

@@ -1210,3 +1210,15 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .project .project-links a { color: var(--title); text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .project .project-links a:hover { color: var(--pk-ink); }
 .project .card-actions { margin-top: auto; padding-top: 18px; }
+
+/* "Drag to rotate" hint: flashes on at the smash (1s on, off, back on...) */
+.s3-drag { position: absolute; z-index: 6; left: 50%; bottom: clamp(70px, 14vh, 130px); transform: translateX(-50%);
+  display: none; align-items: center; gap: 10px; pointer-events: none; white-space: nowrap;
+  font: 700 clamp(13px, 1.4vw, 16px) var(--font-mono); letter-spacing: .22em; text-transform: uppercase; color: #fff;
+  padding: 10px 18px; background: rgba(20,14,10,.55); border: 1.5px solid #FC6C85; box-shadow: 4px 4px 0 #FC6C85, 0 0 28px rgba(252,108,133,.55);
+  text-shadow: 0 0 10px rgba(252,108,133,.95), 0 0 22px rgba(252,108,133,.6); opacity: calc(1 - var(--sp, 0) * 3); }
+.s3-drag-ic { display: inline-block; font-size: 1.4em; color: #FC6C85; animation: s3-spin 2s linear infinite; }
+.stage3d.drag-hint .s3-drag { display: inline-flex; animation: s3-flash 2s steps(1, end) infinite; }
+@keyframes s3-flash { 0% { visibility: visible; } 50% { visibility: hidden; } }
+@keyframes s3-spin { to { transform: rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) { .stage3d.drag-hint .s3-drag, .s3-drag-ic { animation: none; } }
