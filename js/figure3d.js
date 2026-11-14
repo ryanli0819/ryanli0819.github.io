@@ -111,38 +111,38 @@ function crackSVG() { // a quick spider crack drawn over the screen at the momen
 }
 
 async function playSequence(Application, shotApp) {
+  // Both scenes run their own animation scripts (Spline's "inline" HTML content), exactly like Ryan's public links.
   const calm = (a) => { const oc = a.controls && a.controls.orbitControls; if (oc) { oc.enableZoom = false; oc.enablePan = false; } a.setBackgroundColor("rgba(0,0,0,0)"); };
-  // second canvas for the glass scene, loaded underneath while the shot plays
-  const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
-  canvas.after(glassCanvas);
+  fetch(SCENE).catch(() => {}); // warm the cache so the glass scene loads instantly at the hand-off
   const crack = document.createElement("div"); crack.className = "s3-crack"; crack.setAttribute("aria-hidden", "true"); stage.appendChild(crack);
-  const glassApp = new Application(glassCanvas);
-  const glassReady = glassApp.load(SCENE).then(() => calm(glassApp)).catch(() => {});
   await shotApp.load(SHOT_SCENE); calm(shotApp);
-  window.ryanSpline = shotApp; window.ryanSplineGlass = glassApp;
+  window.ryanSpline = shotApp;
   stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
   const start = performance.now(), puck = shotApp.findObjectByName("Shot Puck");
   let done = false;
   const breakThrough = async () => {
     if (done) return; done = true;
     crack.innerHTML = crackSVG(); stage.classList.add("flash", "cracked");
-    await glassReady;
-    setTimeout(() => {
-      stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
-      setTimeout(() => { stage.classList.remove("flash", "cracked"); try { shotApp.stop(); } catch {} }, 700);
-    }, 260);
+    // the glass scene starts from its own beginning now: puck flies in, smashes the glass at 1.1s, shards burst
+    const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
+    canvas.after(glassCanvas);
+    const glassApp = new Application(glassCanvas, { htmlContentMode: "inline" });
+    window.ryanSplineGlass = glassApp;
+    try { await glassApp.load(SCENE); calm(glassApp); } catch (e) { console.warn("glass scene failed", e); }
+    stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
+    setTimeout(() => { stage.classList.remove("flash", "cracked"); try { shotApp.stop(); } catch {} }, 800);
   };
-  // his script: release at 1.35s, the puck reaches the camera just before 2.0s (first loop)
+  // the shot scene's script: release at 1.35s, the puck reaches the camera at about 2.0s
   (function watch() {
     if (done) return;
     const t = (performance.now() - start) / 1000, z = puck && puck.position ? puck.position.z : 0;
-    if (z > 150 || t > 1.95) breakThrough(); else requestAnimationFrame(watch);
+    if (z > 160 || t > 1.98) breakThrough(); else requestAnimationFrame(watch);
   })();
 }
 
 async function initSpline() {
   const { Application } = await import(RUNTIME);
-  const app = new Application(canvas);
+  const app = new Application(canvas, { htmlContentMode: "inline" });
   if (window.HERO_AS_DESIGNED) return playSequence(Application, app);
   await app.load(SCENE);
   window.ryanSpline = app;
