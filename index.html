@@ -44,8 +44,7 @@
         <div class="s3-glass" aria-hidden="true"></div>
         <div class="s3-flash" aria-hidden="true"></div>
         <div class="s3-hello">
-          <p class="h-line">Hope I didn't scare ya <span aria-hidden="true">😅</span></p>
-          <h1 class="h-name">I'm <b>Ryan Li</b></h1>
+          <h1 class="h-name">Ryan Li</h1>
           <p class="h-sub">Freshman · Data Analytics @ Purdue<br>I shoot pucks and I read data.</p>
         </div>
         <canvas id="figure" aria-hidden="true"></canvas>
@@ -62,12 +61,12 @@
     <!-- ============ INTRO (shows after the first scroll) ============ -->
     <section id="intro" class="intro section">
       <figure class="intro-photo reveal">
-        <img src="assets/img/ryan-aix.jpg" alt="Ryan Li (right, with name tag) at the AIx Conference" loading="lazy">
-        <figcaption>At the AIx Conference (IEEE AIxHeart 2024), where our ASABC paper was presented. I'm on the right.</figcaption>
+        <img src="assets/img/ryan-portrait.jpg" alt="Ryan Li standing at a lookout above green hills in Japan" loading="lazy">
+        <figcaption>Somewhere above the hills in Japan.</figcaption>
       </figure>
       <div class="intro-text reveal">
-        <p class="eyebrow">Hi! I am</p>
-        <h2 class="intro-name">Ryan Li</h2>
+        <p class="eyebrow scare">Hope I didn't scare ya.</p>
+        <h2 class="intro-name">I'm Ryan Li</h2>
         <p class="tagline">
           A freshman studying data analytics at Purdue. I am a surfer, hockey player, a brother and a great singer
           outside of academics.
@@ -326,7 +325,7 @@
       "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
     } }
   </script>
-  <script type="module" src="js/player3d.js"></script>
+  <script src="js/player2d.js"></script>
   <script type="module" src="js/figure3d.js"></script>
   <script>document.getElementById("replayShot").addEventListener("click", () => dispatchEvent(new CustomEvent("replay-shot")));</script>
 </body>

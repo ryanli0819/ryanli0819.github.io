@@ -217,13 +217,18 @@
         <ellipse cx="${p0.x}" cy="0" rx="${W * 3.2}" ry="${W * 1.4}" class="beach"/><ellipse cx="${p0.x}" cy="0" rx="${W * 3.2}" ry="${W * 1.4}" fill="url(#sandDots)"/>
         <path d="${d}" class="verge"/><path d="${d}" class="asphalt"/><path d="${d}" class="edge"/><path d="${d}" class="asphalt inner"/>
         <path d="${d}" class="center"/><path d="${d}" class="crest2"/>${lanes}
-        <g class="push-wave"><g class="pw-inner"><text x="0" y="0" text-anchor="middle" dominant-baseline="central" style="font-size:${narrow ? 34 : 44}px">🌊</text></g></g>
+        <g class="push-wave"><g class="pw-inner">
+          <path d="M-46,${-W / 2 + 3} Q-14,${-W / 4} -10,0 Q-14,${W / 4} -46,${W / 2 - 3} Z" class="pw-swell-back"/>
+          <path d="M-30,${-W / 2 + 3} Q4,${-W / 4} 8,0 Q4,${W / 4} -30,${W / 2 - 3} L-38,${W / 2 - 3} Q-6,${W / 4} -2,0 Q-6,${-W / 4} -38,${-W / 2 + 3} Z" class="pw-swell"/>
+          <path d="M-30,${-W / 2 + 3} Q4,${-W / 4} 8,0 Q4,${W / 4} -30,${W / 2 - 3}" class="pw-lip"/>
+          ${[-0.36, -0.18, 0, 0.18, 0.36].map((k, i) => `<circle cx="${(6 - Math.abs(k) * 40).toFixed(1)}" cy="${(k * W).toFixed(1)}" r="${i % 2 ? 2.4 : 3.4}" class="pw-foam"/>`).join("")}
+        </g></g>
         <g class="car surfer"><ellipse cx="0" cy="10" rx="16" ry="5" class="wake"/><g class="rider"><text x="0" y="0" text-anchor="middle" dominant-baseline="central" style="font-size:${narrow ? 24 : 30}px">🏄</text></g></g>`;
       path = svg.querySelector(".center"); len = path.getTotalLength(); car = svg.querySelector(".car");
       wave = svg.querySelector(".push-wave"); rider = svg.querySelector(".rider");
       const pc = document.createElementNS("http://www.w3.org/2000/svg", "path"); pc.setAttribute("d", dCurve); lenC = pc.getTotalLength();
       stops = [...el.querySelectorAll(".r-stop")];
-      move();
+      lastP = -1; move(); // the svg was rebuilt, so always re-place the surfer and wave
     }
 
     let lastP = -1, wave, rider, facing = 1;
@@ -248,8 +253,11 @@
       if (Math.abs(dx) > 0.4) facing = dx > 0 ? 1 : -1;
       rider.setAttribute("transform", `scale(${facing * SURFER_FACES},1)`);
       // the wave stays right behind him, pushing
-      const w = lineY >= yC + 30 ? { x: cx, y: lineY - 30 } : path.getPointAtLength(Math.max(0, Math.min(at, lenC) - 30));
-      wave.setAttribute("transform", `translate(${w.x.toFixed(1)},${(w.y - 4).toFixed(1)}) scale(${facing * WAVE_FACES},1)`);
+      const wAt = Math.max(0, Math.min(at, lenC) - 18);
+      const w = lineY >= yC + 18 ? { x: cx, y: lineY - 18 } : path.getPointAtLength(wAt);
+      const w2 = lineY >= yC + 20 ? { x: cx, y: lineY - 16 } : path.getPointAtLength(Math.min(lenC, wAt + 2));
+      const wAng = Math.atan2(w2.y - w.y, w2.x - w.x) * 180 / Math.PI;
+      wave.setAttribute("transform", `translate(${w.x.toFixed(1)},${w.y.toFixed(1)}) rotate(${wAng.toFixed(1)})`);
       stops.forEach(s => { const y = s.offsetTop + s.offsetHeight / 2; s.classList.toggle("passed", a.y >= y - 30); s.classList.toggle("here", Math.abs(a.y - y) < s.offsetHeight / 2 + 10); });
     }
     let raf = 0;
@@ -406,7 +414,7 @@
   const storage = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
   const savedTheme = storage.get("theme"); if (savedTheme) root.dataset.theme = savedTheme;
   $("#themeToggle").onclick = () => {
-    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const dark = root.dataset.theme === "dark"; // light by default; the button switches
     root.dataset.theme = dark ? "light" : "dark"; storage.set("theme", root.dataset.theme);
   };
   document.body.classList.remove("skim");

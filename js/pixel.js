@@ -42,11 +42,17 @@
     ctx.font = `${W < 720 ? 24 : 30}px ${EMOJI}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText("🏄", 0, 0); ctx.restore();
   }
-  function pushWave(x, y, t) { // same wave as on the timeline, right behind him (mirrored so it curls the way he rides)
-    ctx.save(); ctx.translate(x, y); ctx.scale(-(1 + Math.sin(t * 5.7) * 0.04), 1 + Math.sin(t * 5.7) * 0.04);
-    ctx.font = `${W < 720 ? 34 : 44}px ${EMOJI}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("🌊", 0, 0); ctx.restore();
+  function pushWave(x, y, t, cw) { // same water-built wave as on the timeline: swell across the channel, foam lip, surging
+    const k = 1 + Math.sin(t * 5.7) * 0.09, hw = cw / 2 - 3;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(Math.PI / 2); ctx.scale(k, 1); // travel direction = down
+    ctx.fillStyle = "rgba(255,255,255,.18)"; ctx.beginPath(); ctx.moveTo(-46, -hw); ctx.quadraticCurveTo(-14, -hw / 2, -10, 0); ctx.quadraticCurveTo(-14, hw / 2, -46, hw); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#2F6A96"; ctx.beginPath(); ctx.moveTo(-30, -hw); ctx.quadraticCurveTo(4, -hw / 2, 8, 0); ctx.quadraticCurveTo(4, hw / 2, -30, hw);
+    ctx.lineTo(-38, hw); ctx.quadraticCurveTo(-6, hw / 2, -2, 0); ctx.quadraticCurveTo(-6, -hw / 2, -38, -hw); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "#F4FAFF"; ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(-30, -hw); ctx.quadraticCurveTo(4, -hw / 2, 8, 0); ctx.quadraticCurveTo(4, hw / 2, -30, hw); ctx.stroke();
+    ctx.fillStyle = "#F4FAFF"; [-0.36, -0.18, 0, 0.18, 0.36].forEach((q, i) => { ctx.beginPath(); ctx.arc(6 - Math.abs(q) * 40, q * cw * 1.0, i % 2 ? 2.4 : 3.4, 0, Math.PI * 2); ctx.fill(); });
+    ctx.restore();
   }
+
 
   function draw() {
     if (!W) return;
@@ -87,7 +93,7 @@
       else y = LINE + easeInOut(ride) * (H * 0.88 - LINE);
       if (y !== null) {
         ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.beginPath(); ctx.ellipse(cx, y + 10, 16, 5, 0, 0, Math.PI * 2); ctx.fill();
-        pushWave(cx, y - 34, t);
+        pushWave(cx, y - 18, t, cw);
         surfer(cx, y, 1, 0, 1);
       }
     } else {
