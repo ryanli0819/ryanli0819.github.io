@@ -1127,3 +1127,7 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .road-svg .pw-foam { fill: #F4FAFF; }
 .road-svg .pw-inner { animation: pushWave 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: left center; }
 @keyframes pushWave { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(1.18); } }
+.replay.solo { position: absolute; z-index: 4; right: clamp(16px, 4vw, 48px); bottom: clamp(24px, 6vh, 60px); background: rgba(11,9,6,.7); border: 1px solid rgba(226,196,122,.6);
+  color: #e2c47a; font: 600 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; padding: 7px 11px; cursor: pointer; opacity: 0; transition: opacity .6s ease 2s; }
+.stage3d.broken .replay.solo { opacity: 1; }
+.replay.solo:hover { background: #e2c47a; color: #0b0906; }
