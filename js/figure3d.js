@@ -111,42 +111,48 @@ function crackSVG() { // a quick spider crack drawn over the screen at the momen
 }
 
 async function playSequence(Application, shotApp) {
-  // One continuous shot:
-  //  - Ryan's player runs his whole swing (wind-up, release at 1.35s, follow-through to ~2.0s) and the shot puck flies at us;
-  //  - his glass scene is started underneath while that puck is still in the air, so its own puck is already on approach;
-  //  - right after the follow-through the shot dissolves into the glass scene: we still see the puck coming at us
-  //    through the intact glass (the foreshadow), then it smashes through at the glass script's impact (1.1s).
+  // One continuous shot, played once:
+  //  - Ryan's player holds his ready stance for 1.5s, then runs his whole swing and the shot puck flies at us;
+  //  - his glass scene starts underneath while that puck is still in the air, so its own puck is already on approach;
+  //  - when the shot puck reaches the screen we dissolve into the glass scene: the puck is still coming at us
+  //    through the intact glass (the foreshadow), smashes through once, and everything stops; drag orbits the puck.
   // Both scenes run their own animation scripts (Spline "inline" HTML content), exactly like his public links.
   const calm = (a) => { const oc = a.controls && a.controls.orbitControls; if (oc) { oc.enableZoom = false; oc.enablePan = false; } a.setBackgroundColor("rgba(0,0,0,0)"); };
-  fetch(SCENE).catch(() => {});
+  window.shotT0 = 0;           // set by his shot script the moment its swing clock starts
   await shotApp.load(SHOT_SCENE); calm(shotApp);
   window.ryanSpline = shotApp;
   stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
-  const start = performance.now();
-  const PRELOAD = 1.0;        // shot time when the glass scene starts loading
-  const SWING_END = 1.82;     // follow-through held (his script snaps the puck back to the blade at 2.0)
-  const APPROACH = 0.62;      // glass-scene time at the dissolve: its puck is visibly closing in, impact comes at 1.1
-  let glassApp = null, glassStart = null, faded = false;
-  const loadGlass = () => {
-    if (glassApp) return;
-    const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
-    canvas.after(glassCanvas);
-    glassApp = new Application(glassCanvas, { htmlContentMode: "inline" });
-    window.ryanSplineGlass = glassApp;
-    glassApp.load(SCENE).then(() => { calm(glassApp); glassStart = performance.now(); }).catch((e) => console.warn("glass scene failed", e));
-  };
+  // His scripts are patched (assets/hero/*.splinecode) to play once instead of looping:
+  //  - shot: 1.5s in the ready stance, then the whole swing; it stops with the puck at the screen (no snap back);
+  //  - glass: waits at frame 0 until window.glassGo, plays the smash once (4s) and stops, so the camera is free to orbit.
+  const HOLD = 1.5, SHOT_END = HOLD + 2.0;   // shot puck reaches the screen at 2.0s of his swing
+  const APPROACH = 0.62;                      // glass puck already on approach at the dissolve; impact at 1.1
+  window.glassGo = false;
+  const glassCanvas = canvas.cloneNode(false); glassCanvas.id = "figureGlass"; glassCanvas.classList.add("glass-scene");
+  canvas.after(glassCanvas);
+  const glassApp = new Application(glassCanvas, { htmlContentMode: "inline" }); window.ryanSplineGlass = glassApp;
+  let glassReady = false;
+  glassApp.load(SCENE).then(() => {
+    calm(glassApp);
+    const oc = glassApp.controls && glassApp.controls.orbitControls;
+    if (oc) { oc.enableRotate = true; if (oc.target) oc.target.set(0, 0, 0); } // drag rotates around the puck
+    glassReady = true;
+  }).catch((e) => console.warn("glass scene failed", e));
+  let went = false, faded = false;
   const timer = setInterval(() => {
-    const t = (performance.now() - start) / 1000;
-    if (t > PRELOAD) loadGlass();
-    if (!faded && glassStart !== null) {
-      const gt = (performance.now() - glassStart) / 1000;
-      if (t >= SWING_END && gt >= APPROACH) {
-        faded = true; clearInterval(timer);
-        stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
-        setTimeout(() => { try { shotApp.stop(); } catch {} }, 600);
-      }
+    if (!window.shotT0) return;
+    const t = (performance.now() - window.shotT0) / 1000;
+    if (!went && glassReady && t >= SHOT_END - APPROACH) { went = true; window.glassGo = true; }
+    if (went && !faded && t >= SHOT_END) {
+      faded = true; clearInterval(timer);
+      stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
+      setTimeout(() => { try { shotApp.stop(); } catch {} }, 600);
     }
   }, 20);
+  // background blurs while dragging the puck around
+  glassCanvas.addEventListener("pointerdown", () => stage.classList.add("dragging"));
+  addEventListener("pointerup", () => stage.classList.remove("dragging"));
+  addEventListener("pointercancel", () => stage.classList.remove("dragging"));
 }
 
 async function initSpline() {

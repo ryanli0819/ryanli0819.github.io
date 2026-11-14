@@ -1187,3 +1187,26 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .stage3d.flash .s3-flash { animation: impactFlash .45s ease-out; }
 /* straight cut from the shot to the glass scene (no fade) */
 .stage3d.hard-cut .glass-scene, .stage3d.hard-cut #figure { transition: none !important; }
+
+/* ---------- Project cards: even spacing + text colors that pair with the watermelon pink ---------- */
+:root, body { --pk-ink: #C8365A; --pk-soft: color-mix(in srgb, #FC6C85 16%, transparent); }
+:root[data-theme="dark"], :root[data-theme="dark"] body { --pk-ink: #FC8AA0; }
+.project .featured-body > div:first-child, .project .wide-main { display: flex; flex-direction: column; gap: 18px; }
+.project { gap: 16px; }
+.project h3 { color: var(--title); line-height: 1.12; margin: 2px 0 0; }
+.project .when { margin-top: -8px; color: var(--pk-ink); font-weight: 600; }
+.project p.summary { color: var(--ink); line-height: 1.65; }
+.project .card-time { margin: -6px 0 0; color: var(--title); font-weight: 600; line-height: 1.6;
+  padding: 6px 10px; background: var(--pk-soft); border-left: 3px solid var(--pink); }
+.project .cite { color: var(--ink-2); line-height: 1.6; border-left-color: var(--pink); padding: 2px 0 2px 14px; }
+.project .cite b, .project .cite strong { color: var(--pk-ink); }
+.project .metrics { gap: 28px; padding: 14px 0 2px; border-top: 1px solid var(--line); }
+.project .metric b { color: var(--pk-ink); font-size: 34px; line-height: 1; }
+.project .metric span { display: block; margin-top: 6px; color: var(--title); font: 600 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
+.project .tags { gap: 8px; }
+.project .tags li { color: var(--title); border-color: color-mix(in srgb, var(--title) 45%, transparent); font-weight: 600; transition: background .2s, color .2s, border-color .2s; }
+.project .tags li:hover { background: var(--pink); border-color: var(--pink); color: #fff; }
+.project .project-links { gap: 22px; margin-top: 2px; }
+.project .project-links a { color: var(--title); text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.project .project-links a:hover { color: var(--pk-ink); }
+.project .card-actions { margin-top: auto; padding-top: 18px; }
