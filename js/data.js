@@ -165,6 +165,31 @@ window.SITE = {
       ]
     },
     {
+      id: "tennis101",
+      problem: "In every tennis game I've played, a 1.75 m player and a 1.98 m player move and serve the same way. I wanted a game where a real pro's height, weight and reach actually change how he plays.",
+      time: "Personal project · ongoing since Oct 2026",
+      learned: "Turning video into usable motion data, and keeping a growing project's data in one place I can query.",
+      results: ["22 real pros to pick from in the locker room", "Movement, reach and stamina calculated from each player's real height and weight", "Serves taken from real match footage with pose detection", "Playable in the browser"],
+      repo: "https://github.com/ryanli0819/Tennis101",
+      title: "Tennis101: a tennis game built on real players' bodies",
+      badge: "Playable · In progress",
+      era: "college",
+      when: "Purdue · Fall 2026",
+      tags: ["data", "cv"],
+      icon: "🎾",
+      summary:
+        "A pixel-art tennis game where you play as a real pro. Each player's height, weight and arm span set his speed, first step, reach and how fast he tires, so picking a player is a trade-off and not just bigger numbers.",
+      details: [
+        "Ran pose detection on serve videos, cleaned the joint positions, and turned them into each player's serve motion in the game.",
+        "Built a SQLite database of the project's data (players, skills, motion data, versions) so I can query it with SQL.",
+        "Footwork is player-controlled: split-step timing, momentum, and getting wrong-footed all matter."
+      ],
+      metrics: [{ value: "22", label: "real pros" }],
+      skills: ["JavaScript", "Python", "Pose detection", "SQL / SQLite", "Data cleaning"],
+      links: [{ label: "Play it", url: "https://ryanli0819.github.io/Tennis101/" }],
+      missing: []
+    },
+    {
       id: "aviation",
       problem: "An AI that helps student pilots learn to fly needs clean data. The raw exports from the simulators have to be cleaned, structured and checked first.",
       time: "Purdue · ongoing",

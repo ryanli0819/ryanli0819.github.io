@@ -1288,3 +1288,13 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .intro-skills .tags li { color: var(--ink); border-color: color-mix(in srgb, var(--title) 40%, transparent); font-size: 12.5px; font-weight: 500; }
 .intro-photo figcaption { color: var(--ink-2); }
 @media (max-width: 900px) { .intro-skills { grid-template-columns: 1fr; } }
+
+/* First screen after the smash: no name card (the name was already on the glass), just the puck,
+   a calm "Drag to rotate" in the glass's cream/gold, and the scroll hint. */
+.stage3d.as-designed .s3-hello { display: none; }
+.s3-drag { color: #FFF4DC; background: rgba(11,9,6,.6); border-color: rgba(246,210,122,.75);
+  box-shadow: 3px 3px 0 rgba(246,210,122,.55); text-shadow: none; }
+.s3-drag-ic { color: #F6D27A; animation-duration: 4s; }
+.stage3d.drag-hint .s3-drag { animation: s3-pulse 4s ease-in-out infinite; }
+@keyframes s3-pulse { 0%, 62% { opacity: calc(1 - var(--sp, 0) * 3); } 78%, 86% { opacity: 0; } 100% { opacity: calc(1 - var(--sp, 0) * 3); } }
+@media (prefers-reduced-motion: reduce) { .stage3d.drag-hint .s3-drag { animation: none; } }

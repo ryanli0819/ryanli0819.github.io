@@ -132,6 +132,7 @@
 
   /* ---------- Food cursor trail ---------- */
   const trail = $("#eatTrail"), cap = $("#trailCap");
+  if (trail) {
   L.eats.forEach(([slug]) => { const im = new Image(); im.src = IMG(slug); });
   let k = 0, lx = -999, ly = -999, live = [];
   function drop(x, y) {
@@ -151,10 +152,12 @@
   });
   trail.addEventListener("pointerdown", (e) => { const r = trail.getBoundingClientRect(); lx = e.clientX - r.left; ly = e.clientY - r.top; drop(lx, ly); });
   trail.style.touchAction = "pan-y";
+  }
 
   /* ---------- Marquees ---------- */
   const people = asItems(L.people), half = Math.ceil(L.people.length / 2);
   [[$("#mq1"), L.people.slice(0, half), 0], [$("#mq2"), L.people.slice(half), half]].forEach(([el, list, off]) => {
+    if (!el) return;
     const cells = list.map(([slug, c], j) => `<button class="mq-item" data-i="${off + j}" aria-label="${esc(c)}"><img src="${IMG(slug)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join("");
     el.innerHTML = `<div class="mq-row">${cells}${cells.replace(/<button /g, '<button tabindex="-1" aria-hidden="true" ')}</div>`;
     el.addEventListener("click", (e) => { const b = e.target.closest(".mq-item"); if (b) window.openLightbox(people, +b.dataset.i); });
