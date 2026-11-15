@@ -85,8 +85,8 @@ window.SITE = {
 
   skills: {
     "Languages": ["Python", "C++", "Java", "R (basic)", "SQL"],
-    "ML & AI": ["CNNs", "YOLO", "PyTorch", "LLM prompt-tuning", "Computer vision"],
-    "Data": ["Preprocessing pipelines", "Exploratory data analysis", "Data validation", "Statistics"]
+    "ML & AI": ["PyTorch", "torchvision", "Ultralytics YOLO", "OpenCV", "scikit-learn", "CNNs", "LLM prompt-tuning"],
+    "Data": ["Preprocessing pipelines", "Exploratory data analysis", "Data validation", "Data visualization", "Statistics", "NumPy", "Matplotlib"]
   },
 
   /* ---------------------------------------------------------------
