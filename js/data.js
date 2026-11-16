@@ -181,10 +181,11 @@ window.SITE = {
         "A pixel-art tennis game where you play as a real pro. Each player's height, weight and arm span set his speed, first step, reach and how fast he tires, so picking a player is a trade-off and not just bigger numbers.",
       details: [
         "Ran pose detection on serve videos, cleaned the joint positions, and turned them into each player's serve motion in the game.",
+        "The pictures compare one of Sinner's real serves (with the joints the detector found) to the game playing that same data, at the toss, the trophy position and contact.",
         "Built a SQLite database of the project's data (players, skills, motion data, versions) so I can query it with SQL.",
         "Footwork is player-controlled: split-step timing, momentum, and getting wrong-footed all matter."
       ],
-      metrics: [{ value: "22", label: "real pros" }],
+      metrics: [{ value: "HTML + JS", label: "the whole game, one page" }, { value: "Video → game", label: "film → pose data → serve" }],
       skills: ["JavaScript", "Python", "Pose detection", "SQL / SQLite", "Data cleaning"],
       links: [{ label: "Play it", url: "https://ryanli0819.github.io/Tennis101/" }],
       missing: []
@@ -372,8 +373,8 @@ window.SITE = {
       text: "Lexington Math & CS club since sophomore year: USACO, cryptography, CTFs, physics sims." },
     { from: 10, to: 12, when: "Grades 10–12", title: "Youth Entrepreneurship Service", short: "YES startup pitch", kind: "build",
       text: "Pitched AI drowning-detection camera software. 2nd in the state competition." },
-    { from: 11, to: 11, when: "Grade 11", title: "MIT AI & Art Camp", short: "MIT AI & Art", kind: "learn",
-      text: "Hands-on with image-generation tools (Midjourney, DALL·E, Sora) and prompt tuning, inspired by modern museum collections." },
+    { from: 11, to: 11, when: "Grade 11", title: "AI & Art Camp at the MIT Media Lab", short: "MIT Media Lab", kind: "learn",
+      text: "At the MIT Media Lab: hands-on with image-generation tools (Midjourney, DALL·E, Sora) and prompt tuning, inspired by modern museum collections." },
     { from: 11.5, to: 11.5, when: "Summer after Grade 11", title: "LLM research → IEEE paper", short: "IEEE paper", kind: "build",
       text: "Purdue Prof. Yang's PhD team, 30 hrs/week. Led to the ASABC paper at IEEE AIxHeart 2024." },
     { from: 12, to: 12, when: "Grade 12", title: "Hockey computer vision", short: "Hockey CV award", kind: "build",

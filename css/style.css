@@ -1298,3 +1298,13 @@ body.in-fun .icon-btn { background: #0E345B; border-color: #639CC5; color: #EEF3
 .stage3d.drag-hint .s3-drag { animation: s3-pulse 4s ease-in-out infinite; }
 @keyframes s3-pulse { 0%, 62% { opacity: calc(1 - var(--sp, 0) * 3); } 78%, 86% { opacity: 0; } 100% { opacity: calc(1 - var(--sp, 0) * 3); } }
 @media (prefers-reduced-motion: reduce) { .stage3d.drag-hint .s3-drag { animation: none; } }
+
+/* Tennis101: video + joints vs. the game, same moments of the serve */
+.viz[data-viz="tennis101"] { padding: 10px 10px 26px; }
+.v-cmp { display: grid; gap: 6px; }
+.v-cmp-row { display: grid; grid-template-columns: 74px repeat(3, 1fr); gap: 6px; align-items: center; }
+.v-cmp-row figure { margin: 0; }
+.v-cmp-row img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border: 1.5px solid var(--rule); }
+.v-cmp-head b { font: 600 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); text-align: center; }
+.v-cmp-lab { font: 600 10.5px/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); }
+@media (max-width: 560px) { .v-cmp-row { grid-template-columns: 1fr 1fr 1fr; } .v-cmp-lab { grid-column: 1 / -1; } .v-cmp-head span { display: none; } }

@@ -69,6 +69,17 @@
     tick(); if (!reduce) setInterval(tick, 1100);
   };
 
+  /* ---------- Tennis101: Sinner's real serve (video + detected joints) next to the game at the same moments ---------- */
+  V.tennis101 = (el) => {
+    const D = "assets/projects/tennis101/", ph = [["toss", "Toss"], ["trophy", "Trophy"], ["contact", "Contact"]];
+    const row = (k, label) => `<div class="v-cmp-row"><span class="v-cmp-lab">${label}</span>${ph.map(([n, t]) =>
+      `<figure><img src="${D}${k}-${n}.jpg" alt="${label}: ${t}" loading="lazy" width="450" height="600"></figure>`).join("")}</div>`;
+    el.innerHTML = `<div class="v-cmp">
+        <div class="v-cmp-row v-cmp-head"><span></span>${ph.map(([, t]) => `<b>${t}</b>`).join("")}</div>
+        ${row("video", "Video + joints")}${row("game", "In the game")}
+      </div>${note("real data")}`;
+  };
+
   /* ---------- Aviation: raw vs cleaned simulator telemetry ---------- */
   V.aviation = (el) => {
     const W = 400, H = 170, r = rng(7), N = 120;
