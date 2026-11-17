@@ -8,6 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Big+Shoulders+Display:wght@800;900&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    /* Device check before the page draws: tags <html> with "phone", "tablet" or "computer" so each gets its own layout (css/style.css, end). */
+    (function () {
+      var d = document.documentElement;
+      function pick() {
+        var touch = matchMedia("(pointer: coarse)").matches || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        var short = Math.min(screen.width, screen.height), w = innerWidth;
+        var kind = (w < 640 || (touch && short < 600)) ? "phone" : (w < 1024 || (touch && short < 1100)) ? "tablet" : "computer";
+        d.classList.remove("phone", "tablet", "computer"); d.classList.add(kind); d.classList.toggle("touch", touch);
+      }
+      pick(); addEventListener("resize", pick);
+    })();
+  </script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏒</text></svg>">
 </head>
@@ -47,7 +60,7 @@
           <h1 class="h-name" aria-label="Ryan Li"><span class="hn-first" aria-hidden="true">Ryan</span><span class="hn-side" aria-hidden="true"><span class="hn-last">Li</span><span class="hn-num">#19</span></span></h1>
           <p class="h-sub">Data Analytics @ Purdue</p>
         </div>
-        <div class="s3-drag" aria-hidden="true"><span class="s3-drag-ic">⟲</span> Drag to rotate</div>
+        <div class="s3-drag" aria-hidden="true"><span class="s3-drag-ic">⟲</span> <span class="on-mouse">Drag to rotate</span><span class="on-touch">Swipe sideways to rotate</span></div>
         <div class="s3-scroll" aria-hidden="true">Scroll down to continue <span class="s3-scroll-ic">↓</span></div>
         <canvas id="figure" aria-hidden="true"></canvas>
       </div>
@@ -202,12 +215,12 @@
       </div>
 
       <div class="section">
-        <div class="sub-head"><h3>🏒 Lexington #19</h3><p>Hover (or swipe) to open a slice. Click for the full gallery.</p></div>
+        <div class="sub-head"><h3>🏒 Lexington #19</h3><p><span class="on-mouse">Hover to open a slice. Click for the full gallery.</span><span class="on-touch">Swipe through the photos. Tap one for the full gallery.</span></p></div>
         <div class="acc-wrap"><span class="acc-19" aria-hidden="true">19</span><div class="accordion" id="hockeyAcc"></div></div>
       </div>
 
       <div class="section ring-section">
-        <div class="sub-head"><h3>🌏 Around the world</h3><p>Drag to spin. Click a photo to open it.</p></div>
+        <div class="sub-head"><h3>🌏 Around the world</h3><p><span class="on-mouse">Drag to spin. Click a photo to open it.</span><span class="on-touch">Swipe to spin. Tap a photo to open it.</span></p></div>
         <div class="ring-stage" id="ringStage">
           <div class="ring" id="ring"></div>
           <div class="ring-floor" aria-hidden="true"></div>

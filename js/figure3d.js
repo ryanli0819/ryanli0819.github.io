@@ -17,7 +17,7 @@ function cssScroll() {
   const r = wrap.getBoundingClientRect(), span = Math.max(1, wrap.offsetHeight - innerHeight);
   wrap.style.setProperty("--sp", Math.min(1, Math.max(0, -r.top / span)).toFixed(3));
 }
-addEventListener("scroll", cssScroll, { passive: true }); cssScroll();
+let sRaf = 0; addEventListener("scroll", () => { if (!sRaf) sRaf = requestAnimationFrame(() => { sRaf = 0; cssScroll(); }); }, { passive: true }); cssScroll(); // once per frame
 
 function tweak(app) {
   const portrait = innerWidth / innerHeight < 0.8;
@@ -147,7 +147,10 @@ async function playSequence(Application, shotApp) {
     if (oc) { oc.enableRotate = true; if (oc.target) oc.target.set(0, 0, 0); } // drag rotates around the puck
     glassReady = true;
   }).catch((e) => console.warn("glass scene failed", e));
-  let went = false, faded = false;
+  let went = false, faded = false, settled = false, onScreen = true;
+  // after the smash, stop the glass scene's render loop whenever the first screen is scrolled away
+  const pauseIfAway = () => { if (!settled) return; try { if (onScreen) glassApp.play(); else glassApp.stop(); } catch {} };
+  new IntersectionObserver(es => { onScreen = es[0].isIntersecting; pauseIfAway(); }).observe(stage);
   const timer = setInterval(() => {
     if (!window.shotT0) return;
     const t = (performance.now() - window.shotT0) / 1000;
@@ -159,6 +162,7 @@ async function playSequence(Application, shotApp) {
       faded = true; clearInterval(timer);
       stage.classList.remove("shooting"); stage.classList.add("broken", "glass-on");
       setTimeout(() => { try { shotApp.stop(); } catch {} }, 600);
+      setTimeout(() => { settled = true; pauseIfAway(); }, 4500); // the smash is over; from now on only render while on screen
     }
   }, 20);
   // background blurs while dragging the puck around

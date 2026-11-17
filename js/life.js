@@ -103,11 +103,11 @@
       it.classList.toggle("front", c > .93);
     });
   }
+  let spinning = true;
   function spin() {
-    if (ringVisible) {
-      if (!dragging) { angle -= vel; vel += ((reduce ? 0 : .12) - vel) * .02; }
-      drawRing();
-    }
+    if (!ringVisible) { spinning = false; return; } // stops while off screen
+    if (!dragging) { angle -= vel; vel += ((reduce ? 0 : .12) - vel) * .02; }
+    drawRing();
     requestAnimationFrame(spin);
   }
   ringStage.addEventListener("pointerdown", (e) => { dragging = true; moved = 0; lastX = e.clientX; ringStage.setPointerCapture(e.pointerId); });
@@ -127,7 +127,7 @@
   ringStage.addEventListener("pointercancel", () => dragging = false);
   ring.addEventListener("keydown", (e) => { const b = e.target.closest(".ring-item"); if (b && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); window.openLightbox(world, +b.dataset.i); } });
   ring.addEventListener("focusin", (e) => { const b = e.target.closest(".ring-item"); if (b) { angle = -(360 / N) * +b.dataset.i; vel = 0; drawRing(); } });
-  if ("IntersectionObserver" in window) new IntersectionObserver(es => ringVisible = es[0].isIntersecting).observe(ringStage); else ringVisible = true;
+  if ("IntersectionObserver" in window) new IntersectionObserver(es => { ringVisible = es[0].isIntersecting; if (ringVisible && !spinning) { spinning = true; requestAnimationFrame(spin); } }).observe(ringStage); else ringVisible = true;
   layoutRing(); drawRing(); requestAnimationFrame(spin);
 
   /* ---------- Food cursor trail ---------- */

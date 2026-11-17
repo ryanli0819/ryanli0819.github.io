@@ -101,8 +101,14 @@
       checkGoal();
     }
     draw();
-    requestAnimationFrame(step);
+    if (onScreen) requestAnimationFrame(step); else looping = false;
   }
+  // only animate while the rink is on screen (saves battery on phones)
+  let onScreen = true, looping = true;
+  if ("IntersectionObserver" in window) new IntersectionObserver(es => {
+    onScreen = es[0].isIntersecting;
+    if (onScreen && !looping) { looping = true; requestAnimationFrame(step); }
+  }).observe(canvas);
 
   function collide() {
     const r = puck.r, g = geo(), R = g.cornerR, e = 0.82;

@@ -166,10 +166,11 @@
       });
       if (t < .05) swimmers.forEach((s, i) => s.x = .15 + i * .17);
       alertEl.classList.toggle("show", t > 4.2);
-      requestAnimationFrame(frame);
+      if (shown) requestAnimationFrame(frame); else looping = false;
     };
     new ResizeObserver(size).observe(cv);
-    onVisible(el, () => requestAnimationFrame(frame));
+    let shown = false, looping = false; // only animate while on screen
+    new IntersectionObserver(es => { shown = es[0].isIntersecting; if (shown && !looping) { looping = true; requestAnimationFrame(frame); } }).observe(el);
   };
 
   /* ---------- Ventrix: warehouse heat map of AC units by product, bay and week ---------- */
@@ -312,10 +313,12 @@
         const a = path.getPointAtLength(p * len), b = path.getPointAtLength(Math.min(len, p * len + 1));
         cam.setAttribute("transform", `translate(${a.x},${a.y}) rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI})`);
         feats.forEach(f => { const d = Math.hypot(f.cx.baseVal.value - a.x, f.cy.baseVal.value - a.y); f.style.fill = d < 45 ? css("--gold") : ""; });
-        if (p < 1) requestAnimationFrame(step); else if (!reduce) setTimeout(run, 1500);
+        if (p < 1) requestAnimationFrame(step); else if (!reduce) setTimeout(() => { if (shown) run(); else waiting = true; }, 1500);
       };
       requestAnimationFrame(step);
     };
+    let shown = false, waiting = false; // replays only while on screen
+    new IntersectionObserver(es => { shown = es[0].isIntersecting; if (shown && waiting) { waiting = false; run(); } }).observe(el);
     onVisible(el, run);
   };
 
