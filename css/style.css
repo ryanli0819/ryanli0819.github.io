@@ -359,7 +359,7 @@ kbd { font: 600 12px var(--font-mono); background: var(--ice-2); border: 1px sol
 .v-toggle button { border: 0; background: none; font: 600 12px var(--font-body); padding: 4px 10px; border-radius: 999px; color: var(--ink-2); }
 .v-toggle button.on { background: var(--sky); color: var(--navy); }
 
-/* horizontal bars (Titanic, ASABC, Data Mine) */
+/* horizontal bars (ASABC, Data Mine) */
 .v-hbars, .v-bars { display: grid; gap: 8px; }
 .v-row { display: grid; grid-template-columns: minmax(70px, 34%) 1fr 48px; gap: 8px; align-items: center; font-size: 12.5px; }
 .v-row span { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1325,3 +1325,110 @@ html.touch .egg-hint { display: none; } /* the "type goal" Easter egg needs a ke
 
 /* Phone: tighter spacing so each screen holds more */
 html.phone .ring-stage { height: 340px; }
+
+/* =====================================================================
+   Fewer boxes (work side): open layouts, different shapes, layers and mixed type.
+   Type mix: Big Shoulders (tall numbers), Archivo at its widest (headlines), Instrument Serif italic (accents).
+   ===================================================================== */
+:root { --serif: "Instrument Serif", Georgia, serif; }
+.page-work .section-sub { font: 400 clamp(16px, 1.4vw, 18px)/1.6 var(--font-body); color: var(--ink-2); letter-spacing: 0; } /* plain sans: easiest to read */
+
+/* ---- Skills: three open columns, serif italic heads, skills as plain words ---- */
+.intro-skills { border: 0 !important; box-shadow: none !important; background: none !important; padding: 26px 0 0 !important; border-top: 1.5px solid var(--rule) !important; border-radius: 0; }
+.intro-skills::before { content: none !important; }
+.intro-skills .sk-group h3 { font: 400 italic 32px/1 var(--serif); text-transform: none; letter-spacing: 0; color: var(--title); margin: 0 0 12px; }
+.intro-skills .sk-group h3::before { display: none; }
+.intro-skills .tags { gap: 0; }
+.intro-skills .tags li { border: 0 !important; padding: 0; background: none !important; font: 500 15.5px/1.75 var(--font-body); color: var(--ink); }
+.intro-skills .tags li:not(:last-child)::after { content: "·"; margin: 0 9px; color: var(--pink); font-weight: 700; }
+
+/* ---- Purdue: degree in front of a giant faded PURDUE; "Right now" as a dark blob with a glow behind ---- */
+.pu-top { border: 0; box-shadow: none; background: none; gap: clamp(28px, 5vw, 72px); align-items: center; isolation: isolate; }
+.pu-degree { border: 0 !important; padding: clamp(24px, 4vw, 48px) 0; isolation: isolate; }
+.pu-degree::after { left: -.03em; right: auto; top: 50%; bottom: auto; transform: translateY(-50%); z-index: -1;
+  font-size: clamp(96px, 16vw, 240px); letter-spacing: .01em; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--pink) 50%, transparent); }
+.pu-degree h3 { font-family: "Archivo", sans-serif; font-stretch: 125%; font-weight: 800; font-size: clamp(28px, 3.3vw, 46px); max-width: 15ch; }
+.pu-spec { border-top: 0; }
+.pu-spec dt, .pu-spec dd { border-bottom: 1px dotted color-mix(in srgb, var(--rule) 45%, transparent); }
+.pu-why { position: relative; border-radius: 58% 42% 46% 54% / 46% 52% 48% 54%; padding: clamp(48px, 6vw, 80px) clamp(40px, 6vw, 76px);
+  box-shadow: 0 40px 70px -40px rgba(0,0,0,.55); }
+.pu-why::after { content: ""; position: absolute; inset: 14% -10% -14% 24%; z-index: -1; border-radius: 50%; background: var(--pink); filter: blur(56px); opacity: .4; pointer-events: none; }
+.pu-now li { border-bottom: 0; padding: 7px 0; }
+
+/* the three tracks: open columns, round badges, the middle one dropped a little */
+.pu-tracks { border: 0; background: none; gap: clamp(28px, 4vw, 56px); margin-top: clamp(48px, 7vw, 88px); }
+.pu-track { border: 0 !important; padding: 92px 0 0; }
+.pu-code { left: 0; right: auto; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; padding: 0;
+  background: var(--pink); color: var(--ink); font: 900 30px/1 var(--font-display); letter-spacing: .02em; }
+.pu-track:nth-child(2) .pu-code { background: var(--sky); }
+.pu-track:nth-child(3) .pu-code { background: none; border: 2px solid var(--rule); color: var(--title); }
+.pu-track h3 { font: 400 italic 32px/1.05 var(--serif); text-transform: none; letter-spacing: 0; color: var(--title); }
+@media (min-width: 861px) { .pu-track:nth-child(2) { margin-top: 56px; } }
+
+/* "How my projects fit together": a dotted line with round stops instead of five boxes */
+.pu-pipe { position: relative; gap: 0 clamp(16px, 2.4vw, 32px); }
+.pu-pipe::before { content: ""; position: absolute; left: 0; right: 0; top: 19px; height: 2px; background: repeating-linear-gradient(90deg, var(--rule) 0 7px, transparent 7px 13px); }
+.pu-stage, .pu-stage:first-child { clip-path: none; border: 0; margin: 0; padding: 0; background: none !important; }
+.pu-n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; position: relative; z-index: 1; margin-bottom: 16px;
+  background: var(--ice); border: 2px solid var(--rule); color: var(--ink); font: 900 17px/1 var(--font-display); }
+.pu-stage:nth-child(odd) .pu-n { background: var(--pink); border-color: var(--pink); }
+.pu-stage h4 { font: 400 italic 32px/1 var(--serif); text-transform: none; letter-spacing: 0; color: var(--title); }
+.pu-stage li { border-top: 0; padding: 3px 0 3px 14px; position: relative; }
+.pu-stage li::before { content: ""; position: absolute; left: 0; top: .78em; width: 6px; height: 6px; border-radius: 50%; background: var(--pink); }
+@media (max-width: 980px) {
+  .pu-pipe { gap: 26px; }
+  .pu-pipe::before { left: 19px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; background: repeating-linear-gradient(180deg, var(--rule) 0 7px, transparent 7px 13px); }
+  .pu-stage, .pu-stage:first-child { padding-left: 60px; margin-top: 0; }
+  .pu-n { position: absolute; left: 0; top: 0; }
+}
+
+/* ---- Projects: open rows, sides alternate, a big outlined number behind, the visual fades in from a blur ---- */
+.projects { grid-template-columns: 1fr; gap: 0; }
+.project.pj { border: 0 !important; border-top: 1px solid var(--line) !important; box-shadow: none !important; background: none; border-radius: 0;
+  padding: clamp(56px, 8vw, 110px) 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); gap: clamp(28px, 4.5vw, 72px); align-items: center; isolation: isolate; }
+.project.pj::before { content: none !important; }
+.project.pj:hover { box-shadow: none !important; }
+.project.pj:nth-child(even) .pj-text { order: 2; }
+.pj-text { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.pj-media { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.project.pj.pj-wide { grid-template-columns: 1fr; }
+.project.pj.pj-wide .pj-text { order: 2; max-width: 760px; }
+.pj-num { position: absolute; top: clamp(18px, 3vw, 40px); left: -.04em; z-index: -1; pointer-events: none; transition: transform .5s cubic-bezier(.2,.8,.2,1);
+  font: 900 clamp(150px, 19vw, 280px)/.8 var(--font-display); color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--title) 20%, transparent); }
+.project.pj:nth-child(even) .pj-num { left: auto; right: -.02em; }
+.pj-bg { position: absolute; inset: 4% 0 4% 38%; z-index: -1; pointer-events: none; background: center 30% / cover no-repeat;
+  filter: blur(16px) saturate(.9); opacity: .3; -webkit-mask-image: radial-gradient(closest-side, #000 50%, transparent); mask-image: radial-gradient(closest-side, #000 50%, transparent); }
+.project.pj:nth-child(even) .pj-bg { inset: 4% 38% 4% 0; }
+.project.pj.reveal { opacity: 1; transform: none; }
+.project.pj.reveal .pj-text { opacity: 0; transform: translateY(26px); transition: opacity .7s, transform .7s; }
+.project.pj.reveal .pj-media { opacity: 0; transform: translateY(34px) scale(.96); filter: blur(8px); transition: opacity .9s .15s, transform .9s .15s, filter .9s .15s; }
+.project.pj.reveal.in .pj-text, .project.pj.reveal.in .pj-media { opacity: 1; transform: none; filter: none; }
+.project.pj h3 { font-family: "Archivo", sans-serif; font-stretch: 125%; font-weight: 800; font-size: clamp(26px, 2.8vw, 38px); letter-spacing: -.02em; }
+.project.pj .when { font: 400 italic 20px/1.2 var(--serif); letter-spacing: 0; }
+.project.pj .project-icon { border-radius: 50%; border: 0; width: 48px; height: 48px; }
+.project.pj .badge { border-radius: 999px; transform: rotate(-2.5deg); }
+.project.pj .card-time { background: none; border-left: 0; padding: 0; }
+.project.pj .metrics { border-top: 0; padding-top: 4px; }
+.project.pj .metric b { font-size: 46px; }
+.project.pj .tags { gap: 0; }
+.project.pj .tags li { border: 0; padding: 0; background: none !important; font: 600 13px/1.8 var(--font-mono); color: var(--title) !important; }
+.project.pj .tags li:not(:last-child)::after { content: "/"; margin: 0 10px; color: var(--pink); }
+.project.pj .card-actions { border-top: 0; padding-top: 6px; }
+.project.pj .viz { border: 0 !important; border-radius: 22px; overflow: hidden; }
+.project.pj video { border-radius: 22px; }
+@media (max-width: 900px) {
+  .project.pj { grid-template-columns: 1fr; padding: 64px 0; }
+  .project.pj:nth-child(even) .pj-text { order: 0; }
+  .project.pj .pj-media { order: 2; }
+  .pj-num { font-size: 130px; }
+  .pj-bg, .project.pj:nth-child(even) .pj-bg { inset: 0; }
+}
+
+/* Exceptions to the square-corner rule for the new shapes */
+.pu-top .pu-why { border-radius: 58% 42% 46% 54% / 46% 52% 48% 54% !important; }
+.pu-top .pu-why::after, .pu-track .pu-code, .pu-stage .pu-n, .pu-stage li::before,
+.project.pj .project-icon { border-radius: 50% !important; }
+.project.pj .badge { border-radius: 999px !important; }
+.project.pj .viz, .project.pj video { border-radius: 22px !important; }
+/* the glow and giant background letters may hang past the edge; cut them off there instead of widening the page */
+#intro, #purdue, #projects { overflow-x: clip; }

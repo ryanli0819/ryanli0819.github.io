@@ -1,6 +1,5 @@
 /* Per-project visualizations. Each one renders into <div class="viz" data-viz="<project id>">.
-   Visuals marked "illustrative" explain how a project works; they are not real project data.
-   The Titanic chart uses the real survival rates from Kaggle's training set. */
+   Visuals marked "illustrative" explain how a project works; they are not real project data. */
 (function () {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const NS = "http://www.w3.org/2000/svg";
@@ -108,25 +107,6 @@
     el.querySelector(".v-toggle").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) set(b.dataset.m); });
     set("raw");
     onVisible(el, () => setTimeout(() => set("clean"), reduce ? 0 : 1600));
-  };
-
-  /* ---------- Kaggle Titanic: real survival rates ---------- */
-  V.kaggle = (el) => {
-    const sets = {
-      sex: [["Female", 74.2], ["Male", 18.9]],
-      class: [["1st class", 63.0], ["2nd class", 47.3], ["3rd class", 24.2]]
-    };
-    el.innerHTML = `<div class="v-toggle" role="group" aria-label="Group survival rate by">
-        <button class="on" data-m="sex">By sex</button><button data-m="class">By class</button></div>
-      <div class="v-hbars"></div><div class="v-trophy">🏆 my model: 100% public LB</div>${note("real data · Kaggle train set")}`;
-    const box = el.querySelector(".v-hbars");
-    const draw = (m) => {
-      box.innerHTML = sets[m].map(([k, v]) => `<div class="v-row"><span>${k}</span><div><i data-w="${v}"></i></div><b>${v}%</b></div>`).join("");
-      requestAnimationFrame(() => requestAnimationFrame(() => box.querySelectorAll("i").forEach(i => i.style.width = i.dataset.w + "%")));
-      el.querySelectorAll(".v-toggle button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
-    };
-    el.querySelector(".v-toggle").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) draw(b.dataset.m); });
-    onVisible(el, () => draw("sex"));
   };
 
   /* ---------- Drowning detection: pool camera that flags a still swimmer ---------- */
@@ -288,38 +268,6 @@
     svg.addEventListener("click", (e) => { const g = e.target.closest(".wh-cell"); if (g) showTip(g.dataset.id); });
     draw();
     onVisible(el, () => { if (!reduce) el.querySelector(".wh-play").click(); setTimeout(() => { if (playing) el.querySelector(".wh-play").click(); }, 9500); });
-  };
-
-  /* ---------- Visual odometry: estimated vs true camera path from feature points ---------- */
-  V.vo = (el) => {
-    const W = 400, H = 170, r = rng(11);
-    const pts = Array.from({ length: 70 }, () => [r() * W, r() * H]);
-    const truth = "M30,140 C110,140 120,40 200,50 S320,150 370,60";
-    const est = "M30,140 C115,135 128,48 205,58 S325,140 372,72";
-    el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="v-svg" role="img" aria-label="Camera trajectory estimated from tracked feature points, drawn next to the true path">
-      <g>${pts.map(([x, y]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.8" class="v-feat" style="fill:var(--ink-3)"/>`).join("")}</g>
-      <path d="${truth}" style="fill:none;stroke:var(--ink-3);stroke-width:2;stroke-dasharray:5 5"/>
-      <path d="${est}" class="v-est" pathLength="1" style="fill:none;stroke:var(--red);stroke-width:2.6;stroke-linecap:round"/>
-      <g class="v-cam"><polygon points="-8,-6 8,0 -8,6" style="fill:var(--gold);stroke:var(--ink);stroke-width:1"/></g>
-      <text x="12" y="16" class="v-ax">— estimated   - - true path</text>
-    </svg>${note()}`;
-    const path = el.querySelector(".v-est"), cam = el.querySelector(".v-cam"), feats = el.querySelectorAll(".v-feat");
-    const len = path.getTotalLength();
-    const run = () => {
-      const start = performance.now(), dur = reduce ? 1 : 4000;
-      const step = (now) => {
-        const p = Math.min(1, (now - start) / dur);
-        path.style.strokeDasharray = `${p} 1`;
-        const a = path.getPointAtLength(p * len), b = path.getPointAtLength(Math.min(len, p * len + 1));
-        cam.setAttribute("transform", `translate(${a.x},${a.y}) rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI})`);
-        feats.forEach(f => { const d = Math.hypot(f.cx.baseVal.value - a.x, f.cy.baseVal.value - a.y); f.style.fill = d < 45 ? css("--gold") : ""; });
-        if (p < 1) requestAnimationFrame(step); else if (!reduce) setTimeout(() => { if (shown) run(); else waiting = true; }, 1500);
-      };
-      requestAnimationFrame(step);
-    };
-    let shown = false, waiting = false; // replays only while on screen
-    new IntersectionObserver(es => { shown = es[0].isIntersecting; if (shown && waiting) { waiting = false; run(); } }).observe(el);
-    onVisible(el, run);
   };
 
   window.renderViz = function () {

@@ -54,7 +54,7 @@
 
   /* ---------- Projects ---------- */
   const eraLabel = { hs: "High school", college: "College", work: "Experience", unknown: "" };
-  function projectCard(p) {
+  function projectCard(p, i) {
     const awardish = /award|1st|2nd|published/i.test(p.badge);
     const badgeCls = /soon/i.test(p.badge) ? "soon" : awardish ? "award" : "";
     const linkList = [...p.links];
@@ -87,13 +87,13 @@
         <button class="btn primary sm" data-open="${esc(p.id)}">▶ Demo &amp; details</button>
         ${needCount ? `<span class="need">${needCount} to add</span>` : ""}
       </div>`;
-    const body = p.wideViz
-      ? media + `<div class="wide-main">${main}</div>`
-      : p.featured
-      ? `<div class="featured-body"><div>${main}</div><div class="media-col">${media}</div></div>`
-      : media + main;
-    return `<article class="project reveal ${p.featured ? "featured" : ""}" data-tags="${[...p.tags, p.era].join(" ")}" id="p-${esc(p.id)}">
-      ${head}${body}${more}</article>`;
+    // Open row: text on one side, the visual on the other (sides alternate), a big outlined number in the
+    // background layer and, if the project has one, a blurred photo behind everything.
+    return `<article class="project pj reveal ${p.wideViz ? "pj-wide" : ""}" data-tags="${[...p.tags, p.era].join(" ")}" id="p-${esc(p.id)}">
+      <span class="pj-num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+      ${p.bg ? `<div class="pj-bg" style="background-image:url('${esc(p.bg)}')" aria-hidden="true"></div>` : ""}
+      <div class="pj-text">${head}${main}${more}</div>
+      <div class="pj-media">${media}</div></article>`;
   }
   $("#projectList").innerHTML = S.projects.map(projectCard).join("");
   if (window.renderViz) window.renderViz();
@@ -141,16 +141,16 @@
     });
   });
 
-  // subtle 3D tilt on hover (pointer devices only)
+  // layers on hover (mouse only): the big background number drifts against the content
   if (matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) {
     document.querySelectorAll(".project").forEach(card => {
+      const num = card.querySelector(".pj-num"); if (!num) return;
       card.addEventListener("mousemove", (e) => {
-        if (e.target.closest("video, details[open]")) { card.style.transform = ""; return; }
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-        card.style.transform = `perspective(900px) rotateY(${x * 3}deg) rotateX(${-y * 3}deg) translateY(-3px)`;
+        num.style.transform = `translate(${x * -26}px, ${y * -18}px)`;
       });
-      card.addEventListener("mouseleave", () => card.style.transform = "");
+      card.addEventListener("mouseleave", () => num.style.transform = "");
     });
   }
 

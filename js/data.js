@@ -44,8 +44,8 @@ window.SITE = {
     pipeline: [
       { stage: "Collect", what: "Gather and label raw data", from: ["Hand-labeled hockey film (ground truth)", "Bullet-chat logs from Douyu live streams", "Daily warehouse counts"] },
       { stage: "Clean", what: "Fix, structure, validate", from: ["Flight-simulator exports for an AI flight tutor", "Iterative label cleanup in the ASABC paper"] },
-      { stage: "Explore", what: "Look for patterns and problems", from: ["EDA on inventory discrepancies at Ventrix", "Titanic survival patterns by class and sex"] },
-      { stage: "Model", what: "Train and evaluate", from: ["CNN + YOLO for teams and roles", "Few-shot prompt-tuned LLM", "Titanic classifier"] },
+      { stage: "Explore", what: "Look for patterns and problems", from: ["EDA on inventory discrepancies at Ventrix"] },
+      { stage: "Model", what: "Train and evaluate", from: ["CNN + YOLO for teams and roles", "Few-shot prompt-tuned LLM"] },
       { stage: "Decide", what: "Use the results", from: ["Restocking calls and shipping checks", "Frame-by-frame play review", "Flagging negative chat for moderators"] }
     ],
     before: [
@@ -79,7 +79,6 @@ window.SITE = {
   stats: [
     { value: "1", label: "IEEE published paper" },
     { value: "90%+", label: "CV classification accuracy" },
-    { value: "100%", label: "Kaggle Titanic public score" },
     { value: "2nd", label: "State YES pitch competition" }
   ],
 
@@ -97,6 +96,7 @@ window.SITE = {
   projects: [
     {
       id: "asabc",
+      bg: "assets/img/ryan-aix.jpg", // blurred background layer on the project row (me at the IEEE AIxHeart conference)
       problem: "Live streams on Douyu have thousands of short \"bullet chat\" comments. Filtering out the negative ones by hand doesn't work at that scale, and keyword filters miss slang and sarcasm.",
       time: "Summer after Grade 11 · 30 hrs/week for 9 weeks (about 270 hours)",
       learned: "Data prep, evaluation, and working on a real research team.",
@@ -246,34 +246,6 @@ window.SITE = {
       ]
     },
     {
-      id: "kaggle",
-      problem: "Predict which Titanic passengers survived from details like class, sex and age.",
-      time: "Data science competition",
-      learned: "Feature engineering on tabular data. The chart on this card uses the real survival rates from Kaggle's training set.",
-      results: ["100% accuracy on the public leaderboard", "Tied for 1st among 2,000+ entries"],
-      repo: "https://github.com/ryanli0819/kaggle-titanic",
-      demo: "assets/video/kaggle-explainer.mp4",
-      demoKind: "explainer",
-      code: true,
-      title: "Kaggle Titanic: Machine Learning from Disaster",
-      badge: "Tied 1st of 2,000+",
-      era: "unknown",
-      when: "Data science competition",
-      tags: ["ml"],
-      icon: "🚢",
-      summary:
-        "Built a machine learning model to predict which Titanic passengers survived. It scored 100% accuracy on the public leaderboard, tied for 1st among 2,000+ entries.",
-      details: [],
-      metrics: [{ value: "100%", label: "public LB" }, { value: "2,000+", label: "entries" }],
-      skills: ["Python", "Feature engineering", "Classification"],
-      links: [],
-      missing: [
-        "Your Kaggle username / profile link",
-        "Link to the public notebook so visitors can see the approach",
-        "When was this (high school or college)?"
-      ]
-    },
-    {
       id: "drowning",
       problem: "Lifeguards can't watch every swimmer at once. The idea was camera software that notices when a swimmer stops moving and alerts a lifeguard.",
       time: "Grades 10–12 · about 4 hrs/week, 42 weeks a year",
@@ -329,32 +301,6 @@ window.SITE = {
       skills: ["EDA", "Statistics", "Inventory analysis", "Operations"],
       links: [],
       missing: []
-    },
-    {
-      id: "vo",
-      repo: "https://github.com/ryanli0819/visual-odometry",
-      demo: "assets/video/vo-explainer.mp4",
-      demoKind: "explainer",
-      code: true,
-      title: "Visual odometry",
-      badge: "Details coming soon",
-      era: "unknown",
-      when: "TBD",
-      tags: ["cv"],
-      icon: "📷",
-      summary:
-        "A visual odometry project: estimating camera motion from a sequence of images. Full write-up coming soon.",
-      details: [],
-      metrics: [],
-      skills: ["Computer vision"],
-      links: [],
-      missing: [
-        "What the project was and what you built",
-        "Tools used (language, libraries such as OpenCV, approach)",
-        "Results or metrics",
-        "GitHub link, or confirm it's private",
-        "Timeframe: high school or college?"
-      ]
     }
   ],
 
