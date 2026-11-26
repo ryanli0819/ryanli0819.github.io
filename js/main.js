@@ -64,7 +64,7 @@
     const metrics = p.metrics.length
       ? `<div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div>` : "";
     const video = p.video
-      ? `<video src="${esc(p.video)}" muted loop playsinline autoplay controls preload="metadata" aria-label="Demo of ${esc(p.title)} running on game footage"></video>` : "";
+      ? `<video data-src="${esc(p.video)}" data-autoplay muted loop playsinline controls preload="none" aria-label="Demo of ${esc(p.title)} running on game footage"></video>` : "";
     const media = video + `<div class="viz${video ? " viz-plain" : ""}" data-viz="${esc(p.id)}"></div>`;
     const needCount = window.SHOW_MISSING_INFO ? p.missing.length : 0;
     const head = `
@@ -96,6 +96,7 @@
       <div class="pj-media">${media}</div></article>`;
   }
   $("#projectList").innerHTML = S.projects.map(projectCard).join("");
+  lazyVideos();
   if (window.renderViz) window.renderViz();
 
   /* ---------- Project modal: demo video + full description + skills ---------- */
@@ -449,6 +450,19 @@
     document.querySelectorAll(".reveal:not(.in)").forEach(el => io ? io.observe(el) : el.classList.add("in"));
   }
   observeReveals();
+
+  /* Videos below the first screen wait until they're close (data-src), so they don't slow down the opening. */
+  function lazyVideos() {
+    const vids = [...document.querySelectorAll("video[data-src]")];
+    const load = (v) => {
+      if (!v.dataset.src) return;
+      v.src = v.dataset.src; delete v.dataset.src;
+      if (v.hasAttribute("data-autoplay") && !matchMedia("(prefers-reduced-motion: reduce)").matches) { v.preload = "auto"; v.play().catch(() => {}); }
+    };
+    if (!("IntersectionObserver" in window)) return vids.forEach(load);
+    const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } }), { rootMargin: "600px 0px" });
+    vids.forEach(v => io.observe(v));
+  }
 
   $("#year").textContent = new Date().getFullYear();
 })();

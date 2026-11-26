@@ -5,13 +5,83 @@
    - shards carried toward the screen: golden-angle spiral in a widening cone, bigger the closer they get
    - transparent background so the blurred photo of Ryan (#10) shows through the glass
    - straight-on camera; drag to orbit (zoom/pan off so the page still scrolls); background blurs while dragging
-   If Spline can't load, js/puck3d.js (a three.js version of the same idea) takes over. */
+   If the live 3D can't play (no WebGL, very slow or data-saver connection, a CDN that won't load, or it hasn't
+   started within LIVE_DEADLINE), a recording of the same two scenes plays instead (assets/hero/shot-*.mp4,
+   recorded frame by frame from the live version), so every visitor sees the skater shoot and the puck break the glass. */
 const wrap = document.getElementById("stage3d");
 const stage = document.getElementById("stagePin");
 let canvas = document.getElementById("figure");
 const SCENE = "assets/hero/breakout-glass.splinecode";   // Ryan's puck-through-the-glass scene
 const SHOT_SCENE = "assets/hero/shot.splinecode";         // Ryan's hockey-player shot scene (plays first)
 const RUNTIME = "https://cdn.spline.design/@splinetool/runtime@2.0.183/build/runtime.js"; // the version the scene was published with
+
+/* ---------- the recorded backup ---------- */
+const LIVE_DEADLINE = 5000;  // ms: if the live shot hasn't started by then, play the recording
+const REC_BREAK = 3.45;      // s into the recording where the glass scene takes over (SHOT_END in the live version)
+let mode = "pending";        // "live" once the 3D shot starts, "video" once the recording takes over
+function webglOK() {
+  try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch { return false; }
+}
+function playRecording(from = 0) {
+  if (mode === "video") return;
+  mode = "video";
+  try { window.ryanSpline && window.ryanSpline.stop(); } catch {}
+  try { window.ryanSplineGlass && window.ryanSplineGlass.stop(); } catch {}
+  const shape = innerWidth / innerHeight < 0.62 ? "tall" : "wide";   // phones held upright get the tall cut
+  const q = new URLSearchParams(location.search).get("rec");       // testing: ?rec=full / ?rec=lite
+  let lite = q === "lite" || (q !== "full" && !fastLink());          // slow connections get the ~0.4 MB version
+  const v = document.createElement("video");
+  v.className = "s3-video"; v.setAttribute("aria-hidden", "true");
+  v.muted = true; v.defaultMuted = true; v.setAttribute("muted", ""); v.playsInline = true; v.setAttribute("playsinline", "");
+  v.preload = "auto";
+  v.poster = `assets/hero/shot-${shape}.jpg`;
+  v.src = `assets/hero/shot-${shape}${lite ? "-lite" : ""}.mp4`;
+  stage.appendChild(v);
+  // if the full version stalls mid-play, switch to the light one at the same moment
+  let stall = 0;
+  v.addEventListener("waiting", () => {
+    if (lite || !v.currentTime) return;
+    clearTimeout(stall);
+    stall = setTimeout(() => {
+      if (v.readyState >= 3) return;
+      const t = v.currentTime; lite = true;
+      v.src = `assets/hero/shot-${shape}-lite.mp4`;
+      v.addEventListener("loadedmetadata", () => { v.currentTime = t; v.play().catch(() => {}); }, { once: true });
+    }, 1200);
+  });
+  v.addEventListener("playing", () => clearTimeout(stall));
+  stage.classList.remove("pre-impact", "shooting", "glass-on", "drag-hint");
+  stage.classList.add("ready", "video-mode");
+  const broke = () => stage.classList.add("broken");          // name and intro text come in as the glass breaks
+  const check = () => { if (v.currentTime >= REC_BREAK) broke(); };
+  v.addEventListener("timeupdate", check);
+  v.addEventListener("ended", broke);
+  v.addEventListener("error", broke);
+  if (from) v.addEventListener("loadedmetadata", () => { v.currentTime = from; }, { once: true });
+  const evs = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"];
+  const onGesture = () => { v.play().catch(() => {}); evs.forEach(e => removeEventListener(e, onGesture)); };
+  let started = false;
+  const start = () => {
+    if (started) return; started = true;
+    v.play().catch(() => {
+      // autoplay blocked (e.g. iPhone Low Power Mode): the first frame shows, and it plays on the first touch or scroll
+      evs.forEach(e => addEventListener(e, onGesture, { passive: true }));
+      setTimeout(() => { if (v.paused) broke(); }, 2500);     // don't leave the first screen without the name
+    });
+  };
+  // wait until it can play through without stopping (the first frame shows meanwhile), but never more than 8s
+  if (v.readyState >= 4) start(); else { v.addEventListener("canplaythrough", start, { once: true }); setTimeout(start, 8000); }
+}
+function fastLink() {   // roughly: can this connection stream the full recording (~1.9 Mbps)?
+  const c = navigator.connection;
+  if (c && c.saveData) return false;
+  if (c && c.effectiveType && c.effectiveType !== "4g") return false;
+  if (c && c.downlink > 0) return c.downlink >= 2.5;
+  // no Network Information API (Safari, Firefox): time how fast the stylesheet came down
+  const r = performance.getEntriesByType("resource").find(e => /\/css\/style\.css/.test(e.name));
+  if (r && r.transferSize > 20000 && r.responseEnd > r.responseStart) return (r.transferSize * 8) / (r.responseEnd - r.responseStart) / 1000 >= 2.5;
+  return true;
+}
 
 function cssScroll() {
   const r = wrap.getBoundingClientRect(), span = Math.max(1, wrap.offsetHeight - innerHeight);
@@ -119,7 +189,9 @@ async function playSequence(Application, shotApp) {
   // Both scenes run their own animation scripts (Spline "inline" HTML content), exactly like his public links.
   const calm = (a) => { const oc = a.controls && a.controls.orbitControls; if (oc) { oc.enableZoom = false; oc.enablePan = false; } a.setBackgroundColor("rgba(0,0,0,0)"); };
   window.shotT0 = 0;           // set by his shot script the moment its swing clock starts
-  await shotApp.load(SHOT_SCENE); calm(shotApp);
+  await shotApp.load(SHOT_SCENE);
+  if (mode === "video") { try { shotApp.stop(); } catch {} canvas.style.display = "none"; return; } // the recording already took over
+  mode = "live"; calm(shotApp);
   window.ryanSpline = shotApp;
   stage.classList.remove("pre-impact"); stage.classList.add("ready", "as-designed", "shooting");
   // His scripts are patched (assets/hero/*.splinecode) to play once instead of looping:
@@ -142,6 +214,7 @@ async function playSequence(Application, shotApp) {
   const glassApp = new Application(glassCanvas, { htmlContentMode: "inline" }); window.ryanSplineGlass = glassApp;
   let glassReady = false;
   glassApp.load(SCENE).then(() => {
+    if (mode === "video") { try { glassApp.stop(); } catch {} return; }
     calm(glassApp);
     const oc = glassApp.controls && glassApp.controls.orbitControls;
     if (oc) { oc.enableRotate = true; if (oc.target) oc.target.set(0, 0, 0); } // drag rotates around the puck
@@ -154,6 +227,8 @@ async function playSequence(Application, shotApp) {
   const timer = setInterval(() => {
     if (!window.shotT0) return;
     const t = (performance.now() - window.shotT0) / 1000;
+    // the glass scene didn't make it in time: the recording picks up right where the shot puck reaches the screen
+    if (!went && !glassReady && t >= SHOT_END + 0.4) { clearInterval(timer); playRecording(REC_BREAK); return; }
     if (!went && glassReady && t >= SHOT_END - APPROACH) {
       went = true; window.glassGo = true;
       setTimeout(() => stage.classList.add("smashed", "drag-hint"), 1100); // the puck smashes through at 1.1s of the glass scene
@@ -200,8 +275,15 @@ async function initSpline() {
 }
 
 addEventListener("shot-impact", () => { window.__shotImpacted = true; stage.classList.add("flash"); setTimeout(() => stage.classList.remove("flash"), 450); });
-initSpline().catch(async (e) => {
-  console.warn("Spline scene failed, using the three.js backup", e);
-  const fresh = canvas.cloneNode(false); canvas.replaceWith(fresh); canvas = fresh;
-  await import("./puck3d.js");
-});
+const conn = navigator.connection || {};
+const QS = new URLSearchParams(location.search), forceRec = QS.has("rec");   // testing: ?rec plays the recording, ?live never does
+// no 3D support, data saver, or a 3G-or-slower connection: go straight to the recording (~0.4 MB vs ~1.1 MB for the live 3D)
+if (forceRec || !webglOK() || conn.saveData || (conn.effectiveType && conn.effectiveType !== "4g")) {
+  playRecording();
+} else {
+  if (!QS.has("live")) setTimeout(() => { if (mode === "pending") playRecording(); }, LIVE_DEADLINE);
+  initSpline().catch((e) => {
+    console.warn("Spline scene failed, playing the recording", e);
+    if (mode !== "live") playRecording();
+  });
+}
